@@ -1,0 +1,10 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    
+    # Excluir archivos y directorios reales de la redirección
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    
+    # Redirigir todo lo demás al Front Controller en public/index.php
+    RewriteRule ^(.*)$ public/index.php?url=$1 [QSA,L]
+</IfModule>

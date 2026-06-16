@@ -1,0 +1,108 @@
+/* Variables globales y fuentes */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap');
+
+:root {
+    --bg-dark: #090a15;
+    --bg-card: rgba(18, 20, 38, 0.55);
+    --border-glass: rgba(255, 255, 255, 0.08);
+    --border-glass-glow: rgba(109, 40, 217, 0.3);
+    --text-primary: #f1f5f9;
+    --text-secondary: #94a3b8;
+    --glow-purple: rgba(139, 92, 246, 0.15);
+    --glow-emerald: rgba(16, 185, 129, 0.15);
+}
+
+/* Estilo general del cuerpo */
+body {
+    background-color: var(--bg-dark);
+    color: var(--text-primary);
+    font-family: 'Outfit', 'Inter', sans-serif;
+    overflow-x: hidden;
+    min-height: 100vh;
+    background-image: 
+        radial-gradient(at 10% 20%, rgba(99, 102, 241, 0.1) 0px, transparent 50%),
+        radial-gradient(at 90% 10%, rgba(139, 92, 246, 0.08) 0px, transparent 50%),
+        radial-gradient(at 50% 80%, rgba(16, 185, 129, 0.05) 0px, transparent 50%);
+    background-attachment: fixed;
+}
+
+/* Efectos de Glassmorphism */
+.glass-panel {
+    background: var(--bg-card);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--border-glass);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+}
+
+.glass-panel-hover {
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.glass-panel-hover:hover {
+    transform: translateY(-4px);
+    border-color: var(--border-glass-glow);
+    box-shadow: 0 12px 40px 0 rgba(109, 40, 217, 0.15);
+}
+
+/* Animaciones y transiciones */
+.transition-glow {
+    transition: all 0.3s ease;
+}
+.transition-glow:hover {
+    box-shadow: 0 0 15px var(--border-glass-glow);
+}
+
+/* Scrollbars personalizadas premium */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #0b0c19;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(109, 40, 217, 0.4);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(139, 92, 246, 0.7);
+}
+
+/* Animación de fondo para el Login */
+@keyframes gradientBG {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+.animated-bg {
+    background: linear-gradient(-45deg, #090a15, #120e2e, #0c1c1a, #050b14);
+    background-size: 400% 400%;
+    animation: gradientBG 15s ease infinite;
+}
+
+/* Pad de firma digital o canvas */
+.signature-canvas {
+    border: 2px dashed rgba(255, 255, 255, 0.15);
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    cursor: crosshair;
+}
+
+/* Efectos de pulso y glow */
+.pulse-glow {
+    animation: pulseGlow 3s infinite alternate;
+}
+
+@keyframes pulseGlow {
+    0% {
+        box-shadow: 0 0 5px rgba(109, 40, 217, 0.2);
+    }
+    100% {
+        box-shadow: 0 0 20px rgba(139, 92, 246, 0.5);
+    }
+}
