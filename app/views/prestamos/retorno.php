@@ -73,8 +73,7 @@ $p = $data['prestamo'];
 
                 <!-- Detalle Auxiliar -->
                 <div class="text-xs text-slate-400 flex flex-col justify-end">
-                    <p class="mb-1">Auxiliar Receptor: <span class="font-semibold text-white"><?= Session::get('user_name') ?></span></p>
-                    <p>IP de transacciones: <span class="font-mono text-white"><?= $_SERVER['REMOTE_ADDR'] ?></span></p>
+                    <p>Auxiliar Receptor: <span class="font-semibold text-white"><?= Session::get('user_name') ?></span></p>
                 </div>
             </div>
 

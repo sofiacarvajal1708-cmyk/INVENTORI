@@ -12,10 +12,12 @@ $role = Session::get('role_name');
             <p class="text-xs text-slate-400 mt-1">Consola transaccional de reasignación física de computadores para control de inventarios.</p>
         </div>
         
-        <a href="<?= BASE_URL ?>/traslados/crear" class="py-2.5 px-4 bg-gradient-to-r from-violet-600 to-cyan-500 hover:from-violet-500 hover:to-cyan-400 text-white font-semibold rounded-xl text-xs flex items-center space-x-2 shadow-lg shadow-violet-600/20 active:scale-95 transition-all">
-            <i class="fa-solid fa-truck-ramp-box"></i>
-            <span>Solicitar Traslado</span>
-        </a>
+        <?php if ($role === 'Administrador'): ?>
+            <a href="<?= BASE_URL ?>/traslados/crear" class="py-2.5 px-4 bg-gradient-to-r from-violet-600 to-cyan-500 hover:from-violet-500 hover:to-cyan-400 text-white font-semibold rounded-xl text-xs flex items-center space-x-2 shadow-lg shadow-violet-600/20 active:scale-95 transition-all">
+                <i class="fa-solid fa-truck-ramp-box"></i>
+                <span>Solicitar Traslado</span>
+            </a>
+        <?php endif; ?>
     </div>
 
     <!-- Historial de Traslados -->
@@ -81,16 +83,20 @@ $role = Session::get('role_name');
                                 </td>
                                 <td class="py-4 px-4 text-center whitespace-nowrap">
                                     <?php if ($t['estado_traslado'] === 'Pendiente'): ?>
-                                        <div class="flex items-center justify-center space-x-2">
-                                            <a href="<?= BASE_URL ?>/traslados/autorizar/<?= $t['id_traslado'] ?>/aprobar" class="px-2 py-1 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold rounded-lg text-[10px] transition-all flex items-center space-x-1 shadow-md shadow-emerald-600/10">
-                                                <i class="fa-solid fa-check"></i>
-                                                <span>Aprobar</span>
-                                            </a>
-                                            <a href="<?= BASE_URL ?>/traslados/autorizar/<?= $t['id_traslado'] ?>/rechazar" class="px-2 py-1 bg-rose-600 hover:bg-rose-500 text-white font-semibold rounded-lg text-[10px] transition-all flex items-center space-x-1 shadow-md shadow-rose-600/10">
-                                                <i class="fa-solid fa-xmark"></i>
-                                                <span>Rechazar</span>
-                                            </a>
-                                        </div>
+                                        <?php if ($role === 'Administrador'): ?>
+                                            <div class="flex items-center justify-center space-x-2">
+                                                <a href="<?= BASE_URL ?>/traslados/autorizar/<?= $t['id_traslado'] ?>/aprobar" class="px-2 py-1 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold rounded-lg text-[10px] transition-all flex items-center space-x-1 shadow-md shadow-emerald-600/10">
+                                                    <i class="fa-solid fa-check"></i>
+                                                    <span>Aprobar</span>
+                                                </a>
+                                                <a href="<?= BASE_URL ?>/traslados/autorizar/<?= $t['id_traslado'] ?>/rechazar" class="px-2 py-1 bg-rose-600 hover:bg-rose-500 text-white font-semibold rounded-lg text-[10px] transition-all flex items-center space-x-1 shadow-md shadow-rose-600/10">
+                                                    <i class="fa-solid fa-xmark"></i>
+                                                    <span>Rechazar</span>
+                                                </a>
+                                            </div>
+                                        <?php else: ?>
+                                            <span class="text-[10px] text-amber-400 font-semibold italic">Pendiente de Aprobación</span>
+                                        <?php endif; ?>
                                     <?php else: ?>
                                         <span class="text-[10px] text-slate-500">Autorizado por: <?= htmlspecialchars($t['autoriza_nombres'] . ' ' . $t['autoriza_apellidos']) ?></span>
                                     <?php endif; ?>

@@ -39,7 +39,16 @@ class Session {
 
     // Obtener un valor de sesión
     public static function get($key) {
-        return $_SESSION[$key] ?? null;
+        $val = $_SESSION[$key] ?? null;
+        // Normalización automática para roles (evita problemas con sesiones activas previas o alias)
+        if ($key === 'role_name' && is_string($val)) {
+            if (stripos($val, 'admin') !== false) return 'Administrador';
+            if (stripos($val, 'rector') !== false) return 'Rector';
+            if (stripos($val, 'almacen') !== false) return 'Almacenista';
+            if (stripos($val, 'contralor') !== false) return 'Contralor';
+            if (stripos($val, 'docente') !== false) return 'Docente';
+        }
+        return $val;
     }
 
     // Verificar si existe una clave de sesión
@@ -86,9 +95,20 @@ class Session {
             exit();
         }
 
-        // Asumimos que el nombre del rol se guarda en $_SESSION['role_name']
         $userRole = self::get('role_name');
-        if (!in_array($userRole, $allowedRoles)) {
+        
+        // Comprobar coincidencia exacta o normalizada
+        $hasAccess = in_array($userRole, $allowedRoles);
+        if (!$hasAccess) {
+            foreach ($allowedRoles as $role) {
+                if (stripos($userRole, $role) !== false || stripos($role, $userRole) !== false) {
+                    $hasAccess = true;
+                    break;
+                }
+            }
+        }
+
+        if (!$hasAccess) {
             // Si el rol no está permitido, redirigir al dashboard con error de denegado
             header("Location: " . BASE_URL . "/dashboard?forbidden=1");
             exit();

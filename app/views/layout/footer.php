@@ -14,19 +14,18 @@
 
 <!-- Lógica del Menú Desplegable en Móvil -->
 <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const sidebarToggle = document.getElementById('sidebar-toggle');
-        const mainSidebar = document.getElementById('main-sidebar');
+    document.addEventListener('DOMContentLoaded', function () {
+        var sidebarToggle = document.getElementById('sidebar-toggle');
+        var mainSidebar   = document.getElementById('main-sidebar');
 
         if (sidebarToggle && mainSidebar) {
-            sidebarToggle.addEventListener('click', (e) => {
+            sidebarToggle.addEventListener('click', function (e) {
                 e.stopPropagation();
                 mainSidebar.classList.toggle('-translate-x-full');
             });
 
-            // Cerrar el panel al hacer clic en cualquier parte fuera del sidebar
-            document.addEventListener('click', (e) => {
-                if (window.innerWidth < 768) { // Solo en resoluciones móviles
+            document.addEventListener('click', function (e) {
+                if (window.innerWidth < 768) {
                     if (!mainSidebar.contains(e.target) && !sidebarToggle.contains(e.target)) {
                         mainSidebar.classList.add('-translate-x-full');
                     }

@@ -1,7 +1,7 @@
 <?php
 require_once APP_ROOT . '/views/layout/header.php';
 $role = Session::get('role_name');
-$canEdit = in_array($role, ['Rector', 'Almacenista']);
+$canEdit = ($role === 'Administrador');
 ?>
 
 <div class="space-y-8">

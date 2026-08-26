@@ -8,6 +8,8 @@ class PrestamoController extends Controller {
         if (!Session::isLoggedIn()) {
             $this->redirect('auth/login');
         }
+        // Consulta para todos los roles autorizados
+        Session::requireRole(['Rector', 'Almacenista', 'Contralor', 'Docente', 'Administrador']);
     }
 
     /**
@@ -27,6 +29,7 @@ class PrestamoController extends Controller {
      * Crear solicitud de préstamo
      */
     public function crear() {
+        Session::requireRole(['Docente', 'Almacenista', 'Administrador']);
         $prestamoModel = $this->model('Prestamo');
         $compModel = $this->model('Computador');
         $userModel = $this->model('User');
@@ -102,8 +105,8 @@ class PrestamoController extends Controller {
      * Procesar Devolución (Retorno)
      */
     public function devolver($id) {
-        // Retorno solo realizado por Almacenista o Rector (auxiliar de retorno)
-        Session::requireRole(['Rector', 'Almacenista']);
+        // Retorno realizado por Almacenista, Rector o Administrador
+        Session::requireRole(['Rector', 'Almacenista', 'Administrador']);
         $id = (int)$id;
 
         $prestamoModel = $this->model('Prestamo');

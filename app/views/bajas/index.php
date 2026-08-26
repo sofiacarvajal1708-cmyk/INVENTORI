@@ -1,5 +1,6 @@
 <?php
 require_once APP_ROOT . '/views/layout/header.php';
+$role = Session::get('role_name');
 ?>
 
 <div class="space-y-6">
@@ -11,10 +12,12 @@ require_once APP_ROOT . '/views/layout/header.php';
             <p class="text-xs text-slate-400 mt-1">Control fiscal y ecológico de equipos dados de baja por obsolescencia o daño irreparable.</p>
         </div>
         
-        <a href="<?= BASE_URL ?>/bajas/crear" class="py-2.5 px-4 bg-gradient-to-r from-violet-600 to-cyan-500 hover:from-violet-500 hover:to-cyan-400 text-white font-semibold rounded-xl text-xs flex items-center space-x-2 shadow-lg shadow-violet-600/20 active:scale-95 transition-all">
-            <i class="fa-solid fa-circle-minus"></i>
-            <span>Registrar Baja RAEE</span>
-        </a>
+        <?php if ($role === 'Administrador'): ?>
+            <a href="<?= BASE_URL ?>/bajas/crear" class="py-2.5 px-4 bg-gradient-to-r from-violet-600 to-cyan-500 hover:from-violet-500 hover:to-cyan-400 text-white font-semibold rounded-xl text-xs flex items-center space-x-2 shadow-lg shadow-violet-600/20 active:scale-95 transition-all">
+                <i class="fa-solid fa-circle-minus"></i>
+                <span>Registrar Baja RAEE</span>
+            </a>
+        <?php endif; ?>
     </div>
 
     <!-- Historial de Bajas RAEE -->

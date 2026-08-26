@@ -8,7 +8,7 @@ class ComputadorController extends Controller {
         if (!Session::isLoggedIn()) {
             $this->redirect('auth/login');
         }
-        Session::requireRole(['Rector', 'Almacenista', 'Contralor Escolar']);
+        Session::requireRole(['Rector', 'Almacenista', 'Contralor', 'Docente', 'Administrador']);
     }
 
     /**
@@ -35,10 +35,10 @@ class ComputadorController extends Controller {
     }
 
     /**
-     * Formulario y proceso de registro
+     * Formulario y proceso de registro (SOLO ADMINISTRADOR)
      */
     public function crear() {
-        Session::requireRole(['Rector', 'Almacenista']);
+        Session::requireRole(['Administrador']);
         
         $compModel = $this->model('Computador');
         $salaModel = $this->model('Sala');
@@ -59,7 +59,7 @@ class ComputadorController extends Controller {
                         'Crear Computador',
                         'computadores',
                         $newId,
-                        "Se registró un computador modelo {$data['modelo']} con Serial {$data['numero_serial']} y Placa SED {$data['placa_sed']}."
+                        "El administrador registró un computador modelo {$data['modelo']} con Serial {$data['numero_serial']} y Placa SED {$data['placa_sed']}."
                     );
                     $_SESSION['flash_success'] = 'Computador registrado exitosamente.';
                     $this->redirect('computadores');
@@ -81,10 +81,10 @@ class ComputadorController extends Controller {
     }
 
     /**
-     * Formulario y proceso de edición
+     * Formulario y proceso de edición (SOLO ADMINISTRADOR)
      */
     public function editar($id) {
-        Session::requireRole(['Rector', 'Almacenista']);
+        Session::requireRole(['Administrador']);
         $id = (int)$id;
 
         $compModel = $this->model('Computador');
@@ -110,7 +110,7 @@ class ComputadorController extends Controller {
                         'Editar Computador',
                         'computadores',
                         $id,
-                        "Se actualizaron los datos del computador Serial: {$data['numero_serial']}."
+                        "El administrador actualizó los datos del computador Serial: {$data['numero_serial']}."
                     );
                     $_SESSION['flash_success'] = 'Computador actualizado exitosamente.';
                     $this->redirect('computadores');
@@ -195,22 +195,10 @@ class ComputadorController extends Controller {
 
         $componentes = $compModel->getComponents($id);
 
-        // Consultar depreciación de la vista para mostrar indicadores financieros
-        $depr = null;
-        try {
-            $db = Database::connect();
-            $stmtDepr = $db->prepare("SELECT * FROM vista_depreciacion_fse WHERE id_computador = :id LIMIT 1");
-            $stmtDepr->execute(['id' => $id]);
-            $depr = $stmtDepr->fetch();
-        } catch (Exception $e) {
-            // Ignorar si falla la vista
-        }
-
         $this->view('computadores/ficha', [
             'title' => 'Ficha Técnica de Activo',
             'computador' => $computador,
-            'componentes' => $componentes,
-            'depreciacion' => $depr
+            'componentes' => $componentes
         ]);
     }
 }

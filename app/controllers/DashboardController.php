@@ -14,77 +14,39 @@ class DashboardController extends Controller {
 
         $db = Database::connect();
 
-        // --- 1. DIMENSIÓN FINANCIERA ---
-        $totalComputadores = $db->query("SELECT COUNT(*) FROM computadores")->fetchColumn();
-        $valorHistoricoTotal = $db->query("SELECT SUM(valor_historico) FROM computadores")->fetchColumn() ?: 0;
-        
-        // Depreciación y Valor Neto en Libros consumiendo la vista `vista_depreciacion_fse`
-        $depreciacionAnualTotal = 0;
-        $valorNetoLibrosTotal = 0;
-        try {
-            $deprData = $db->query("SELECT SUM(depreciacion_anual_Da) as total_da, SUM(valor_neto_libros) as total_vnl FROM vista_depreciacion_fse")->fetch();
-            $depreciacionAnualTotal = $deprData['total_da'] ?: 0;
-            $valorNetoLibrosTotal = $deprData['total_vnl'] ?: 0;
-        } catch (Exception $e) {
-            // Manejar error en caso de que la vista tenga problemas
-        }
+        // --- 1. INDICADORES GENERALES DE EQUIPOS ---
+        $totalComputadores = $db->query("SELECT COUNT(*) FROM computadores")->fetchColumn() ?: 0;
+        $totalSalas = $db->query("SELECT COUNT(*) FROM salas")->fetchColumn() ?: 0;
+        $totalPrestamos = $db->query("SELECT COUNT(*) FROM prestamos")->fetchColumn() ?: 0;
+        $totalTraslados = $db->query("SELECT COUNT(*) FROM traslados")->fetchColumn() ?: 0;
+        $prestamosActivos = $db->query("SELECT COUNT(*) FROM prestamos WHERE estado_prestamo = 'Activo'")->fetchColumn() ?: 0;
+        $totalUsuarios = $db->query("SELECT COUNT(*) FROM usuarios")->fetchColumn() ?: 0;
 
-        // TCO = (Costo de Compra (historico) + Costo de Licencia (estimado en 5% del valor) + Mantenimiento (estimado en 15% del valor)) / Total Activos
-        // (Nota: Si no hay computadores, evitamos división por cero)
-        $tco = 0;
-        if ($totalComputadores > 0) {
-            $costoCompra = $valorHistoricoTotal;
-            $costoLicenciamiento = $valorHistoricoTotal * 0.05;
-            $costoMantenimiento = $valorHistoricoTotal * 0.15;
-            $tco = ($costoCompra + $costoLicenciamiento + $costoMantenimiento) / $totalComputadores;
-        }
-
-        // Índice de Obsolescencia Financiera = (Depreciación Acumulada / Valor Adquisición) * 100
-        // Depreciación acumulada = Valor Historico - Valor Neto en Libros
-        $depreciacionAcumulada = $valorHistoricoTotal - $valorNetoLibrosTotal;
-        $obsolescenciaFinanciera = 0;
-        if ($valorHistoricoTotal > 0) {
-            $obsolescenciaFinanciera = ($depreciacionAcumulada / $valorHistoricoTotal) * 100;
-        }
-
-        // Pérdida Fiscal por Siniestros (Equipos robados o dañados con préstamos marcados como 'Siniestro')
-        $perdidaSiniestros = 0;
-        try {
-            $perdidaSiniestros = $db->query("
-                SELECT SUM(c.valor_historico) 
-                FROM computadores c
-                JOIN prestamos p ON c.id_computador = p.id_computador
-                WHERE p.estado_prestamo = 'Siniestro'
-            ")->fetchColumn() ?: 0;
-        } catch (Exception $e) {}
-
-        // --- 2. DIMENSIÓN EDUCATIVA ---
+        // --- 2. DIMENSIÓN EDUCATIVA Y TIC ---
         $docentesTIC = $db->query("SELECT COUNT(*) FROM usuarios WHERE capacitacion_tic_aprobada = 1 AND id_rol = 3")->fetchColumn() ?: 0;
         $totalDocentes = $db->query("SELECT COUNT(*) FROM usuarios WHERE id_rol = 3")->fetchColumn() ?: 1;
         $tasaIdoneidadDocente = ($docentesTIC / $totalDocentes) * 100;
 
-        // TAM (Tasa de Aprovechamiento del Aula Móvil) - Basado en la cantidad de horas usadas vs jornada semanal
-        // Simulamos el indicador en 75% o según la relación de préstamos activos
-        $prestamosActivos = $db->query("SELECT COUNT(*) FROM prestamos WHERE estado_prestamo = 'Activo'")->fetchColumn() ?: 0;
-        $tam = 65.0 + min(35.0, $prestamosActivos * 5); // Simulación dinámica realista
+        // TAM (Tasa de Aprovechamiento del Aula)
+        $tam = 65.0 + min(35.0, $prestamosActivos * 5);
 
-        // Cobertura de Software Pedagógico Instalado (Computadores con licenciamiento educativo activo)
+        // Cobertura de Software Pedagógico Instalado
         $coberturaSoftware = 0;
         if ($totalComputadores > 0) {
             $compConSoft = $db->query("SELECT COUNT(*) FROM computadores WHERE licenciamiento IS NOT NULL AND licenciamiento != '' AND estado_activo != 'Obsoleto'")->fetchColumn() ?: 0;
             $coberturaSoftware = ($compConSoft / $totalComputadores) * 100;
         }
 
-        // --- 3. DIMENSIÓN AMBIENTAL ---
-        $bajasRAEE = $db->query("SELECT COUNT(*) FROM bajas_raee")->fetchColumn() ?: 0;
-        
-        // Salas en riesgo (que no cumplen con polo a tierra, estabilizador o estructurado)
-        $salasRiesgo = $db->query("SELECT COUNT(*) FROM salas WHERE tiene_polo_a_tierra = 0 OR tiene_estabilizador = 0")->fetchColumn() ?: 0;
-        $totalSalas = $db->query("SELECT COUNT(*) FROM salas")->fetchColumn() ?: 0;
+        // Tasa de Operatividad Técnica = (Equipos Operativos / Total) * 100
+        $tasaOperatividad = 0;
+        if ($totalComputadores > 0) {
+            $compOperativos = $db->query("SELECT COUNT(*) FROM computadores WHERE estado_activo = 'Operativo'")->fetchColumn() ?: 0;
+            $tasaOperatividad = ($compOperativos / $totalComputadores) * 100;
+        }
 
-        // Ahorro de papel estimado (cada préstamo/traslado en línea ahorra 2 hojas de papel de acta física)
-        $totalPrestamos = $db->query("SELECT COUNT(*) FROM prestamos")->fetchColumn() ?: 0;
-        $totalTraslados = $db->query("SELECT COUNT(*) FROM traslados")->fetchColumn() ?: 0;
+        // --- 3. DIMENSIÓN AMBIENTAL Y CERO PAPEL ---
+        $bajasRAEE = $db->query("SELECT COUNT(*) FROM bajas_raee")->fetchColumn() ?: 0;
+        $salasRiesgo = $db->query("SELECT COUNT(*) FROM salas WHERE tiene_polo_a_tierra = 0 OR tiene_estabilizador = 0")->fetchColumn() ?: 0;
         $ahorroHojasPapel = ($totalPrestamos + $totalTraslados) * 2;
 
         // --- 4. DATOS PARA GRÁFICOS (ESTADO DE ACTIVOS) ---
@@ -112,20 +74,19 @@ class DashboardController extends Controller {
         $this->view('dashboard/index', [
             'title' => 'Panel de Control',
             'stats' => [
-                'totalComputadores' => $totalComputadores,
-                'valorHistoricoTotal' => $valorHistoricoTotal,
-                'depreciacionAnualTotal' => $depreciacionAnualTotal,
-                'valorNetoLibrosTotal' => $valorNetoLibrosTotal,
-                'tco' => $tco,
-                'obsolescenciaFinanciera' => $obsolescenciaFinanciera,
-                'perdidaSiniestros' => $perdidaSiniestros,
+                'totalComputadores'    => $totalComputadores,
+                'prestamosActivos'     => $prestamosActivos,
+                'totalPrestamos'       => $totalPrestamos,
+                'totalTraslados'       => $totalTraslados,
+                'tasaOperatividad'     => $tasaOperatividad,
                 'tasaIdoneidadDocente' => $tasaIdoneidadDocente,
-                'tam' => $tam,
-                'coberturaSoftware' => $coberturaSoftware,
-                'bajasRAEE' => $bajasRAEE,
-                'salasRiesgo' => $salasRiesgo,
-                'totalSalas' => $totalSalas,
-                'ahorroHojasPapel' => $ahorroHojasPapel
+                'tam'                  => $tam,
+                'coberturaSoftware'    => $coberturaSoftware,
+                'bajasRAEE'            => $bajasRAEE,
+                'salasRiesgo'          => $salasRiesgo,
+                'totalSalas'           => $totalSalas,
+                'totalUsuarios'        => $totalUsuarios,
+                'ahorroHojasPapel'     => $ahorroHojasPapel
             ],
             'chartData' => $chartData,
             'recentLogs' => $recentLogs

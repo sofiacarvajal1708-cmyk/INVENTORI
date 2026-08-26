@@ -8,8 +8,8 @@ class TrasladoController extends Controller {
         if (!Session::isLoggedIn()) {
             $this->redirect('auth/login');
         }
-        // Restringir a Rector y Almacenista según las directrices (División Administrativa)
-        Session::requireRole(['Rector', 'Almacenista']);
+        // Consulta para Rector, Almacenista y Administrador
+        Session::requireRole(['Rector', 'Almacenista', 'Administrador']);
     }
 
     /**
@@ -26,9 +26,11 @@ class TrasladoController extends Controller {
     }
 
     /**
-     * Solicitar un traslado de sala
+     * Solicitar un traslado de sala (SOLO ADMINISTRADOR)
      */
     public function crear() {
+        Session::requireRole(['Administrador']);
+
         $trasladoModel = $this->model('Traslado');
         $compModel = $this->model('Computador');
         $salaModel = $this->model('Sala');
@@ -48,7 +50,7 @@ class TrasladoController extends Controller {
                         'Solicitar Traslado',
                         'traslados',
                         $data['id_computador'],
-                        "Se solicitó el traslado del computador ID {$data['id_computador']} hacia la sala ID {$data['id_sala_destino']}."
+                        "El administrador solicitó el traslado del computador ID {$data['id_computador']} hacia la sala ID {$data['id_sala_destino']}."
                     );
                     $_SESSION['flash_success'] = 'Solicitud de traslado registrada. Pendiente de aprobación.';
                     $this->redirect('traslados');
@@ -70,9 +72,10 @@ class TrasladoController extends Controller {
     }
 
     /**
-     * Procesar Autorización (Aprobar / Rechazar)
+     * Procesar Autorización (Aprobar / Rechazar) (SOLO ADMINISTRADOR)
      */
     public function autorizar($id, $action) {
+        Session::requireRole(['Administrador']);
         $id = (int)$id;
         $action = Security::sanitize($action); // 'aprobar' o 'rechazar'
 

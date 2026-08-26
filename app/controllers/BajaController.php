@@ -8,7 +8,8 @@ class BajaController extends Controller {
         if (!Session::isLoggedIn()) {
             $this->redirect('auth/login');
         }
-        Session::requireRole(['Rector', 'Almacenista']);
+        // Consulta para Rector, Almacenista, Contralor y Administrador
+        Session::requireRole(['Rector', 'Almacenista', 'Contralor', 'Administrador']);
     }
 
     /**
@@ -25,9 +26,10 @@ class BajaController extends Controller {
     }
 
     /**
-     * Crear una baja RAEE
+     * Crear una baja RAEE (SOLO ADMINISTRADOR)
      */
     public function crear() {
+        Session::requireRole(['Administrador']);
         $bajaModel = $this->model('Baja');
         $compModel = $this->model('Computador');
 

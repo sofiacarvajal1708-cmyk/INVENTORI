@@ -1,29 +1,82 @@
-/* Variables globales y fuentes */
+/* =========================================================
+   INVENTORI BASAMA - SISTEMA DE ESTILOS INSTITUCIONAL
+   ========================================================= */
+
+/* Tipografías Globales */
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap');
 
+/* -------- Tokens de tema (dark por defecto) -------- */
 :root {
-    --bg-dark: #090a15;
-    --bg-card: rgba(18, 20, 38, 0.55);
-    --border-glass: rgba(255, 255, 255, 0.08);
-    --border-glass-glow: rgba(109, 40, 217, 0.3);
-    --text-primary: #f1f5f9;
+    /* Fondo general */
+    --bg-page:   #090a15;
+    --bg-dark:   #090a15;
+    /* Cards / paneles */
+    --bg-card:   rgba(18, 20, 38, 0.65);
+    --bg-card-solid: #121426;
+    /* Bordes */
+    --border-glass:      rgba(255, 255, 255, 0.08);
+    --border-glass-glow: rgba(59, 130, 246, 0.4);
+    /* Textos */
+    --text-primary:   #f1f5f9;
     --text-secondary: #94a3b8;
-    --glow-purple: rgba(139, 92, 246, 0.15);
+    --text-muted:     #64748b;
+    /* Sombras / glows */
+    --glow-blue:    rgba(59, 130, 246, 0.2);
+    --glow-purple:  rgba(139, 92, 246, 0.2);
     --glow-emerald: rgba(16, 185, 129, 0.15);
+    /* Inputs */
+    --input-bg:      rgba(10, 12, 28, 0.75);
+    --input-color:   #e2e8f0;
+    --input-border:  rgba(255, 255, 255, 0.10);
+    /* Scrollbar */
+    --scrollbar-track: #0b0c19;
+    --scrollbar-thumb: rgba(59, 130, 246, 0.4);
+}
+
+/* -------- Overrides para MODO CLARO -------- */
+:root.light {
+    --bg-page:   #f1f5f9;
+    --bg-dark:   #f1f5f9;
+    --bg-card:   rgba(255, 255, 255, 0.88);
+    --bg-card-solid: #ffffff;
+    --border-glass:      rgba(0, 0, 0, 0.08);
+    --border-glass-glow: rgba(99, 102, 241, 0.4);
+    --text-primary:   #0f172a;
+    --text-secondary: #475569;
+    --text-muted:     #94a3b8;
+    --glow-blue:    rgba(59, 130, 246, 0.08);
+    --glow-purple:  rgba(139, 92, 246, 0.08);
+    --glow-emerald: rgba(16, 185, 129, 0.06);
+    --input-bg:      #ffffff;
+    --input-color:   #0f172a;
+    --input-border:  rgba(0, 0, 0, 0.15);
+    --scrollbar-track: #e2e8f0;
+    --scrollbar-thumb: rgba(99, 102, 241, 0.4);
 }
 
 /* Estilo general del cuerpo */
 body {
-    background-color: var(--bg-dark);
+    background-color: var(--bg-page);
     color: var(--text-primary);
     font-family: 'Outfit', 'Inter', sans-serif;
     overflow-x: hidden;
     min-height: 100vh;
+    background-attachment: fixed;
+    margin: 0;
+    padding: 0;
+    transition: background-color 0.35s ease, color 0.35s ease;
+}
+:root:not(.light) body {
     background-image: 
-        radial-gradient(at 10% 20%, rgba(99, 102, 241, 0.1) 0px, transparent 50%),
+        radial-gradient(at 10% 20%, rgba(59, 130, 246, 0.1) 0px, transparent 50%),
         radial-gradient(at 90% 10%, rgba(139, 92, 246, 0.08) 0px, transparent 50%),
         radial-gradient(at 50% 80%, rgba(16, 185, 129, 0.05) 0px, transparent 50%);
-    background-attachment: fixed;
+}
+:root.light body {
+    background-image:
+        radial-gradient(at 10% 20%, rgba(59, 130, 246, 0.05) 0px, transparent 50%),
+        radial-gradient(at 90% 10%, rgba(139, 92, 246, 0.04) 0px, transparent 50%),
+        radial-gradient(at 50% 80%, rgba(16, 185, 129, 0.03) 0px, transparent 50%);
 }
 
 /* Efectos de Glassmorphism */
@@ -32,20 +85,35 @@ body {
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
     border: 1px solid var(--border-glass);
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    transition: background 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease;
 }
 
 .glass-panel-hover {
-    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .glass-panel-hover:hover {
-    transform: translateY(-4px);
+    transform: translateY(-3px);
     border-color: var(--border-glass-glow);
-    box-shadow: 0 12px 40px 0 rgba(109, 40, 217, 0.15);
+    box-shadow: 0 12px 40px 0 var(--glow-blue);
 }
 
-/* Animaciones y transiciones */
+/* Chips de roles interactivos */
+.role-chip {
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+}
+.role-chip:hover {
+    transform: translateY(-2px);
+    border-color: rgba(59, 130, 246, 0.4);
+    background: rgba(255, 255, 255, 0.08);
+}
+.role-chip:active {
+    transform: scale(0.97);
+}
+
+/* Animaciones y Transiciones */
 .transition-glow {
     transition: all 0.3s ease;
 }
@@ -58,21 +126,18 @@ body {
     width: 8px;
     height: 8px;
 }
-
 ::-webkit-scrollbar-track {
-    background: #0b0c19;
+    background: var(--scrollbar-track);
 }
-
 ::-webkit-scrollbar-thumb {
-    background: rgba(109, 40, 217, 0.4);
+    background: var(--scrollbar-thumb);
     border-radius: 4px;
 }
-
 ::-webkit-scrollbar-thumb:hover {
-    background: rgba(139, 92, 246, 0.7);
+    background: rgba(99, 102, 241, 0.7);
 }
 
-/* Animación de fondo para el Login */
+/* Fondo dinámico animado */
 @keyframes gradientBG {
     0% { background-position: 0% 50%; }
     50% { background-position: 100% 50%; }
@@ -80,9 +145,23 @@ body {
 }
 
 .animated-bg {
-    background: linear-gradient(-45deg, #090a15, #120e2e, #0c1c1a, #050b14);
+    background: linear-gradient(-45deg, #070913, #0d122b, #091720, #050811);
     background-size: 400% 400%;
-    animation: gradientBG 15s ease infinite;
+    animation: gradientBG 18s ease infinite;
+}
+
+/* Efecto de Pulso y Glow */
+.pulse-glow {
+    animation: pulseGlow 3s infinite alternate;
+}
+
+@keyframes pulseGlow {
+    0% {
+        box-shadow: 0 0 5px rgba(59, 130, 246, 0.2);
+    }
+    100% {
+        box-shadow: 0 0 20px rgba(99, 102, 241, 0.5);
+    }
 }
 
 /* Pad de firma digital o canvas */
@@ -93,16 +172,271 @@ body {
     cursor: crosshair;
 }
 
-/* Efectos de pulso y glow */
-.pulse-glow {
-    animation: pulseGlow 3s infinite alternate;
+/* Layout específico para el Login Split */
+.login-split-container {
+    display: flex;
+    flex-direction: row;
+    min-height: 100vh;
+    width: 100%;
 }
 
-@keyframes pulseGlow {
-    0% {
-        box-shadow: 0 0 5px rgba(109, 40, 217, 0.2);
+.login-split-left {
+    flex: 1;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2.5rem;
+    box-sizing: border-box;
+}
+
+.login-split-right {
+    flex: 1;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    padding: 2.5rem;
+    box-sizing: border-box;
+    overflow-y: auto;
+}
+
+@media (max-width: 768px) {
+    .login-split-container {
+        flex-direction: column;
     }
-    100% {
-        box-shadow: 0 0 20px rgba(139, 92, 246, 0.5);
+    .login-split-left {
+        display: none;
+    }
+    .login-split-right {
+        width: 100%;
+        padding: 1.5rem;
     }
 }
+
+/* =========================================================
+   INPUTS, SELECTS, TEXTAREAS — TEMA OSCURO GLOBAL
+   ========================================================= */
+
+/* Estilos base para todos los controles de formulario */
+input,
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+input[type="search"],
+input[type="date"],
+input[type="tel"],
+select,
+textarea {
+    background-color: var(--input-bg) !important;
+    color: var(--input-color) !important;
+    border: 1px solid var(--input-border) !important;
+    border-radius: 0.6rem;
+    outline: none;
+    transition: border-color .2s, box-shadow .2s, background-color .3s, color .3s;
+}
+
+/* Placeholder */
+input::placeholder,
+textarea::placeholder {
+    color: rgba(148, 163, 184, 0.55) !important;
+}
+
+/* Focus */
+input:focus,
+select:focus,
+textarea:focus {
+    border-color: rgba(99, 102, 241, 0.55) !important;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.12) !important;
+    background-color: var(--input-bg) !important;
+}
+
+/* Opciones del select */
+select option {
+    background-color: #0d1024 !important;
+    color: #e2e8f0 !important;
+}
+
+/* Forzar color en select cuando tiene valor seleccionado */
+select:not([multiple]) {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%2394a3b8' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3E%3C/svg%3E") !important;
+    background-repeat: no-repeat !important;
+    background-position: right 0.6rem center !important;
+    background-size: 1.2rem !important;
+    padding-right: 2.2rem !important;
+}
+
+/* Hover suave */
+input:hover,
+select:hover,
+textarea:hover {
+    border-color: rgba(255, 255, 255, 0.18) !important;
+}
+
+/* Auto-fill del navegador (Chrome/Edge) — evita fondo blanco */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus {
+    -webkit-text-fill-color: #e2e8f0 !important;
+    -webkit-box-shadow: 0 0 0px 1000px rgba(10, 12, 28, 0.9) inset !important;
+    transition: background-color 9999s ease-in-out 0s;
+}
+
+/* Dismiss automático de alertas flash */
+.auto-dismiss {
+    animation: fadeOutAlert 0.5s ease 4s forwards;
+}
+@keyframes fadeOutAlert {
+    to { opacity: 0; max-height: 0; padding: 0; margin: 0; overflow: hidden; }
+}
+
+/* =========================================================
+   MODO CLARO — todas las reglas bajo :root.light
+   Las CSS variables ya se actualizan en :root.light (arriba).
+   Aquí corregimos clases de Tailwind hardcodeadas en el HTML.
+   ========================================================= */
+
+/* --- Textos de Tailwind hardcodeados --- */
+:root.light .text-white      { color: #0f172a !important; }
+:root.light .text-slate-50   { color: #1e293b !important; }
+:root.light .text-slate-100  { color: #1e293b !important; }
+:root.light .text-slate-200  { color: #334155 !important; }
+:root.light .text-slate-300  { color: #334155 !important; }
+:root.light .text-slate-400  { color: #475569 !important; }
+:root.light .text-slate-500  { color: #64748b !important; }
+:root.light .text-slate-600  { color: #475569 !important; }
+:root.light .text-gray-300   { color: #374151 !important; }
+:root.light .text-gray-400   { color: #4b5563 !important; }
+:root.light .text-gray-500   { color: #6b7280 !important; }
+
+/* Títulos de página con gradiente — hacerlos visibles */
+:root.light h1.bg-clip-text,
+:root.light .bg-clip-text { color: #1e293b !important; -webkit-text-fill-color: #1e293b !important; }
+/* Subtítulos / párrafos de contexto que suelen ser text-slate-400 o similares */
+:root.light p { color: inherit; }
+
+/* --- Sidebar --- */
+:root.light #main-sidebar {
+    background: rgba(255,255,255,0.97) !important;
+    border-right-color: rgba(0,0,0,0.08) !important;
+}
+:root.light #main-sidebar a            { color: #334155 !important; }
+:root.light #main-sidebar a:hover      { background: rgba(0,0,0,0.05) !important; color: #0f172a !important; }
+:root.light #main-sidebar span         { color: #475569 !important; }
+:root.light #main-sidebar .font-bold,
+:root.light #main-sidebar strong       { color: #0f172a !important; }
+:root.light #main-sidebar .text-xs     { color: #64748b !important; }
+/* Iconos en sidebar */
+:root.light #main-sidebar i            { color: #475569 !important; }
+
+/* --- Header (navbar superior) --- */
+:root.light header.glass-panel {
+    background: rgba(255,255,255,0.95) !important;
+    border-bottom-color: rgba(0,0,0,0.08) !important;
+}
+:root.light header .text-white   { color: #0f172a !important; }
+:root.light header .text-slate-400 { color: #64748b !important; }
+
+/* --- Paneles de vidrio generales --- */
+:root.light .glass-panel {
+    background: rgba(255,255,255,0.92) !important;
+    border-color: rgba(0,0,0,0.08) !important;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.06) !important;
+}
+
+/* --- Tarjetas Dashboard --- */
+:root.light .kpi-card {
+    background: #ffffff !important;
+    border-color: rgba(0,0,0,0.08) !important;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.04) !important;
+}
+:root.light .section-card {
+    background: #ffffff !important;
+    border-color: rgba(0,0,0,0.08) !important;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.04) !important;
+}
+:root.light .stat-mini {
+    background: #f8fafc !important;
+    border-color: rgba(0,0,0,0.08) !important;
+}
+:root.light .action-btn {
+    background: #f8fafc !important;
+    border-color: rgba(0,0,0,0.10) !important;
+    color: #1e293b !important;
+}
+:root.light .action-btn:hover {
+    background: #ffffff !important;
+    border-color: rgba(99,102,241,0.5) !important;
+    color: #0f172a !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.06) !important;
+}
+:root.light .action-btn .btn-icon { color: inherit !important; }
+
+/* --- Tablas --- */
+:root.light table thead tr  { background: rgba(241,245,249,0.9) !important; border-color: rgba(0,0,0,0.08) !important; }
+:root.light table thead th  { color: #475569 !important; }
+:root.light table tbody tr  { border-color: rgba(0,0,0,0.05) !important; color: #1e293b !important; }
+:root.light table tbody tr:hover { background: rgba(248,250,252,0.9) !important; }
+:root.light table tbody td  { color: #1e293b !important; }
+:root.light table tbody td span { color: inherit !important; }
+
+/* --- Formularios (labels) --- */
+:root.light label { color: #334155 !important; }
+:root.light legend { color: #1e293b !important; }
+
+/* --- Badges / pills de estado — preservar su color propio --- */
+:root.light .text-emerald-400 { color: #059669 !important; }
+:root.light .text-emerald-300 { color: #10b981 !important; }
+:root.light .text-yellow-400  { color: #d97706 !important; }
+:root.light .text-rose-400    { color: #e11d48 !important; }
+:root.light .text-rose-300    { color: #f43f5e !important; }
+:root.light .text-indigo-400  { color: #4f46e5 !important; }
+:root.light .text-violet-400  { color: #7c3aed !important; }
+:root.light .text-cyan-400    { color: #0891b2 !important; }
+:root.light .text-blue-400    { color: #2563eb !important; }
+:root.light .text-amber-400   { color: #d97706 !important; }
+
+/* --- Fondos de badges en modo claro --- */
+:root.light .bg-emerald-500\/10,
+:root.light [class*="bg-emerald"] { background-color: rgba(16,185,129,0.12) !important; }
+:root.light .bg-rose-500\/10,
+:root.light [class*="bg-rose-9"]  { background-color: rgba(244,63,94,0.10)  !important; }
+
+/* --- Botón de tema --- */
+:root.light #global-theme-toggle {
+    background: rgba(0,0,0,0.06) !important;
+    border-color: rgba(0,0,0,0.12) !important;
+    color: #475569 !important;
+}
+:root.light #global-theme-toggle:hover {
+    background: rgba(0,0,0,0.10) !important;
+    color: #0f172a !important;
+}
+
+/* --- Font Mono (seriales, IDs) --- */
+:root.light .font-mono { color: #334155 !important; }
+
+/* --- Texto transparente (gradient titles) en modo claro --- */
+:root.light [class*="text-transparent"] {
+    -webkit-text-fill-color: #1e293b !important;
+    color: #1e293b !important;
+    background: none !important;
+}
+
+/* Footer */
+:root.light footer.glass-panel { color: #64748b !important; }
+
+/* Transiciones suaves en todos los elementos */
+*, *::before, *::after {
+    transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease;
+}
+/* Excluir transiciones en elementos animados (no interferir) */
+.auto-dismiss, [class*="animate-"] {
+    transition: none !important;
+}
+

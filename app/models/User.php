@@ -38,6 +38,140 @@ class User extends Model {
     }
 
     /**
+     * Listar todos los usuarios para la gestión de administración
+     */
+    public function getAll($filters = []) {
+        $sql = "
+            SELECT u.*, r.nombre_rol as role_name 
+            FROM usuarios u 
+            JOIN roles r ON u.id_rol = r.id_rol 
+            WHERE 1=1
+        ";
+        $params = [];
+
+        if (!empty($filters['rol'])) {
+            $sql .= " AND u.id_rol = :rol";
+            $params['rol'] = $filters['rol'];
+        }
+
+        if (!empty($filters['estado'])) {
+            $sql .= " AND u.estado_usuario = :estado";
+            $params['estado'] = $filters['estado'];
+        }
+
+        if (!empty($filters['search'])) {
+            $sql .= " AND (u.nombres LIKE :search OR u.apellidos LIKE :search OR u.email LIKE :search OR u.documento_identidad LIKE :search)";
+            $params['search'] = '%' . $filters['search'] . '%';
+        }
+
+        $sql .= " ORDER BY u.id_usuario DESC";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($params);
+        return $stmt->fetchAll();
+    }
+
+    /**
+     * Obtener todos los roles disponibles
+     */
+    public function getRoles() {
+        $stmt = $this->db->query("SELECT * FROM roles ORDER BY id_rol ASC");
+        return $stmt->fetchAll();
+    }
+
+    /**
+     * Crear un nuevo usuario
+     */
+    public function create($data) {
+        $stmt = $this->db->prepare("
+            INSERT INTO usuarios 
+            (documento_identidad, nombres, apellidos, email, password_hash, id_rol, capacitacion_tic_aprobada, horas_asistencia_tic, estado_usuario) 
+            VALUES 
+            (:doc, :nombres, :apellidos, :email, :pass, :rol, :tic, :horas, :estado)
+        ");
+
+        $stmt->execute([
+            'doc' => $data['documento_identidad'],
+            'nombres' => $data['nombres'],
+            'apellidos' => $data['apellidos'],
+            'email' => $data['email'],
+            'pass' => password_hash($data['password'], PASSWORD_BCRYPT),
+            'rol' => $data['id_rol'],
+            'tic' => !empty($data['capacitacion_tic_aprobada']) ? 1 : 0,
+            'horas' => !empty($data['horas_asistencia_tic']) ? (int)$data['horas_asistencia_tic'] : 0,
+            'estado' => $data['estado_usuario'] ?? 'Activo'
+        ]);
+
+        return $this->db->lastInsertId();
+    }
+
+    /**
+     * Actualizar datos del usuario
+     */
+    public function update($id, $data) {
+        $stmt = $this->db->prepare("
+            UPDATE usuarios 
+            SET documento_identidad = :doc,
+                nombres = :nombres, 
+                apellidos = :apellidos, 
+                email = :email, 
+                id_rol = :rol, 
+                capacitacion_tic_aprobada = :tic, 
+                horas_asistencia_tic = :horas, 
+                estado_usuario = :estado
+            WHERE id_usuario = :id
+        ");
+
+        return $stmt->execute([
+            'id' => $id,
+            'doc' => $data['documento_identidad'],
+            'nombres' => $data['nombres'],
+            'apellidos' => $data['apellidos'],
+            'email' => $data['email'],
+            'rol' => $data['id_rol'],
+            'tic' => !empty($data['capacitacion_tic_aprobada']) ? 1 : 0,
+            'horas' => !empty($data['horas_asistencia_tic']) ? (int)$data['horas_asistencia_tic'] : 0,
+            'estado' => $data['estado_usuario'] ?? 'Activo'
+        ]);
+    }
+
+    /**
+     * Actualizar contraseña de un usuario
+     */
+    public function updatePassword($id, $newPassword) {
+        $stmt = $this->db->prepare("
+            UPDATE usuarios 
+            SET password_hash = :pass 
+            WHERE id_usuario = :id
+        ");
+
+        return $stmt->execute([
+            'id' => $id,
+            'pass' => password_hash($newPassword, PASSWORD_BCRYPT)
+        ]);
+    }
+
+    /**
+     * Alternar estado Activo / Inactivo
+     */
+    public function toggleStatus($id) {
+        $stmt = $this->db->prepare("
+            UPDATE usuarios 
+            SET estado_usuario = IF(estado_usuario = 'Activo', 'Inactivo', 'Activo') 
+            WHERE id_usuario = :id
+        ");
+        return $stmt->execute(['id' => $id]);
+    }
+
+    /**
+     * Eliminar usuario
+     */
+    public function delete($id) {
+        $stmt = $this->db->prepare("DELETE FROM usuarios WHERE id_usuario = :id");
+        return $stmt->execute(['id' => $id]);
+    }
+
+    /**
      * Listar todos los docentes para los préstamos
      */
     public function getDocentes() {
@@ -66,7 +200,8 @@ class User extends Model {
                 ['id' => 1, 'name' => 'Rector', 'desc' => 'Ordenador de gasto y responsable máximo del inventario.'],
                 ['id' => 2, 'name' => 'Almacenista', 'desc' => 'Administración física, catálogo, aprobación de traslados e infraestructura.'],
                 ['id' => 3, 'name' => 'Docente', 'desc' => 'Solicitud de préstamos de terminales y planeación pedagógica.'],
-                ['id' => 4, 'name' => 'Contralor Escolar', 'desc' => 'Veeduría ciudadana y acceso a reportes públicos de transparencia.']
+                ['id' => 4, 'name' => 'Contralor', 'desc' => 'Veeduría ciudadana y acceso a reportes públicos de transparencia.'],
+                ['id' => 5, 'name' => 'Administrador', 'desc' => 'Superadministrador con control total del sistema, gestión de usuarios y CRUD centralizado.']
             ];
 
             $insertRol = $this->db->prepare("INSERT INTO roles (id_rol, nombre_rol, descripcion) VALUES (:id, :name, :desc)");
@@ -100,6 +235,11 @@ class User extends Model {
                     'doc' => '1005', 'nombres' => 'Mateo', 'apellidos' => 'Restrepo',
                     'email' => 'contralor@santa.edu.co', 'pass' => password_hash('contralor123', PASSWORD_DEFAULT),
                     'rol' => 4, 'tic' => 0, 'horas' => 0
+                ],
+                [
+                    'doc' => '10000000', 'nombres' => 'Administrador', 'apellidos' => 'General',
+                    'email' => 'admin@santa.edu.co', 'pass' => password_hash('admin123', PASSWORD_DEFAULT),
+                    'rol' => 5, 'tic' => 1, 'horas' => 100
                 ]
             ];
 

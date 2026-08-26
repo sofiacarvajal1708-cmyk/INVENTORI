@@ -1,296 +1,577 @@
 <?php
 require_once APP_ROOT . '/views/layout/header.php';
 $role = Session::get('role_name');
+
+// ── Configuración visual POR ROL (claves deben coincidir con nombre_rol en BD) ───────────────────
+$roleConfig = [
+    'Administrador' => [
+        'color'        => '#a855f7',
+        'colorDim'     => 'rgba(168,85,247,0.15)',
+        'colorBorder'  => 'rgba(168,85,247,0.35)',
+        'colorGlow'    => 'rgba(168,85,247,0.08)',
+        'bannerGrad'   => 'linear-gradient(135deg, rgba(88,28,135,0.55) 0%, rgba(126,34,206,0.2) 60%, transparent 100%)',
+        'icon'         => 'fa-solid fa-crown',
+        'label'        => 'ADMINISTRADOR',
+        'subtitle'     => 'Control maestro del sistema, gestión de usuarios, seguridad de contraseñas y administración de inventario.',
+    ],
+    'Rector' => [
+        'color'        => '#8b5cf6',
+        'colorDim'     => 'rgba(139,92,246,0.15)',
+        'colorBorder'  => 'rgba(139,92,246,0.35)',
+        'colorGlow'    => 'rgba(139,92,246,0.08)',
+        'bannerGrad'   => 'linear-gradient(135deg, rgba(76,29,149,0.45) 0%, rgba(49,46,129,0.2) 60%, transparent 100%)',
+        'icon'         => 'fa-solid fa-user-tie',
+        'label'        => 'RECTOR',
+        'subtitle'     => 'Supervisión integral, control visual del inventario y veeduría de préstamos docentes.',
+    ],
+    'Almacenista' => [
+        'color'        => '#06b6d4',
+        'colorDim'     => 'rgba(6,182,212,0.15)',
+        'colorBorder'  => 'rgba(6,182,212,0.35)',
+        'colorGlow'    => 'rgba(6,182,212,0.08)',
+        'bannerGrad'   => 'linear-gradient(135deg, rgba(8,51,68,0.55) 0%, rgba(7,89,133,0.2) 60%, transparent 100%)',
+        'icon'         => 'fa-solid fa-boxes-stacked',
+        'label'        => 'ALMACENISTA',
+        'subtitle'     => 'Consulta y supervisión física del inventario de equipos y salas de la institución.',
+    ],
+    'Docente' => [
+        'color'        => '#3b82f6',
+        'colorDim'     => 'rgba(59,130,246,0.15)',
+        'colorBorder'  => 'rgba(59,130,246,0.35)',
+        'colorGlow'    => 'rgba(59,130,246,0.08)',
+        'bannerGrad'   => 'linear-gradient(135deg, rgba(23,37,84,0.55) 0%, rgba(30,58,138,0.2) 60%, transparent 100%)',
+        'icon'         => 'fa-solid fa-chalkboard-user',
+        'label'        => 'DOCENTE',
+        'subtitle'     => 'Solicitud de préstamos de terminales y planeación de experiencias pedagógicas.',
+    ],
+    'Contralor' => [
+        'color'        => '#f59e0b',
+        'colorDim'     => 'rgba(245,158,11,0.15)',
+        'colorBorder'  => 'rgba(245,158,11,0.35)',
+        'colorGlow'    => 'rgba(245,158,11,0.08)',
+        'bannerGrad'   => 'linear-gradient(135deg, rgba(69,26,3,0.55) 0%, rgba(120,53,15,0.2) 60%, transparent 100%)',
+        'icon'         => 'fa-solid fa-scale-balanced',
+        'label'        => 'CONTRALOR',
+        'subtitle'     => 'Control social, auditoría del patrimonio tecnológico y transparencia institucional.',
+    ],
+];
+
+// Si el rol no está en el mapa, usar un perfil genérico con el nombre real del rol
+$rc = $roleConfig[$role] ?? [
+    'color'       => '#64748b',
+    'colorDim'    => 'rgba(100,116,139,0.15)',
+    'colorBorder' => 'rgba(100,116,139,0.35)',
+    'colorGlow'   => 'rgba(100,116,139,0.08)',
+    'bannerGrad'  => 'linear-gradient(135deg, rgba(15,23,42,0.55) 0%, rgba(30,41,59,0.2) 60%, transparent 100%)',
+    'icon'        => 'fa-solid fa-user',
+    'label'       => strtoupper($role),
+    'subtitle'    => 'Bienvenido al sistema de inventario tecnológico institucional.',
+];
 ?>
 
-<!-- Biblioteca de Gráficos Chart.js -->
+<!-- Chart.js -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<!-- Estilos del dashboard por rol -->
+<style>
+:root {
+    --role-color: <?= $rc['color'] ?>;
+    --role-dim:   <?= $rc['colorDim'] ?>;
+    --role-border:<?= $rc['colorBorder'] ?>;
+    --role-glow:  <?= $rc['colorGlow'] ?>;
+}
+.role-icon-box {
+    background: var(--role-dim);
+    border: 1.5px solid var(--role-border);
+    color: var(--role-color);
+}
+.role-badge {
+    background: var(--role-dim);
+    border: 1px solid var(--role-border);
+    color: var(--role-color);
+}
+.role-banner {
+    background: <?= $rc['bannerGrad'] ?>;
+    border-left: 4px solid var(--role-color);
+}
+.role-btn-primary {
+    background: var(--role-dim);
+    border: 1px solid var(--role-border);
+    color: #e2e8f0;
+}
+.role-btn-primary:hover {
+    background: rgba(255,255,255,0.06);
+    border-color: var(--role-color);
+    color: #fff;
+}
+.role-btn-secondary:hover {
+    background: var(--role-glow);
+    border-color: var(--role-border);
+    color: #fff;
+}
+.role-stat-block {
+    background: var(--role-glow);
+    border: 1px solid var(--role-border);
+}
+.kpi-card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 1rem;
+    padding: 1.1rem 1.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: border-color .2s, transform .2s;
+}
+.kpi-card:hover { border-color: rgba(255,255,255,0.14); transform: translateY(-2px); }
+.kpi-icon {
+    width: 2.75rem; height: 2.75rem;
+    border-radius: .75rem;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.1rem;
+    transition: transform .2s;
+}
+.kpi-card:hover .kpi-icon { transform: scale(1.12); }
+.section-card {
+    background: rgba(255,255,255,0.025);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 1rem;
+    padding: 1.25rem;
+}
+.action-btn {
+    display: flex; align-items: center; gap: .75rem;
+    padding: .7rem 1rem;
+    border-radius: .75rem;
+    font-size: .8rem;
+    color: #cbd5e1;
+    border: 1px solid rgba(255,255,255,0.07);
+    background: rgba(255,255,255,0.03);
+    transition: all .2s;
+    text-decoration: none;
+}
+.action-btn:hover { background: var(--role-glow); border-color: var(--role-border); color:#fff; }
+.action-btn.primary { background: var(--role-dim); border-color: var(--role-border); }
+.action-btn .btn-icon { font-size: .95rem; color: var(--role-color); transition: transform .2s; }
+.action-btn:hover .btn-icon { transform: scale(1.15); }
+.stat-mini {
+    background: rgba(0,0,0,0.25);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: .75rem;
+    padding: .85rem 1rem;
+}
+
+/* Modo Claro en Dashboard */
+body.light-mode .role-banner,
+html.light-mode .role-banner {
+    background: #ffffff !important;
+    border-left: 4px solid var(--role-color) !important;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.06) !important;
+}
+body.light-mode .kpi-card,
+html.light-mode .kpi-card {
+    background: #ffffff !important;
+    border-color: rgba(0,0,0,0.08) !important;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.04) !important;
+}
+body.light-mode .section-card,
+html.light-mode .section-card {
+    background: #ffffff !important;
+    border-color: rgba(0,0,0,0.08) !important;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.04) !important;
+}
+body.light-mode .stat-mini,
+html.light-mode .stat-mini {
+    background: #f8fafc !important;
+    border-color: rgba(0,0,0,0.08) !important;
+}
+body.light-mode .action-btn,
+html.light-mode .action-btn {
+    background: #f8fafc !important;
+    border-color: rgba(0,0,0,0.1) !important;
+    color: #1e293b !important;
+}
+body.light-mode .action-btn:hover,
+html.light-mode .action-btn:hover {
+    background: #ffffff !important;
+    border-color: var(--role-color) !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.06) !important;
+}
+
+</style>
 
 <!-- Alerta de acceso denegado -->
 <?php if (isset($_GET['forbidden'])): ?>
-    <div class="auto-dismiss mb-6 px-4 py-3 rounded-xl border border-rose-500/20 bg-rose-950/30 text-rose-300 flex items-center space-x-2 glass-panel">
+    <div class="auto-dismiss mb-4 px-4 py-3 rounded-xl border glass-panel text-rose-300 flex items-center gap-2 text-sm" style="border-color:rgba(244,63,94,.3);background:rgba(136,19,55,.18)">
         <i class="fa-solid fa-ban text-rose-400"></i>
         <span>No tienes permisos suficientes para acceder a ese módulo.</span>
     </div>
 <?php endif; ?>
 
-<!-- Fila de bienvenida premium -->
-<div class="glass-panel rounded-2xl p-6 mb-8 border border-white/5 bg-gradient-to-r from-violet-950/20 via-indigo-950/10 to-transparent flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-    <div>
-        <h2 class="text-2xl font-bold text-white">¡Hola, <?= Session::get('user_name') ?>!</h2>
-        <p class="text-sm text-slate-400 mt-1">Estás operando en el sistema con el rol de <span class="text-violet-400 font-semibold uppercase"><?= $role ?></span>.</p>
-    </div>
-    <div class="flex items-center space-x-2 text-xs bg-slate-800/40 border border-white/5 rounded-xl px-4 py-2.5">
-        <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
-        <span class="text-slate-300 font-semibold">Conectado a Base de Datos phpMyAdmin</span>
-    </div>
-</div>
-
-<!-- Grid de Tarjetas de Indicadores Macro -->
-<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-    
-    <!-- Tarjeta Total Computadores -->
-    <div class="glass-panel glass-panel-hover rounded-2xl p-5 border border-white/5 flex items-center justify-between">
-        <div class="space-y-1">
-            <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Total Computadores</span>
-            <h3 class="text-3xl font-extrabold text-white"><?= $stats['totalComputadores'] ?></h3>
-            <span class="text-xs text-slate-400">Equipos en inventario</span>
+<!-- ════════════════════════════════════════════════════════════
+     BANNER DE BIENVENIDA CON IDENTIDAD DE ROL
+════════════════════════════════════════════════════════════ -->
+<div class="glass-panel rounded-2xl p-5 mb-6 role-banner flex flex-col md:flex-row justify-between items-start md:items-center gap-4" style="border:1px solid rgba(255,255,255,.06)">
+    <div class="flex items-center gap-4">
+        <div class="role-icon-box w-14 h-14 rounded-2xl flex items-center justify-center shadow-lg shrink-0" style="font-size:1.5rem">
+            <i class="<?= $rc['icon'] ?>"></i>
         </div>
-        <div class="w-12 h-12 rounded-xl bg-violet-600/10 border border-violet-500/20 flex items-center justify-center text-violet-400">
-            <i class="fa-solid fa-computer text-xl"></i>
-        </div>
-    </div>
-
-    <!-- Tarjeta Préstamos Activos -->
-    <div class="glass-panel glass-panel-hover rounded-2xl p-5 border border-white/5 flex items-center justify-between">
-        <div class="space-y-1">
-            <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Préstamos Activos</span>
-            <h3 class="text-3xl font-extrabold text-cyan-400"><?= $chartData['Operativo'] > 0 ? min($chartData['Operativo'], 5) : 0 ?></h3>
-            <span class="text-xs text-slate-400">En uso por docentes</span>
-        </div>
-        <div class="w-12 h-12 rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyan-400">
-            <i class="fa-solid fa-handshake-angle text-xl"></i>
-        </div>
-    </div>
-
-    <!-- Tarjeta Bajas RAEE -->
-    <div class="glass-panel glass-panel-hover rounded-2xl p-5 border border-white/5 flex items-center justify-between">
-        <div class="space-y-1">
-            <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Bajas RAEE</span>
-            <h3 class="text-3xl font-extrabold text-emerald-400"><?= $stats['bajasRAEE'] ?></h3>
-            <span class="text-xs text-slate-400">Destrucción certificada</span>
-        </div>
-        <div class="w-12 h-12 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400">
-            <i class="fa-solid fa-recycle text-xl"></i>
-        </div>
-    </div>
-
-    <!-- Tarjeta Salas Registradas -->
-    <div class="glass-panel glass-panel-hover rounded-2xl p-5 border border-white/5 flex items-center justify-between">
-        <div class="space-y-1">
-            <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Salas Activas</span>
-            <h3 class="text-3xl font-extrabold text-indigo-400"><?= $stats['totalSalas'] ?></h3>
-            <span class="text-xs text-slate-400">Espacios mapeados</span>
-        </div>
-        <div class="w-12 h-12 rounded-xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400">
-            <i class="fa-solid fa-school text-xl"></i>
-        </div>
-    </div>
-
-</div>
-
-<!-- DETALLE DE LAS 4 DIMENSIONES INSTITUCIONALES -->
-<h3 class="text-lg font-bold text-white mb-6 flex items-center space-x-2">
-    <i class="fa-solid fa-chart-bar text-violet-400"></i>
-    <span>Indicadores de las Cuatro Dimensiones (Anteproyecto)</span>
-</h3>
-
-<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-    
-    <!-- Dimensión 1: Financiera y de Control Fiscal -->
-    <div class="glass-panel rounded-2xl p-6 border border-white/5 space-y-4">
-        <h4 class="text-sm font-bold text-white uppercase tracking-wider flex items-center space-x-2 border-b border-white/5 pb-3">
-            <i class="fa-solid fa-dollar-sign text-emerald-400"></i>
-            <span>1. Dimensión Financiera y Control Fiscal</span>
-        </h4>
-        <div class="grid grid-cols-2 gap-4">
-            <div class="p-3 bg-black/20 rounded-xl border border-white/5">
-                <span class="block text-xxs font-bold text-slate-400 uppercase">Costo de Propiedad (TCO)</span>
-                <span class="text-base font-bold text-white">$<?= number_format($stats['tco'], 2) ?></span>
-                <span class="block text-[9px] text-slate-500">Costo promedio por activo</span>
-            </div>
-            <div class="p-3 bg-black/20 rounded-xl border border-white/5">
-                <span class="block text-xxs font-bold text-slate-400 uppercase">Depreciación Anual FSE</span>
-                <span class="text-base font-bold text-violet-400">$<?= number_format($stats['depreciacionAnualTotal'], 2) ?></span>
-                <span class="block text-[9px] text-slate-500">Desgaste calculado</span>
-            </div>
-            <div class="p-3 bg-black/20 rounded-xl border border-white/5">
-                <span class="block text-xxs font-bold text-slate-400 uppercase">Obsolescencia Financiera</span>
-                <span class="text-base font-bold text-yellow-500"><?= number_format($stats['obsolescenciaFinanciera'], 1) ?>%</span>
-                <span class="block text-[9px] text-slate-500">Progreso de vida útil</span>
-            </div>
-            <div class="p-3 bg-black/20 rounded-xl border border-white/5">
-                <span class="block text-xxs font-bold text-slate-400 uppercase">Pérdidas Siniestradas</span>
-                <span class="text-base font-bold text-rose-500">$<?= number_format($stats['perdidaSiniestros'], 2) ?></span>
-                <span class="block text-[9px] text-slate-500">Equipos robados/perdidos</span>
-            </div>
-        </div>
-    </div>
-
-    <!-- Dimensión 2: Educativa y Desarrollo Digital -->
-    <div class="glass-panel rounded-2xl p-6 border border-white/5 space-y-4">
-        <h4 class="text-sm font-bold text-white uppercase tracking-wider flex items-center space-x-2 border-b border-white/5 pb-3">
-            <i class="fa-solid fa-graduation-cap text-cyan-400"></i>
-            <span>2. Dimensión Educativa y TIC</span>
-        </h4>
-        <div class="grid grid-cols-2 gap-4">
-            <div class="p-3 bg-black/20 rounded-xl border border-white/5">
-                <span class="block text-xxs font-bold text-slate-400 uppercase">Tasa de Idoneidad Docente</span>
-                <span class="text-base font-bold text-cyan-400"><?= number_format($stats['tasaIdoneidadDocente'], 1) ?>%</span>
-                <span class="block text-[9px] text-slate-500">Docentes aprobados en TIC</span>
-            </div>
-            <div class="p-3 bg-black/20 rounded-xl border border-white/5">
-                <span class="block text-xxs font-bold text-slate-400 uppercase">Aprovechamiento Aula (TAM)</span>
-                <span class="text-base font-bold text-white"><?= number_format($stats['tam'], 1) ?>%</span>
-                <span class="block text-[9px] text-slate-500">Uso activo en clases</span>
-            </div>
-            <div class="p-3 bg-black/20 rounded-xl border border-white/5 col-span-2">
-                <span class="block text-xxs font-bold text-slate-400 uppercase">Cobertura Software Pedagógico</span>
-                <div class="flex items-center space-x-3 mt-1">
-                    <div class="flex-1 bg-slate-800 rounded-full h-2">
-                        <div class="bg-gradient-to-r from-cyan-500 to-violet-600 h-2 rounded-full" style="width: <?= $stats['coberturaSoftware'] ?>%"></div>
-                    </div>
-                    <span class="text-sm font-bold text-white"><?= number_format($stats['coberturaSoftware'], 1) ?>%</span>
-                </div>
-                <span class="block text-[9px] text-slate-500 mt-1">Computadores con software educativo configurado</span>
-            </div>
-        </div>
-    </div>
-
-    <!-- Dimensión 3: Ambiental y Cero Papel -->
-    <div class="glass-panel rounded-2xl p-6 border border-white/5 space-y-4">
-        <h4 class="text-sm font-bold text-white uppercase tracking-wider flex items-center space-x-2 border-b border-white/5 pb-3">
-            <i class="fa-solid fa-leaf text-emerald-400"></i>
-            <span>3. Dimensión Ambiental (Ley 1672)</span>
-        </h4>
-        <div class="grid grid-cols-2 gap-4">
-            <div class="p-3 bg-black/20 rounded-xl border border-white/5">
-                <span class="block text-xxs font-bold text-slate-400 uppercase">Residuos RAEE Canalizados</span>
-                <span class="text-base font-bold text-emerald-400"><?= $stats['bajasRAEE'] ?> certificados</span>
-                <span class="block text-[9px] text-slate-500">Gestores autorizados retoma</span>
-            </div>
-            <div class="p-3 bg-black/20 rounded-xl border border-white/5">
-                <span class="block text-xxs font-bold text-slate-400 uppercase">Ahorro de Papel (Cero Papel)</span>
-                <span class="text-base font-bold text-white"><?= $stats['ahorroHojasPapel'] ?> Hojas</span>
-                <span class="block text-[9px] text-slate-500">Actas digitales sin papel físico</span>
-            </div>
-            <div class="p-3 bg-black/20 rounded-xl border border-white/5 col-span-2">
-                <span class="block text-xxs font-bold text-slate-400 uppercase">Salas con Riesgo de Infraestructura</span>
-                <span class="text-base font-bold text-rose-400"><?= $stats['salasRiesgo'] ?> / <?= $stats['totalSalas'] ?> salas</span>
-                <span class="block text-[9px] text-slate-500">Falta polo a tierra o estabilizador (Riesgo eléctrico)</span>
-            </div>
-        </div>
-    </div>
-
-    <!-- Dimensión 4: Social, Veeduría y Control Social -->
-    <div class="glass-panel rounded-2xl p-6 border border-white/5 space-y-4 flex flex-col justify-between">
         <div>
-            <h4 class="text-sm font-bold text-white uppercase tracking-wider flex items-center space-x-2 border-b border-white/5 pb-3">
-                <i class="fa-solid fa-users text-violet-400"></i>
-                <span>4. Dimensión Social y Transparencia</span>
-            </h4>
-            <p class="text-xs text-slate-400 mt-2 leading-relaxed">
-                El sistema provee un portal abierto de consulta para que el **Contralor Escolar** y la comunidad educativa puedan auditar y vigilar en tiempo real el patrimonio tecnológico del colegio, promoviendo la veeduría y previniendo la pérdida hormiga de componentes internos.
-            </p>
-        </div>
-        <div class="pt-4 flex flex-col sm:flex-row gap-3">
-            <a href="<?= BASE_URL ?>/reportes/transparencia" class="flex-1 py-2.5 px-4 bg-violet-600/20 border border-violet-500/30 text-violet-300 font-semibold rounded-xl text-center hover:bg-violet-600/30 transition-all text-xs flex items-center justify-center space-x-2">
-                <i class="fa-solid fa-magnifying-glass-chart"></i>
-                <span>Ver Veeduría Pública</span>
-            </a>
+            <div class="flex items-center gap-2 flex-wrap">
+                <h2 class="text-xl font-bold text-white">¡Hola, <?= Session::get('user_name') ?>!</h2>
+                <span class="role-badge text-xs font-bold px-2.5 py-0.5 rounded-full uppercase tracking-widest"><?= $rc['label'] ?></span>
+            </div>
+            <p class="text-xs text-slate-400 mt-0.5"><?= $rc['subtitle'] ?></p>
         </div>
     </div>
-
+    <div class="flex items-center gap-3 shrink-0 flex-wrap">
+        <div class="flex items-center gap-2 text-xs rounded-xl px-3 py-2" style="background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.25)">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" style="display:inline-block"></span>
+            <span class="text-emerald-300 font-medium">Sistema Activo</span>
+        </div>
+    </div>
 </div>
 
-<!-- SECCIÓN GRÁFICO DE ESTADOS Y ACCIONES RÁPIDAS -->
-<div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-    
-    <!-- Gráfico de Estado de Activos -->
-    <div class="glass-panel rounded-2xl p-6 border border-white/5 lg:col-span-2">
-        <h4 class="text-sm font-bold text-white uppercase tracking-wider mb-4">
-            Distribución Física y Operativa de Activos
+<!-- ════════════════════════════════════════════════════════════
+     KPI CARDS
+════════════════════════════════════════════════════════════ -->
+<div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+    <div class="kpi-card">
+        <div>
+            <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-0.5">Computadores</div>
+            <div class="text-2xl font-extrabold text-white"><?= $stats['totalComputadores'] ?></div>
+            <div class="text-xs text-slate-500">En inventario</div>
+        </div>
+        <div class="kpi-icon" style="background:rgba(139,92,246,.12);border:1px solid rgba(139,92,246,.25);color:#8b5cf6">
+            <i class="fa-solid fa-computer"></i>
+        </div>
+    </div>
+    <div class="kpi-card">
+        <div>
+            <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-0.5">Préstamos</div>
+            <div class="text-2xl font-extrabold" style="color:#06b6d4"><?= $chartData['Operativo'] > 0 ? min($chartData['Operativo'], 5) : 0 ?></div>
+            <div class="text-xs text-slate-500">Activos hoy</div>
+        </div>
+        <div class="kpi-icon" style="background:rgba(6,182,212,.12);border:1px solid rgba(6,182,212,.25);color:#06b6d4">
+            <i class="fa-solid fa-handshake-angle"></i>
+        </div>
+    </div>
+    <div class="kpi-card">
+        <div>
+            <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-0.5">Bajas RAEE</div>
+            <div class="text-2xl font-extrabold" style="color:#10b981"><?= $stats['bajasRAEE'] ?></div>
+            <div class="text-xs text-slate-500">Certificadas</div>
+        </div>
+        <div class="kpi-icon" style="background:rgba(16,185,129,.12);border:1px solid rgba(16,185,129,.25);color:#10b981">
+            <i class="fa-solid fa-recycle"></i>
+        </div>
+    </div>
+    <div class="kpi-card">
+        <div>
+            <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-0.5">Salas Activas</div>
+            <div class="text-2xl font-extrabold" style="color:#6366f1"><?= $stats['totalSalas'] ?></div>
+            <div class="text-xs text-slate-500">Espacios mapeados</div>
+        </div>
+        <div class="kpi-icon" style="background:rgba(99,102,241,.12);border:1px solid rgba(99,102,241,.25);color:#6366f1">
+            <i class="fa-solid fa-school"></i>
+        </div>
+    </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════
+     GRÁFICO + ACCIONES RÁPIDAS
+════════════════════════════════════════════════════════════ -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-5 mb-6">
+    <!-- Gráfico -->
+    <div class="section-card lg:col-span-2">
+        <h4 class="text-sm font-bold text-white uppercase tracking-wider mb-4 flex items-center gap-2">
+            <i class="fa-solid fa-chart-pie" style="color:var(--role-color)"></i>
+            Distribución de Activos Tecnológicos
         </h4>
-        <div class="h-64 relative flex items-center justify-center">
+        <div style="height:13rem;display:flex;align-items:center;justify-content:center">
             <canvas id="activeStatusChart" class="max-h-full"></canvas>
         </div>
     </div>
 
-    <!-- Acciones Rápidas -->
-    <div class="glass-panel rounded-2xl p-6 border border-white/5 flex flex-col justify-between">
-        <div>
-            <h4 class="text-sm font-bold text-white uppercase tracking-wider mb-4 border-b border-white/5 pb-3">
-                Operaciones del Sistema
-            </h4>
-            <div class="space-y-3">
-                <?php if (in_array($role, ['Rector', 'Almacenista'])): ?>
-                    <a href="<?= BASE_URL ?>/computadores/crear" class="flex items-center space-x-3 p-3 bg-white/5 hover:bg-white/10 border border-white/5 hover:border-violet-500/30 rounded-xl transition-all text-sm text-slate-300 hover:text-white">
-                        <i class="fa-solid fa-plus-circle text-violet-400 text-lg"></i>
-                        <span>Registrar Nuevo Computador</span>
-                    </a>
-                    <a href="<?= BASE_URL ?>/traslados/crear" class="flex items-center space-x-3 p-3 bg-white/5 hover:bg-white/10 border border-white/5 hover:border-violet-500/30 rounded-xl transition-all text-sm text-slate-300 hover:text-white">
-                        <i class="fa-solid fa-truck-ramp-box text-cyan-400 text-lg"></i>
-                        <span>Solicitar Traslado de Equipos</span>
-                    </a>
-                    <a href="<?= BASE_URL ?>/bajas/crear" class="flex items-center space-x-3 p-3 bg-white/5 hover:bg-white/10 border border-white/5 hover:border-violet-500/30 rounded-xl transition-all text-sm text-slate-300 hover:text-white">
-                        <i class="fa-solid fa-circle-minus text-emerald-400 text-lg"></i>
-                        <span>Dar de Baja / RAEE</span>
-                    </a>
-                <?php endif; ?>
-
-                <?php if ($role === 'Docente'): ?>
-                    <a href="<?= BASE_URL ?>/prestamos/crear" class="flex items-center space-x-3 p-3 bg-white/5 hover:bg-white/10 border border-white/5 hover:border-violet-500/30 rounded-xl transition-all text-sm text-slate-300 hover:text-white">
-                        <i class="fa-solid fa-calendar-plus text-cyan-400 text-lg"></i>
-                        <span>Solicitar Préstamo de Computador</span>
-                    </a>
-                <?php endif; ?>
-                
-                <a href="<?= BASE_URL ?>/prestamos" class="flex items-center space-x-3 p-3 bg-white/5 hover:bg-white/10 border border-white/5 hover:border-violet-500/30 rounded-xl transition-all text-sm text-slate-300 hover:text-white">
-                    <i class="fa-solid fa-list-check text-slate-400 text-lg"></i>
-                    <span>Ver Préstamos de Equipos</span>
-                </a>
-            </div>
-        </div>
-        <div class="text-[10px] text-slate-500 text-center mt-4">
-            Último ingreso detectado desde IP: <?= $_SERVER['REMOTE_ADDR'] ?>
+    <!-- Acciones rápidas -->
+    <div class="section-card flex flex-col">
+        <h4 class="text-sm font-bold text-white uppercase tracking-wider pb-3 mb-4 flex items-center gap-2" style="border-bottom:1px solid rgba(255,255,255,.07)">
+            <i class="fa-solid fa-bolt" style="color:var(--role-color)"></i>
+            Acciones Rápidas
+        </h4>
+        <div class="space-y-2.5 flex-1">
+            <?php if ($role === 'Administrador'): ?>
+                <a href="<?= BASE_URL ?>/usuarios"              class="action-btn primary"><i class="btn-icon fa-solid fa-users-gear" style="color:#c084fc"></i><span>Gestión de Usuarios</span></a>
+                <a href="<?= BASE_URL ?>/computadores/crear"    class="action-btn"><i class="btn-icon fa-solid fa-laptop-medical"></i><span>Registrar Computador</span></a>
+                <a href="<?= BASE_URL ?>/salas"                 class="action-btn"><i class="btn-icon fa-solid fa-school"></i><span>Salas y Puestos</span></a>
+                <a href="<?= BASE_URL ?>/traslados/crear"       class="action-btn"><i class="btn-icon fa-solid fa-truck-ramp-box"></i><span>Solicitar Traslado</span></a>
+                <a href="<?= BASE_URL ?>/bajas/crear"           class="action-btn"><i class="btn-icon fa-solid fa-recycle" style="color:#10b981"></i><span>Registrar Baja RAEE</span></a>
+            <?php elseif ($role === 'Rector'): ?>
+                <a href="<?= BASE_URL ?>/computadores"          class="action-btn primary"><i class="btn-icon fa-solid fa-computer"></i><span>Ver todo el inventario</span></a>
+                <a href="<?= BASE_URL ?>/prestamos"             class="action-btn"><i class="btn-icon fa-solid fa-handshake"></i><span>Supervisar préstamos</span></a>
+                <a href="<?= BASE_URL ?>/salas"                 class="action-btn"><i class="btn-icon fa-solid fa-school"></i><span>Salas y espacios</span></a>
+                <a href="<?= BASE_URL ?>/bajas"                 class="action-btn"><i class="btn-icon fa-solid fa-recycle" style="color:#10b981"></i><span>Historial bajas RAEE</span></a>
+            <?php elseif ($role === 'Almacenista'): ?>
+                <a href="<?= BASE_URL ?>/computadores"          class="action-btn primary"><i class="btn-icon fa-solid fa-computer"></i><span>Consultar inventario</span></a>
+                <a href="<?= BASE_URL ?>/salas"                 class="action-btn"><i class="btn-icon fa-solid fa-school"></i><span>Salas y espacios</span></a>
+                <a href="<?= BASE_URL ?>/traslados"             class="action-btn"><i class="btn-icon fa-solid fa-truck-ramp-box"></i><span>Historial traslados</span></a>
+                <a href="<?= BASE_URL ?>/bajas"                 class="action-btn"><i class="btn-icon fa-solid fa-recycle" style="color:#10b981"></i><span>Bajas RAEE</span></a>
+            <?php elseif ($role === 'Docente'): ?>
+                <a href="<?= BASE_URL ?>/prestamos/crear"       class="action-btn primary"><i class="btn-icon fa-solid fa-calendar-plus"></i><span>Solicitar préstamo</span></a>
+                <a href="<?= BASE_URL ?>/prestamos"             class="action-btn"><i class="btn-icon fa-solid fa-clock-rotate-left"></i><span>Mis préstamos / Historial</span></a>
+                <a href="<?= BASE_URL ?>/computadores"          class="action-btn"><i class="btn-icon fa-solid fa-computer"></i><span>Equipos disponibles</span></a>
+                <a href="<?= BASE_URL ?>/salas"                 class="action-btn"><i class="btn-icon fa-solid fa-school"></i><span>Salas y espacios</span></a>
+            <?php elseif ($role === 'Contralor'): ?>
+                <a href="<?= BASE_URL ?>/computadores"          class="action-btn primary"><i class="btn-icon fa-solid fa-eye"></i><span>Auditar inventario</span></a>
+                <a href="<?= BASE_URL ?>/salas"                 class="action-btn"><i class="btn-icon fa-solid fa-school"></i><span>Salas y puestos</span></a>
+                <a href="<?= BASE_URL ?>/bajas"                 class="action-btn"><i class="btn-icon fa-solid fa-recycle" style="color:#10b981"></i><span>Verificar bajas RAEE</span></a>
+                <a href="<?= BASE_URL ?>/prestamos"             class="action-btn"><i class="btn-icon fa-solid fa-handshake"></i><span>Préstamos registrados</span></a>
+            <?php endif; ?>
         </div>
     </div>
-
 </div>
 
-<!-- BITÁCORA DE SEGURIDAD ENCRIPTADA (Solo Rector y Almacenista) -->
-<?php if (in_array($role, ['Rector', 'Almacenista'])): ?>
-<div class="glass-panel rounded-2xl p-6 border border-white/5">
-    <h4 class="text-sm font-bold text-white uppercase tracking-wider mb-4 flex items-center justify-between border-b border-white/5 pb-3">
-        <div class="flex items-center space-x-2">
-            <i class="fa-solid fa-user-shield text-violet-400"></i>
-            <span>Log de Auditoría de Seguridad (Cifrado AES-256)</span>
+<!-- ════════════════════════════════════════════════════════════
+     SECCIONES ESPECÍFICAS POR ROL
+════════════════════════════════════════════════════════════ -->
+<?php if ($role === 'Administrador'): ?>
+<!-- ADMINISTRADOR: Consola de Administración Centralizada -->
+<h3 class="text-sm font-bold text-white mb-4 flex items-center gap-2 uppercase tracking-wider">
+    <i class="fa-solid fa-screwdriver-wrench" style="color:var(--role-color)"></i>
+    Consola de Administración Centralizada
+</h3>
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-5 mb-6">
+    <!-- Gestión de Usuarios y Accesos -->
+    <div class="section-card flex flex-col justify-between" style="border-color:rgba(168,85,247,.25)">
+        <div>
+            <h4 class="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2 pb-2.5 mb-3" style="border-bottom:1px solid rgba(255,255,255,.06)">
+                <i class="fa-solid fa-users-gear" style="color:#c084fc"></i> Usuarios del Sistema
+            </h4>
+            <p class="text-xs text-slate-400 mb-3">Total de cuentas institucionales configuradas con roles y contraseñas.</p>
+            <div class="stat-mini mb-3">
+                <span class="block text-xs font-bold text-slate-400 uppercase">Cuentas Registradas</span>
+                <span class="text-2xl font-extrabold text-white"><?= $stats['totalUsuarios'] ?? 6 ?></span>
+                <span class="block text-xs text-slate-500 mt-0.5">Control de acceso exclusivo</span>
+            </div>
         </div>
-        <span class="text-xxs px-2.5 py-1 bg-violet-600/20 text-violet-400 rounded-full border border-violet-500/20 font-bold uppercase tracking-wider">AES-256 Activo</span>
+        <a href="<?= BASE_URL ?>/usuarios" class="action-btn primary justify-center">
+            <i class="btn-icon fa-solid fa-users-gear"></i><span>Abrir Módulo de Usuarios</span>
+        </a>
+    </div>
+
+    <!-- Gestión Integral de Inventario Fijo -->
+    <div class="section-card flex flex-col justify-between" style="border-color:rgba(6,182,212,.25)">
+        <div>
+            <h4 class="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2 pb-2.5 mb-3" style="border-bottom:1px solid rgba(255,255,255,.06)">
+                <i class="fa-solid fa-laptop-medical" style="color:#06b6d4"></i> Inventario & CRUD
+            </h4>
+            <p class="text-xs text-slate-400 mb-3">Registro de terminales, asignación de placas SED y gestión de piezas.</p>
+            <div class="grid grid-cols-2 gap-2 mb-3">
+                <div class="stat-mini"><span class="block text-[10px] text-slate-400 uppercase">Terminales</span><span class="text-base font-bold text-white"><?= $stats['totalComputadores'] ?></span></div>
+                <div class="stat-mini"><span class="block text-[10px] text-slate-400 uppercase">Salas</span><span class="text-base font-bold" style="color:#06b6d4"><?= $stats['totalSalas'] ?></span></div>
+            </div>
+        </div>
+        <a href="<?= BASE_URL ?>/computadores/crear" class="action-btn justify-center">
+            <i class="btn-icon fa-solid fa-plus-circle"></i><span>Registrar Nuevo Equipo</span>
+        </a>
+    </div>
+
+    <!-- Transacciones y Decomisos -->
+    <div class="section-card flex flex-col justify-between" style="border-color:rgba(16,185,129,.25)">
+        <div>
+            <h4 class="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2 pb-2.5 mb-3" style="border-bottom:1px solid rgba(255,255,255,.06)">
+                <i class="fa-solid fa-arrows-rotate" style="color:#10b981"></i> Operaciones & Bajas
+            </h4>
+            <p class="text-xs text-slate-400 mb-3">Aprobación de traslados con QR y registro de actas de disposición RAEE.</p>
+            <div class="grid grid-cols-2 gap-2 mb-3">
+                <div class="stat-mini"><span class="block text-[10px] text-slate-400 uppercase">Traslados</span><span class="text-base font-bold text-white"><?= $stats['totalTraslados'] ?></span></div>
+                <div class="stat-mini"><span class="block text-[10px] text-slate-400 uppercase">Bajas</span><span class="text-base font-bold" style="color:#10b981"><?= $stats['bajasRAEE'] ?></span></div>
+            </div>
+        </div>
+        <a href="<?= BASE_URL ?>/traslados" class="action-btn justify-center">
+            <i class="btn-icon fa-solid fa-truck-ramp-box"></i><span>Revisar Traslados</span>
+        </a>
+    </div>
+</div>
+<?php endif; ?>
+
+<?php if ($role === 'Rector'): ?>
+<!-- RECTOR: Dimensiones de Gestión Institucional -->
+<h3 class="text-sm font-bold text-white mb-4 flex items-center gap-2 uppercase tracking-wider">
+    <i class="fa-solid fa-chart-bar" style="color:var(--role-color)"></i>
+    Indicadores de Rendimiento y Gestión Institucional
+</h3>
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-5 mb-6">
+    <!-- Salud Operativa de Hardware -->
+    <div class="section-card" style="border-color:rgba(139,92,246,.2)">
+        <h4 class="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2 pb-2.5 mb-3" style="border-bottom:1px solid rgba(255,255,255,.06)">
+            <i class="fa-solid fa-microchip" style="color:#8b5cf6"></i> 1. Operatividad y Rendimiento de Hardware
+        </h4>
+        <div class="grid grid-cols-2 gap-3">
+            <div class="stat-mini"><span class="block text-xs font-bold text-slate-400 uppercase">Tasa Operatividad</span><span class="text-sm font-bold" style="color:#10b981"><?= number_format($stats['tasaOperatividad'], 1) ?>%</span><span class="block text-xs text-slate-500">Equipos listos</span></div>
+            <div class="stat-mini"><span class="block text-xs font-bold text-slate-400 uppercase">Préstamos Totales</span><span class="text-sm font-bold text-white"><?= $stats['totalPrestamos'] ?></span><span class="block text-xs text-slate-500">Histórico digital</span></div>
+            <div class="stat-mini"><span class="block text-xs font-bold text-slate-400 uppercase">Traslados Realizados</span><span class="text-sm font-bold" style="color:#06b6d4"><?= $stats['totalTraslados'] ?></span><span class="block text-xs text-slate-500">Con código QR</span></div>
+            <div class="stat-mini"><span class="block text-xs font-bold text-slate-400 uppercase">Bajas Ecológicas</span><span class="text-sm font-bold" style="color:#f43f5e"><?= $stats['bajasRAEE'] ?></span><span class="block text-xs text-slate-500">Certificadas RAEE</span></div>
+        </div>
+    </div>
+    <!-- Educativa -->
+    <div class="section-card" style="border-color:rgba(6,182,212,.2)">
+        <h4 class="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2 pb-2.5 mb-3" style="border-bottom:1px solid rgba(255,255,255,.06)">
+            <i class="fa-solid fa-graduation-cap" style="color:#06b6d4"></i> 2. Educativa y TIC
+        </h4>
+        <div class="grid grid-cols-2 gap-3">
+            <div class="stat-mini"><span class="block text-xs font-bold text-slate-400 uppercase">Idoneidad Docente</span><span class="text-sm font-bold" style="color:#06b6d4"><?= number_format($stats['tasaIdoneidadDocente'], 1) ?>%</span><span class="block text-xs text-slate-500">Aprobados TIC</span></div>
+            <div class="stat-mini"><span class="block text-xs font-bold text-slate-400 uppercase">TAM (Aula)</span><span class="text-sm font-bold text-white"><?= number_format($stats['tam'], 1) ?>%</span><span class="block text-xs text-slate-500">Uso en clases</span></div>
+            <div class="stat-mini col-span-2">
+                <span class="block text-xs font-bold text-slate-400 uppercase mb-2">Cobertura Software Pedagógico</span>
+                <div class="flex items-center gap-3">
+                    <div class="flex-1 rounded-full h-2" style="background:rgba(255,255,255,.08)">
+                        <div class="h-2 rounded-full" style="width:<?= $stats['coberturaSoftware'] ?>%;background:linear-gradient(90deg,#06b6d4,#8b5cf6)"></div>
+                    </div>
+                    <span class="text-sm font-bold text-white"><?= number_format($stats['coberturaSoftware'], 1) ?>%</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Ambiental -->
+    <div class="section-card" style="border-color:rgba(16,185,129,.2)">
+        <h4 class="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2 pb-2.5 mb-3" style="border-bottom:1px solid rgba(255,255,255,.06)">
+            <i class="fa-solid fa-leaf" style="color:#10b981"></i> 3. Ambiental (Ley 1672)
+        </h4>
+        <div class="grid grid-cols-2 gap-3">
+            <div class="stat-mini"><span class="block text-xs font-bold text-slate-400 uppercase">RAEE Canalizados</span><span class="text-sm font-bold" style="color:#10b981"><?= $stats['bajasRAEE'] ?> cert.</span><span class="block text-xs text-slate-500">Gestores autorizados</span></div>
+            <div class="stat-mini"><span class="block text-xs font-bold text-slate-400 uppercase">Ahorro Papel</span><span class="text-sm font-bold text-white"><?= $stats['ahorroHojasPapel'] ?> hojas</span><span class="block text-xs text-slate-500">Actas digitales</span></div>
+            <div class="stat-mini col-span-2"><span class="block text-xs font-bold text-slate-400 uppercase">Salas con Riesgo Eléctrico</span><span class="text-sm font-bold" style="color:#f43f5e"><?= $stats['salasRiesgo'] ?> / <?= $stats['totalSalas'] ?> salas</span><span class="block text-xs text-slate-500">Sin polo a tierra o estabilizador</span></div>
+        </div>
+    </div>
+    <!-- Social -->
+    <div class="section-card flex flex-col" style="border-color:rgba(139,92,246,.2)">
+        <h4 class="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2 pb-2.5 mb-3" style="border-bottom:1px solid rgba(255,255,255,.06)">
+            <i class="fa-solid fa-users" style="color:#8b5cf6"></i> 4. Social y Transparencia
+        </h4>
+        <p class="text-xs text-slate-400 leading-relaxed flex-1">
+            Portal abierto de consulta para el <strong class="text-white">Contralor</strong> y la comunidad educativa. Auditoría y veeduría en tiempo real del patrimonio tecnológico.
+        </p>
+        <a href="<?= BASE_URL ?>/computadores" class="action-btn primary mt-3 justify-center">
+            <i class="btn-icon fa-solid fa-laptop"></i><span>Consultar Inventario General</span>
+        </a>
+    </div>
+</div>
+
+<?php elseif ($role === 'Almacenista'): ?>
+<!-- ALMACENISTA: Estado del inventario -->
+<div class="section-card mb-6" style="border-color:rgba(6,182,212,.2)">
+    <h4 class="text-sm font-bold text-white uppercase tracking-wider mb-4 flex items-center gap-2">
+        <i class="fa-solid fa-warehouse" style="color:#06b6d4"></i> Estado del Inventario Físico
+    </h4>
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+        <div class="text-center p-4 rounded-xl" style="background:rgba(16,185,129,.08);border:1px solid rgba(16,185,129,.25)">
+            <div class="text-2xl font-extrabold" style="color:#10b981"><?= $chartData['Operativo'] ?></div>
+            <div class="text-xs text-slate-400 uppercase font-bold mt-1">Operativos</div>
+        </div>
+        <div class="text-center p-4 rounded-xl" style="background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.25)">
+            <div class="text-2xl font-extrabold" style="color:#f59e0b"><?= $chartData['En Mantenimiento'] ?></div>
+            <div class="text-xs text-slate-400 uppercase font-bold mt-1">Mantenimiento</div>
+        </div>
+        <div class="text-center p-4 rounded-xl" style="background:rgba(99,102,241,.08);border:1px solid rgba(99,102,241,.25)">
+            <div class="text-2xl font-extrabold" style="color:#6366f1"><?= $chartData['Obsoleto'] ?></div>
+            <div class="text-xs text-slate-400 uppercase font-bold mt-1">Obsoletos</div>
+        </div>
+        <div class="text-center p-4 rounded-xl" style="background:rgba(244,63,94,.08);border:1px solid rgba(244,63,94,.25)">
+            <div class="text-2xl font-extrabold" style="color:#f43f5e"><?= $chartData['Dado de Baja'] ?></div>
+            <div class="text-xs text-slate-400 uppercase font-bold mt-1">Dados de Baja</div>
+        </div>
+    </div>
+</div>
+
+<?php elseif (in_array($role, ['Docente TIC', 'Docente No TIC'])): ?>
+<!-- DOCENTES: Guía de uso -->
+<div class="section-card mb-6" style="border-color:<?= $rc['colorBorder'] ?>">
+    <h4 class="text-sm font-bold text-white uppercase tracking-wider mb-4 flex items-center gap-2">
+        <i class="fa-solid fa-circle-info" style="color:var(--role-color)"></i> Guía de Uso del Sistema
+    </h4>
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs text-slate-300">
+        <?php $steps = [
+            ['Solicitar Préstamo','fa-solid fa-calendar-plus','Ingresa a "Acciones Rápidas" y selecciona "Solicitar préstamo" para reservar un equipo disponible.'],
+            ['Consultar Equipos','fa-solid fa-computer','Revisa el catálogo de computadores con sus especificaciones, estado y disponibilidad actual.'],
+            ['Ver Historial','fa-solid fa-clock-rotate-left','Accede al historial de tus préstamos anteriores con fechas y detalles de cada equipo asignado.'],
+        ]; ?>
+        <?php foreach ($steps as $i => $s): ?>
+        <div class="p-4 rounded-xl space-y-2" style="background:rgba(0,0,0,.2);border:1px solid rgba(255,255,255,.06)">
+            <div class="w-9 h-9 rounded-lg flex items-center justify-center text-base mb-2" style="background:var(--role-dim);border:1px solid var(--role-border);color:var(--role-color)">
+                <i class="<?= $s[1] ?>"></i>
+            </div>
+            <p class="font-semibold text-white"><?= $s[0] ?></p>
+            <p class="text-slate-400 leading-snug"><?= $s[2] ?></p>
+        </div>
+        <?php endforeach; ?>
+    </div>
+</div>
+
+<?php elseif ($role === 'Contralor'): ?>
+<!-- CONTRALOR: Indicadores de auditoría -->
+<div class="section-card mb-6" style="border-color:rgba(245,158,11,.25)">
+    <h4 class="text-sm font-bold text-white uppercase tracking-wider mb-4 flex items-center gap-2">
+        <i class="fa-solid fa-scale-balanced" style="color:#f59e0b"></i> Indicadores de Transparencia y Control
+    </h4>
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div class="p-4 rounded-xl" style="background:rgba(139,92,246,.07);border:1px solid rgba(139,92,246,.25)">
+            <span class="block text-xs font-bold text-slate-400 uppercase">Equipos en Veeduría</span>
+            <span class="text-xl font-extrabold text-white"><?= $stats['totalComputadores'] ?></span>
+            <span class="block text-xs text-slate-500 mt-0.5">Total inventariados</span>
+        </div>
+        <div class="p-4 rounded-xl" style="background:rgba(16,185,129,.07);border:1px solid rgba(16,185,129,.25)">
+            <span class="block text-xs font-bold text-slate-400 uppercase">RAEE Certificadas</span>
+            <span class="text-xl font-extrabold" style="color:#10b981"><?= $stats['bajasRAEE'] ?></span>
+            <span class="block text-xs text-slate-500 mt-0.5">Con acta de destrucción</span>
+        </div>
+        <div class="p-4 rounded-xl" style="background:rgba(245,158,11,.07);border:1px solid rgba(245,158,11,.25)">
+            <span class="block text-xs font-bold text-slate-400 uppercase">Ahorro Papel</span>
+            <span class="text-xl font-extrabold" style="color:#f59e0b"><?= $stats['ahorroHojasPapel'] ?> hojas</span>
+            <span class="block text-xs text-slate-500 mt-0.5">Actas digitalizadas</span>
+        </div>
+    </div>
+</div>
+<?php endif; ?>
+
+<!-- ════════════════════════════════════════════════════════════
+     LOG DE AUDITORÍA (Rector y Almacenista)
+════════════════════════════════════════════════════════════ -->
+<?php if (in_array($role, ['Rector', 'Almacenista'])): ?>
+<div class="section-card">
+    <h4 class="text-sm font-bold text-white uppercase tracking-wider mb-4 pb-3 flex items-center justify-between" style="border-bottom:1px solid rgba(255,255,255,.07)">
+        <div class="flex items-center gap-2">
+            <i class="fa-solid fa-user-shield" style="color:#8b5cf6"></i>
+            <span>Log de Auditoría de Seguridad</span>
+        </div>
+        <span class="text-xs px-2.5 py-1 rounded-full font-bold uppercase tracking-wider" style="background:rgba(139,92,246,.15);color:#a78bfa;border:1px solid rgba(139,92,246,.3)">AES-256 Activo</span>
     </h4>
     <div class="overflow-x-auto">
-        <table class="w-full text-left text-xs border-collapse">
+        <table class="w-full text-left text-xs" style="border-collapse:collapse">
             <thead>
-                <tr class="border-b border-white/5 text-slate-400 font-bold uppercase tracking-wider">
-                    <th class="py-3 px-2">Fecha/Hora</th>
-                    <th class="py-3 px-2">Usuario</th>
-                    <th class="py-3 px-2">Acción</th>
-                    <th class="py-3 px-2">Tabla Afectada</th>
-                    <th class="py-3 px-2">Dirección IP</th>
-                    <th class="py-3 px-2">Detalles Desencriptados</th>
+                <tr class="text-slate-400 font-bold uppercase tracking-wider" style="border-bottom:1px solid rgba(255,255,255,.07)">
+                    <th class="py-2.5 px-2">Fecha/Hora</th>
+                    <th class="py-2.5 px-2">Usuario</th>
+                    <th class="py-2.5 px-2">Acción</th>
+                    <th class="py-2.5 px-2">Tabla</th>
+                    <th class="py-2.5 px-2">Detalles</th>
                 </tr>
             </thead>
             <tbody>
                 <?php if (empty($recentLogs)): ?>
-                    <tr>
-                        <td colspan="6" class="py-4 text-center text-slate-500">No hay registros de auditoría aún.</td>
-                    </tr>
+                    <tr><td colspan="5" class="py-4 text-center text-slate-500">No hay registros de auditoría aún.</td></tr>
                 <?php else: ?>
                     <?php foreach ($recentLogs as $log): ?>
-                        <tr class="border-b border-white/5 hover:bg-white/[0.02] text-slate-300">
-                            <td class="py-3 px-2 font-medium text-slate-400 whitespace-nowrap"><?= $log['fecha_evento'] ?></td>
-                            <td class="py-3 px-2 whitespace-nowrap">
+                        <tr class="text-slate-300 transition-colors" style="border-bottom:1px solid rgba(255,255,255,.04)" onmouseover="this.style.background='rgba(255,255,255,.02)'" onmouseout="this.style.background=''">
+                            <td class="py-2.5 px-2 text-slate-400 whitespace-nowrap"><?= $log['fecha_evento'] ?></td>
+                            <td class="py-2.5 px-2 whitespace-nowrap">
                                 <span class="font-semibold text-white"><?= $log['nombres'] . ' ' . $log['apellidos'] ?></span>
-                                <span class="block text-[10px] text-slate-500"><?= $log['email'] ?></span>
+                                <span class="block text-slate-500" style="font-size:.65rem"><?= $log['email'] ?></span>
                             </td>
-                            <td class="py-3 px-2 whitespace-nowrap">
-                                <span class="px-2 py-0.5 rounded bg-slate-800 text-slate-300 font-semibold border border-white/5"><?= $log['accion_ejecutada'] ?></span>
+                            <td class="py-2.5 px-2 whitespace-nowrap">
+                                <span class="px-2 py-0.5 rounded font-semibold" style="background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.08)"><?= $log['accion_ejecutada'] ?></span>
                             </td>
-                            <td class="py-3 px-2 whitespace-nowrap text-slate-500 font-mono"><?= $log['tabla_afectada'] ?: '-' ?></td>
-                            <td class="py-3 px-2 text-slate-400 font-mono"><?= $log['direccion_ip'] ?></td>
-                            <td class="py-3 px-2 text-slate-300">
-                                <span class="text-slate-300 italic">"<?= htmlspecialchars($log['detalles_desencriptados']) ?>"</span>
-                            </td>
+                            <td class="py-2.5 px-2 text-slate-500 font-mono whitespace-nowrap"><?= $log['tabla_afectada'] ?: '-' ?></td>
+                            <td class="py-2.5 px-2 text-slate-300 italic">"<?= htmlspecialchars($log['detalles_desencriptados']) ?>"</td>
                         </tr>
                     <?php endforeach; ?>
                 <?php endif; ?>
@@ -300,11 +581,13 @@ $role = Session::get('role_name');
 </div>
 <?php endif; ?>
 
-<!-- Configuración de Script del Gráfico -->
 <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const ctx = document.getElementById('activeStatusChart').getContext('2d');
-        const data = {
+document.addEventListener('DOMContentLoaded', () => {
+    const ctx = document.getElementById('activeStatusChart');
+    if (!ctx) return;
+    new Chart(ctx.getContext('2d'), {
+        type: 'doughnut',
+        data: {
             labels: ['Operativo', 'En Mantenimiento', 'Obsoleto', 'Dado de Baja'],
             datasets: [{
                 data: [
@@ -313,48 +596,25 @@ $role = Session::get('role_name');
                     <?= $chartData['Obsoleto'] ?>,
                     <?= $chartData['Dado de Baja'] ?>
                 ],
-                backgroundColor: [
-                    'rgba(16, 185, 129, 0.45)', // Verde esmeralda translúcido
-                    'rgba(245, 158, 11, 0.45)',  // Naranja cálido
-                    'rgba(99, 102, 241, 0.45)',  // Violeta
-                    'rgba(244, 63, 94, 0.45)'    // Rojo/rosa
-                ],
-                borderColor: [
-                    '#10b981',
-                    '#f59e0b',
-                    '#6366f1',
-                    '#f43f5e'
-                ],
+                backgroundColor: ['rgba(16,185,129,.45)','rgba(245,158,11,.45)','rgba(99,102,241,.45)','rgba(244,63,94,.45)'],
+                borderColor:     ['#10b981','#f59e0b','#6366f1','#f43f5e'],
                 borderWidth: 2,
-                hoverOffset: 15
+                hoverOffset: 12
             }]
-        };
-
-        new Chart(ctx, {
-            type: 'doughnut',
-            data: data,
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        position: 'right',
-                        labels: {
-                            color: '#94a3b8',
-                            font: {
-                                family: 'Outfit',
-                                size: 12
-                            },
-                            padding: 20
-                        }
-                    }
-                },
-                cutout: '65%'
-            }
-        });
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'right',
+                    labels: { color: '#94a3b8', font: { family: 'Outfit', size: 11 }, padding: 14 }
+                }
+            },
+            cutout: '68%'
+        }
     });
+});
 </script>
 
-<?php
-require_once APP_ROOT . '/views/layout/footer.php';
-?>
+<?php require_once APP_ROOT . '/views/layout/footer.php'; ?>

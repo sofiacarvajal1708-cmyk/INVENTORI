@@ -49,12 +49,6 @@ $comp = $data['computador'] ?? null;
                         class="block w-full px-4 py-2.5 bg-black/35 border border-white/10 rounded-xl text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-violet-500/50 focus:border-violet-500 text-xs" placeholder="Ej. SED-98745">
                 </div>
 
-                <!-- Placa FSE -->
-                <div>
-                    <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Placa FSE (Fondos de Servicios Educativos)</label>
-                    <input type="text" name="placa_fse" value="<?= htmlspecialchars($comp['placa_fse'] ?? '') ?>" 
-                        class="block w-full px-4 py-2.5 bg-black/35 border border-white/10 rounded-xl text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-violet-500/50 focus:border-violet-500 text-xs" placeholder="Ej. FSE-3321">
-                </div>
 
                 <!-- Modelo -->
                 <div>
@@ -90,19 +84,6 @@ $comp = $data['computador'] ?? null;
                     </select>
                 </div>
 
-                <!-- Valor Histórico -->
-                <div>
-                    <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Valor Histórico de Compra ($) *</label>
-                    <input type="number" step="0.01" name="valor_historico" required value="<?= htmlspecialchars($comp['valor_historico'] ?? '') ?>" 
-                        class="block w-full px-4 py-2.5 bg-black/35 border border-white/10 rounded-xl text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-violet-500/50 focus:border-violet-500 text-xs" placeholder="Ej. 1850000">
-                </div>
-
-                <!-- Vida Útil (Años) -->
-                <div>
-                    <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Vida Útil (Años) *</label>
-                    <input type="number" name="vida_util_anos" required value="<?= htmlspecialchars($comp['vida_util_anos'] ?? '5') ?>" 
-                        class="block w-full px-4 py-2.5 bg-black/35 border border-white/10 rounded-xl text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-violet-500/50 focus:border-violet-500 text-xs" placeholder="Ej. 5">
-                </div>
 
                 <!-- Fecha Adquisición -->
                 <div>

@@ -75,21 +75,18 @@ class Computador extends Model {
     public function create($data) {
         $stmt = $this->db->prepare("
             INSERT INTO computadores 
-            (placa_sed, placa_fse, numero_serial, id_marca, modelo, procesador, licenciamiento, valor_historico, vida_util_anos, fecha_adquisicion, id_sala_actual, estado_activo) 
+            (placa_sed, numero_serial, id_marca, modelo, procesador, licenciamiento, fecha_adquisicion, id_sala_actual, estado_activo) 
             VALUES 
-            (:placa_sed, :placa_fse, :numero_serial, :id_marca, :modelo, :procesador, :licenciamiento, :valor_historico, :vida_util_anos, :fecha_adquisicion, :id_sala_actual, :estado_activo)
+            (:placa_sed, :numero_serial, :id_marca, :modelo, :procesador, :licenciamiento, :fecha_adquisicion, :id_sala_actual, :estado_activo)
         ");
         
         $stmt->execute([
             'placa_sed' => !empty($data['placa_sed']) ? $data['placa_sed'] : null,
-            'placa_fse' => !empty($data['placa_fse']) ? $data['placa_fse'] : null,
             'numero_serial' => $data['numero_serial'],
             'id_marca' => $data['id_marca'],
             'modelo' => $data['modelo'],
             'procesador' => $data['procesador'],
             'licenciamiento' => $data['licenciamiento'],
-            'valor_historico' => $data['valor_historico'],
-            'vida_util_anos' => $data['vida_util_anos'],
             'fecha_adquisicion' => $data['fecha_adquisicion'],
             'id_sala_actual' => $data['id_sala_actual'],
             'estado_activo' => $data['estado_activo'] ?? 'Operativo'
@@ -105,14 +102,11 @@ class Computador extends Model {
         $stmt = $this->db->prepare("
             UPDATE computadores 
             SET placa_sed = :placa_sed, 
-                placa_fse = :placa_fse, 
                 numero_serial = :numero_serial, 
                 id_marca = :id_marca, 
                 modelo = :modelo, 
                 procesador = :procesador, 
                 licenciamiento = :licenciamiento, 
-                valor_historico = :valor_historico, 
-                vida_util_anos = :vida_util_anos, 
                 fecha_adquisicion = :fecha_adquisicion, 
                 id_sala_actual = :id_sala_actual, 
                 estado_activo = :estado_activo
@@ -122,14 +116,11 @@ class Computador extends Model {
         return $stmt->execute([
             'id' => $id,
             'placa_sed' => !empty($data['placa_sed']) ? $data['placa_sed'] : null,
-            'placa_fse' => !empty($data['placa_fse']) ? $data['placa_fse'] : null,
             'numero_serial' => $data['numero_serial'],
             'id_marca' => $data['id_marca'],
             'modelo' => $data['modelo'],
             'procesador' => $data['procesador'],
             'licenciamiento' => $data['licenciamiento'],
-            'valor_historico' => $data['valor_historico'],
-            'vida_util_anos' => $data['vida_util_anos'],
             'fecha_adquisicion' => $data['fecha_adquisicion'],
             'id_sala_actual' => $data['id_sala_actual'],
             'estado_activo' => $data['estado_activo']

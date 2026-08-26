@@ -8,8 +8,8 @@ class SalaController extends Controller {
         if (!Session::isLoggedIn()) {
             $this->redirect('auth/login');
         }
-        // Restringir a Rector, Almacenista y Contralor (docentes no administran salas)
-        Session::requireRole(['Rector', 'Almacenista', 'Contralor Escolar']);
+        // Consulta permitida para todos los roles autorizados
+        Session::requireRole(['Rector', 'Almacenista', 'Contralor', 'Docente', 'Administrador']);
     }
 
     /**
@@ -26,10 +26,10 @@ class SalaController extends Controller {
     }
 
     /**
-     * Crear una nueva sala
+     * Crear una nueva sala (SOLO ADMINISTRADOR)
      */
     public function crear() {
-        Session::requireRole(['Rector', 'Almacenista']); // Contralor no edita
+        Session::requireRole(['Administrador']);
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $data = Security::sanitize($_POST);
@@ -46,7 +46,7 @@ class SalaController extends Controller {
                         'Crear Sala',
                         'salas',
                         null,
-                        "Se registró la nueva sala: {$data['nombre_sala']}"
+                        "El administrador registró la nueva sala: {$data['nombre_sala']}"
                     );
                     $_SESSION['flash_success'] = 'Sala registrada exitosamente.';
                 } else {
@@ -58,10 +58,10 @@ class SalaController extends Controller {
     }
 
     /**
-     * Editar infraestructura de una sala
+     * Editar infraestructura de una sala (SOLO ADMINISTRADOR)
      */
     public function editar($id) {
-        Session::requireRole(['Rector', 'Almacenista']);
+        Session::requireRole(['Administrador']);
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $data = Security::sanitize($_POST);

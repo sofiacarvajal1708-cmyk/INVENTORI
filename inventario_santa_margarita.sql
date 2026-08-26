@@ -62,14 +62,11 @@ CREATE TABLE `componentes_internos` (
 CREATE TABLE `computadores` (
   `id_computador` int NOT NULL,
   `placa_sed` varchar(50) DEFAULT NULL,
-  `placa_fse` varchar(50) DEFAULT NULL,
   `numero_serial` varchar(100) NOT NULL,
   `id_marca` int NOT NULL,
   `modelo` varchar(100) DEFAULT NULL,
   `procesador` varchar(100) DEFAULT NULL,
   `licenciamiento` varchar(100) DEFAULT NULL,
-  `valor_historico` decimal(12,2) NOT NULL,
-  `vida_util_anos` int NOT NULL,
   `fecha_adquisicion` date NOT NULL,
   `id_sala_actual` int NOT NULL,
   `estado_activo` enum('Operativo','En Mantenimiento','Obsoleto','Dado de Baja') DEFAULT 'Operativo'
@@ -188,28 +185,6 @@ CREATE TABLE `usuarios` (
 
 -- --------------------------------------------------------
 
---
--- Stand-in structure for view `vista_depreciacion_fse`
--- (See below for the actual view)
---
-CREATE TABLE `vista_depreciacion_fse` (
-`depreciacion_anual_Da` decimal(12,2)
-,`id_computador` int
-,`numero_serial` varchar(100)
-,`placa_fse` varchar(50)
-,`u_v` int
-,`V_h` decimal(12,2)
-,`valor_neto_libros` decimal(18,2)
-);
-
--- --------------------------------------------------------
-
---
--- Structure for view `vista_depreciacion_fse`
---
-DROP TABLE IF EXISTS `vista_depreciacion_fse`;
-
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `vista_depreciacion_fse`  AS SELECT `computadores`.`id_computador` AS `id_computador`, `computadores`.`placa_fse` AS `placa_fse`, `computadores`.`numero_serial` AS `numero_serial`, `computadores`.`valor_historico` AS `V_h`, `computadores`.`vida_util_anos` AS `u_v`, truncate((`computadores`.`valor_historico` / `computadores`.`vida_util_anos`),2) AS `depreciacion_anual_Da`, truncate((`computadores`.`valor_historico` - (truncate((`computadores`.`valor_historico` / `computadores`.`vida_util_anos`),2) * (year(curdate()) - year(`computadores`.`fecha_adquisicion`)))),2) AS `valor_neto_libros` FROM `computadores` WHERE (`computadores`.`estado_activo` <> 'Dado de Baja')  ;
 
 --
 -- Indexes for dumped tables
@@ -238,7 +213,6 @@ ALTER TABLE `computadores`
   ADD PRIMARY KEY (`id_computador`),
   ADD UNIQUE KEY `numero_serial` (`numero_serial`),
   ADD UNIQUE KEY `placa_sed` (`placa_sed`),
-  ADD UNIQUE KEY `placa_fse` (`placa_fse`),
   ADD KEY `id_marca` (`id_marca`),
   ADD KEY `id_sala_actual` (`id_sala_actual`);
 

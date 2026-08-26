@@ -92,7 +92,7 @@ require_once APP_ROOT . '/views/layout/header.php';
                 <div class="flex items-start space-x-3">
                     <input type="checkbox" required id="firma_digital_check" class="rounded bg-black border-white/10 text-violet-600 focus:ring-violet-500 mt-1">
                     <label for="firma_digital_check" class="text-xs text-slate-300 leading-relaxed cursor-pointer select-none">
-                        Acepto los términos de responsabilidad civil y disciplinaria descritos anteriormente. Al dar clic en "Confirmar Préstamo", esta transacción queda sellada digitalmente a mi nombre utilizando mi documento de identidad bajo sesión cifrada (IP de auditoría: <?= $_SERVER['REMOTE_ADDR'] ?>).
+                        Acepto los términos de responsabilidad civil y disciplinaria descritos anteriormente. Al dar clic en "Confirmar Préstamo", esta transacción queda sellada digitalmente a mi nombre utilizando mi documento de identidad bajo sesión institucional autenticada.
                     </label>
                 </div>
 

@@ -34,97 +34,51 @@ $salaEnRiesgo = (!$comp['tiene_polo_a_tierra'] || !$comp['tiene_estabilizador'])
         </div>
     <?php endif; ?>
 
-    <!-- Fila de Información General y Lógica Fiscal -->
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        
-        <!-- Bloque 1: Ficha Técnica (Hardware) -->
-        <div class="glass-panel rounded-2xl p-6 border border-white/5 bg-black/10 space-y-4 lg:col-span-2">
-            <h3 class="text-sm font-bold text-white uppercase tracking-wider border-b border-white/5 pb-3 flex items-center space-x-2">
-                <i class="fa-solid fa-microchip text-violet-400"></i>
-                <span>Especificaciones de Hardware</span>
-            </h3>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
-                <div class="space-y-1">
-                    <span class="block text-slate-400 font-semibold">Marca y Modelo:</span>
-                    <span class="text-white text-sm font-bold"><?= htmlspecialchars($comp['nombre_marca'] . ' ' . $comp['modelo']) ?></span>
-                </div>
-                <div class="space-y-1">
-                    <span class="block text-slate-400 font-semibold">Número de Serial:</span>
-                    <span class="text-white text-sm font-mono"><?= htmlspecialchars($comp['numero_serial']) ?></span>
-                </div>
-                <div class="space-y-1">
-                    <span class="block text-slate-400 font-semibold">Placa SED:</span>
-                    <span class="text-white"><?= htmlspecialchars($comp['placa_sed'] ?: 'No asignada') ?></span>
-                </div>
-                <div class="space-y-1">
-                    <span class="block text-slate-400 font-semibold">Placa FSE:</span>
-                    <span class="text-white"><?= htmlspecialchars($comp['placa_fse'] ?: 'No asignada') ?></span>
-                </div>
-                <div class="space-y-1">
-                    <span class="block text-slate-400 font-semibold">Procesador Central (CPU):</span>
-                    <span class="text-white"><?= htmlspecialchars($comp['procesador'] ?: 'No especificado') ?></span>
-                </div>
-                <div class="space-y-1">
-                    <span class="block text-slate-400 font-semibold">Sistema Operativo (OS):</span>
-                    <span class="text-white"><?= htmlspecialchars($comp['licenciamiento'] ?: 'No licenciado / Libre') ?></span>
-                </div>
-                <div class="space-y-1">
-                    <span class="block text-slate-400 font-semibold">Sala / Ubicación Actual:</span>
-                    <span class="text-white font-semibold flex items-center space-x-1">
-                        <i class="fa-solid fa-door-open text-violet-400"></i>
-                        <span><?= htmlspecialchars($comp['nombre_sala']) ?></span>
-                    </span>
-                </div>
-                <div class="space-y-1">
-                    <span class="block text-slate-400 font-semibold">Estado Activo:</span>
-                    <span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-slate-800 text-slate-300">
-                        <?= $comp['estado_activo'] ?>
-                    </span>
-                </div>
+    <!-- Fila de Información General -->
+    <div class="glass-panel rounded-2xl p-6 border border-white/5 bg-black/10 space-y-4">
+        <h3 class="text-sm font-bold text-white uppercase tracking-wider border-b border-white/5 pb-3 flex items-center space-x-2">
+            <i class="fa-solid fa-microchip text-violet-400"></i>
+            <span>Especificaciones Técnicas y Ubicación</span>
+        </h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 text-xs">
+            <div class="space-y-1">
+                <span class="block text-slate-400 font-semibold">Marca y Modelo:</span>
+                <span class="text-white text-sm font-bold"><?= htmlspecialchars($comp['nombre_marca'] . ' ' . $comp['modelo']) ?></span>
+            </div>
+            <div class="space-y-1">
+                <span class="block text-slate-400 font-semibold">Número de Serial:</span>
+                <span class="text-white text-sm font-mono"><?= htmlspecialchars($comp['numero_serial']) ?></span>
+            </div>
+            <div class="space-y-1">
+                <span class="block text-slate-400 font-semibold">Placa SED:</span>
+                <span class="text-white"><?= htmlspecialchars($comp['placa_sed'] ?: 'No asignada') ?></span>
+            </div>
+            <div class="space-y-1">
+                <span class="block text-slate-400 font-semibold">Procesador Central (CPU):</span>
+                <span class="text-white"><?= htmlspecialchars($comp['procesador'] ?: 'No especificado') ?></span>
+            </div>
+            <div class="space-y-1">
+                <span class="block text-slate-400 font-semibold">Sistema Operativo (OS):</span>
+                <span class="text-white"><?= htmlspecialchars($comp['licenciamiento'] ?: 'No licenciado / Libre') ?></span>
+            </div>
+            <div class="space-y-1">
+                <span class="block text-slate-400 font-semibold">Fecha de Adquisición:</span>
+                <span class="text-white font-semibold"><?= htmlspecialchars($comp['fecha_adquisicion'] ?? 'No registrada') ?></span>
+            </div>
+            <div class="space-y-1">
+                <span class="block text-slate-400 font-semibold">Sala / Ubicación Actual:</span>
+                <span class="text-white font-semibold flex items-center space-x-1">
+                    <i class="fa-solid fa-door-open text-violet-400"></i>
+                    <span><?= htmlspecialchars($comp['nombre_sala']) ?></span>
+                </span>
+            </div>
+            <div class="space-y-1">
+                <span class="block text-slate-400 font-semibold">Estado Activo:</span>
+                <span class="px-2.5 py-0.5 rounded text-[11px] font-semibold bg-slate-800 text-slate-300 inline-block">
+                    <?= $comp['estado_activo'] ?>
+                </span>
             </div>
         </div>
-
-        <!-- Bloque 2: Ficha Contable / Control Fiscal (FSE) -->
-        <div class="glass-panel rounded-2xl p-6 border border-white/5 bg-black/10 space-y-4">
-            <h3 class="text-sm font-bold text-white uppercase tracking-wider border-b border-white/5 pb-3 flex items-center space-x-2">
-                <i class="fa-solid fa-calculator text-cyan-400"></i>
-                <span>Cálculo Contable y Depreciación</span>
-            </h3>
-            <div class="space-y-3.5 text-xs">
-                <div class="flex justify-between">
-                    <span class="text-slate-400">Valor de Adquisición:</span>
-                    <span class="font-bold text-white">$<?= number_format($comp['valor_historico'], 2) ?></span>
-                </div>
-                <div class="flex justify-between">
-                    <span class="text-slate-400">Vida Útil Parametrizada:</span>
-                    <span class="font-bold text-white"><?= $comp['vida_util_anos'] ?> Años</span>
-                </div>
-                <div class="flex justify-between">
-                    <span class="text-slate-400">Fecha Adquisición:</span>
-                    <span class="font-semibold text-slate-300"><?= $comp['fecha_adquisicion'] ?></span>
-                </div>
-                
-                <div class="border-t border-white/5 my-2 pt-2"></div>
-                
-                <!-- Datos calculados por la vista SQL -->
-                <?php if ($depr): ?>
-                    <div class="flex justify-between">
-                        <span class="text-slate-400">Depreciación Anual ($D_a$):</span>
-                        <span class="font-bold text-violet-400">$<?= number_format($depr['depreciacion_anual_Da'], 2) ?></span>
-                    </div>
-                    <div class="flex justify-between p-2 bg-violet-600/10 rounded-lg border border-violet-500/20 mt-1">
-                        <span class="text-slate-300 font-semibold">Valor Neto en Libros:</span>
-                        <span class="font-extrabold text-white">$<?= number_format($depr['valor_neto_libros'], 2) ?></span>
-                    </div>
-                <?php else: ?>
-                    <!-- Fallback en caso de que la vista no devuelva datos o el computador esté de baja -->
-                    <div class="p-3 bg-slate-800/40 rounded-xl text-center text-slate-400 text-xxs">
-                        Cálculos no disponibles para equipos inactivos o dados de baja.
-                    </div>
-                <?php endif; ?>
-            </div>
-        </div>
-
     </div>
 
     <!-- GESTIÓN DE COMPONENTES INTERNOS (Para prevenir la pérdida hormiga) -->

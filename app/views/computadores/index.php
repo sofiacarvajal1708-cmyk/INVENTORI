@@ -1,7 +1,7 @@
 <?php
 require_once APP_ROOT . '/views/layout/header.php';
 $role = Session::get('role_name');
-$canEdit = in_array($role, ['Rector', 'Almacenista']);
+$canEdit = ($role === 'Administrador');
 ?>
 
 <div class="space-y-6">
@@ -63,7 +63,7 @@ $canEdit = in_array($role, ['Rector', 'Almacenista']);
                 <thead>
                     <tr class="border-b border-white/5 text-slate-400 font-bold uppercase tracking-wider bg-black/10">
                         <th class="py-4 px-4 text-center">ID</th>
-                        <th class="py-4 px-4">Placas (SED/FSE)</th>
+                        <th class="py-4 px-4">Placa SED</th>
                         <th class="py-4 px-4">Serial / Modelo</th>
                         <th class="py-4 px-4">Ubicación Actual</th>
                         <th class="py-4 px-4">Estado</th>
@@ -85,8 +85,7 @@ $canEdit = in_array($role, ['Rector', 'Almacenista']);
                             <tr class="border-b border-white/5 hover:bg-white/[0.01] transition-colors text-slate-300">
                                 <td class="py-4 px-4 text-center text-slate-500 font-mono">#<?= $comp['id_computador'] ?></td>
                                 <td class="py-4 px-4">
-                                    <span class="block font-semibold text-white">SED: <?= htmlspecialchars($comp['placa_sed'] ?: 'N/A') ?></span>
-                                    <span class="block text-[10px] text-slate-500">FSE: <?= htmlspecialchars($comp['placa_fse'] ?: 'N/A') ?></span>
+                                    <span class="font-semibold text-white"><?= htmlspecialchars($comp['placa_sed'] ?: 'No asignada') ?></span>
                                 </td>
                                 <td class="py-4 px-4">
                                     <span class="block font-semibold text-white"><?= htmlspecialchars($comp['nombre_marca'] . ' ' . $comp['modelo']) ?></span>

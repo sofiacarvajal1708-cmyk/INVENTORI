@@ -29,7 +29,7 @@ class App {
                 'prestamos'    => 'PrestamoController',
                 'traslados'    => 'TrasladoController',
                 'bajas'        => 'BajaController',
-                'reportes'     => 'ReportController'
+                'usuarios'     => 'UsuarioController'
             ];
             
             if (array_key_exists($controllerKey, $routeMap)) {
