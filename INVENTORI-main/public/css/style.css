@@ -1,0 +1,958 @@
+/* =========================================================
+   INVENTORI BASAMA - SISTEMA DE ESTILOS INSTITUCIONAL
+   ========================================================= */
+
+/* Tipografías Globales */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap');
+
+/* -------- Tokens de tema (dark por defecto) -------- */
+:root {
+    /* Fondo general */
+    --bg-page:   #090a15;
+    --bg-dark:   #090a15;
+    /* Cards / paneles */
+    --bg-card:   rgba(18, 20, 38, 0.65);
+    --bg-card-solid: #121426;
+    /* Bordes */
+    --border-glass:      rgba(255, 255, 255, 0.08);
+    --border-glass-glow: rgba(59, 130, 246, 0.4);
+    /* Textos */
+    --text-primary:   #f1f5f9;
+    --text-secondary: #94a3b8;
+    --text-muted:     #64748b;
+    /* Sombras / glows */
+    --glow-blue:    rgba(59, 130, 246, 0.2);
+    --glow-purple:  rgba(139, 92, 246, 0.2);
+    --glow-emerald: rgba(16, 185, 129, 0.15);
+    /* Inputs */
+    --input-bg:      rgba(10, 12, 28, 0.75);
+    --input-color:   #e2e8f0;
+    --input-border:  rgba(255, 255, 255, 0.10);
+    /* Scrollbar */
+    --scrollbar-track: #0b0c19;
+    --scrollbar-thumb: rgba(59, 130, 246, 0.4);
+}
+
+/* -------- Tema Oscuro Neón (Predeterminado) -------- */
+:root {
+    --bg-page:   #090a15;
+    --bg-dark:   #090a15;
+    --bg-card:   rgba(15, 23, 42, 0.85);
+    --bg-card-solid: #0f172a;
+    --border-glass:      rgba(16, 185, 129, 0.35);
+    --border-glass-glow: rgba(16, 185, 129, 0.55);
+    --text-primary:   #ffffff;
+    --text-secondary: #e2e8f0;
+    --text-muted:     #94a3b8;
+    --glow-blue:    rgba(30, 58, 138, 0.45);
+    --glow-purple:  rgba(16, 185, 129, 0.35);
+    --glow-emerald: rgba(16, 185, 129, 0.45);
+    --input-bg:      rgba(2, 6, 23, 0.9);
+    --input-color:   #ffffff;
+    --input-border:  rgba(16, 185, 129, 0.45);
+    --scrollbar-track: #090a15;
+    --scrollbar-thumb: rgba(16, 185, 129, 0.5);
+}
+
+/* -------- Tema Claro Elegante e Institucional -------- */
+:root.light {
+    --bg-page:   #f1f5f9;
+    --bg-dark:   #e2e8f0;
+    --bg-card:   rgba(255, 255, 255, 0.92);
+    --bg-card-solid: #ffffff;
+    --border-glass:      rgba(16, 185, 129, 0.3);
+    --border-glass-glow: rgba(16, 185, 129, 0.5);
+    --text-primary:   #0f172a;
+    --text-secondary: #334155;
+    --text-muted:     #64748b;
+    --glow-blue:    rgba(59, 130, 246, 0.15);
+    --glow-purple:  rgba(139, 92, 246, 0.15);
+    --glow-emerald: rgba(16, 185, 129, 0.2);
+    --input-bg:      #ffffff;
+    --input-color:   #0f172a;
+    --input-border:  rgba(16, 185, 129, 0.4);
+    --scrollbar-track: #e2e8f0;
+    --scrollbar-thumb: rgba(16, 185, 129, 0.5);
+}
+
+/* Estilo general del cuerpo */
+body {
+    background-color: var(--bg-page);
+    color: var(--text-primary);
+    font-family: 'Outfit', 'Inter', sans-serif;
+    overflow-x: hidden;
+    min-height: 100vh;
+    background-attachment: fixed;
+    margin: 0;
+    padding: 0;
+    transition: background-color 0.35s ease, color 0.35s ease;
+}
+:root:not(.light) body {
+    background-image: 
+        radial-gradient(at 10% 20%, rgba(59, 130, 246, 0.1) 0px, transparent 50%),
+        radial-gradient(at 90% 10%, rgba(139, 92, 246, 0.08) 0px, transparent 50%),
+        radial-gradient(at 50% 80%, rgba(16, 185, 129, 0.05) 0px, transparent 50%);
+}
+:root.light body {
+    background-image:
+        radial-gradient(at 10% 20%, rgba(59, 130, 246, 0.05) 0px, transparent 50%),
+        radial-gradient(at 90% 10%, rgba(139, 92, 246, 0.04) 0px, transparent 50%),
+        radial-gradient(at 50% 80%, rgba(16, 185, 129, 0.03) 0px, transparent 50%);
+}
+
+/* Efectos de Glassmorphism */
+.glass-panel {
+    background: var(--bg-card);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--border-glass);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    transition: background 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease;
+}
+
+.glass-panel-hover {
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.glass-panel-hover:hover {
+    transform: translateY(-3px);
+    border-color: var(--border-glass-glow);
+    box-shadow: 0 12px 40px 0 var(--glow-blue);
+}
+
+/* Chips de roles interactivos */
+.role-chip {
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+}
+.role-chip:hover {
+    transform: translateY(-2px);
+    border-color: rgba(59, 130, 246, 0.4);
+    background: rgba(255, 255, 255, 0.08);
+}
+.role-chip:active {
+    transform: scale(0.97);
+}
+
+/* Animaciones y Transiciones */
+.transition-glow {
+    transition: all 0.3s ease;
+}
+.transition-glow:hover {
+    box-shadow: 0 0 15px var(--border-glass-glow);
+}
+
+/* Scrollbars personalizadas premium */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+::-webkit-scrollbar-track {
+    background: var(--scrollbar-track);
+}
+::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-thumb);
+    border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(99, 102, 241, 0.7);
+}
+
+/* Fondo dinámico animado */
+@keyframes gradientBG {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+.animated-bg {
+    background: linear-gradient(-45deg, #070913, #0d122b, #091720, #050811);
+    background-size: 400% 400%;
+    animation: gradientBG 18s ease infinite;
+}
+
+/* Efecto de Pulso y Glow */
+.pulse-glow {
+    animation: pulseGlow 3s infinite alternate;
+}
+
+@keyframes pulseGlow {
+    0% {
+        box-shadow: 0 0 5px rgba(59, 130, 246, 0.2);
+    }
+    100% {
+        box-shadow: 0 0 20px rgba(99, 102, 241, 0.5);
+    }
+}
+
+/* Pad de firma digital o canvas */
+.signature-canvas {
+    border: 2px dashed rgba(255, 255, 255, 0.15);
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    cursor: crosshair;
+}
+
+/* Layout específico para el Login Split */
+.login-split-container {
+    display: flex;
+    flex-direction: row;
+    min-height: 100vh;
+    width: 100%;
+}
+
+.login-split-left {
+    flex: 1;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2.5rem;
+    box-sizing: border-box;
+}
+
+.login-split-right {
+    flex: 1;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    padding: 2.5rem;
+    box-sizing: border-box;
+    overflow-y: auto;
+}
+
+@media (max-width: 768px) {
+    .login-split-container {
+        flex-direction: column;
+    }
+    .login-split-left {
+        display: none;
+    }
+    .login-split-right {
+        width: 100%;
+        padding: 1.5rem;
+    }
+}
+
+/* =========================================================
+   INPUTS, SELECTS, TEXTAREAS — TEMA OSCURO GLOBAL
+   ========================================================= */
+
+/* Estilos base para todos los controles de formulario */
+input,
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+input[type="search"],
+input[type="date"],
+input[type="tel"],
+select,
+textarea {
+    background-color: var(--input-bg) !important;
+    color: var(--input-color) !important;
+    border: 1px solid var(--input-border) !important;
+    border-radius: 0.6rem;
+    outline: none;
+    transition: border-color .2s, box-shadow .2s, background-color .3s, color .3s;
+}
+
+/* Placeholder */
+input::placeholder,
+textarea::placeholder {
+    color: rgba(148, 163, 184, 0.55) !important;
+}
+
+/* Focus */
+input:focus,
+select:focus,
+textarea:focus {
+    border-color: rgba(99, 102, 241, 0.55) !important;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.12) !important;
+    background-color: var(--input-bg) !important;
+}
+
+/* Opciones del select */
+select option {
+    background-color: #0d1024 !important;
+    color: #e2e8f0 !important;
+}
+
+/* Forzar color en select cuando tiene valor seleccionado */
+select:not([multiple]) {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%2394a3b8' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3E%3C/svg%3E") !important;
+    background-repeat: no-repeat !important;
+    background-position: right 0.6rem center !important;
+    background-size: 1.2rem !important;
+    padding-right: 2.2rem !important;
+}
+
+/* Hover suave */
+input:hover,
+select:hover,
+textarea:hover {
+    border-color: rgba(255, 255, 255, 0.18) !important;
+}
+
+/* Auto-fill del navegador (Chrome/Edge) — evita fondo blanco */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus {
+    -webkit-text-fill-color: #e2e8f0 !important;
+    -webkit-box-shadow: 0 0 0px 1000px rgba(10, 12, 28, 0.9) inset !important;
+    transition: background-color 9999s ease-in-out 0s;
+}
+
+/* Dismiss automático de alertas flash */
+.auto-dismiss {
+    animation: fadeOutAlert 0.5s ease 4s forwards;
+}
+@keyframes fadeOutAlert {
+    to { opacity: 0; max-height: 0; padding: 0; margin: 0; overflow: hidden; }
+}
+
+/* --- Reglas de Fondo y Texto para Modo Claro Completo --- */
+:root.light body {
+    background-color: #f1f5f9 !important;
+    background-image: 
+        radial-gradient(at 10% 20%, rgba(59, 130, 246, 0.08) 0px, transparent 50%),
+        radial-gradient(at 90% 10%, rgba(16, 185, 129, 0.08) 0px, transparent 50%),
+        radial-gradient(at 50% 80%, rgba(139, 92, 246, 0.05) 0px, transparent 50%) !important;
+    color: #0f172a !important;
+}
+
+:root.light .animated-bg-wrapper {
+    background-color: #e2e8f0 !important;
+    background-image: 
+        radial-gradient(at 10% 20%, rgba(59, 130, 246, 0.12) 0px, transparent 50%),
+        radial-gradient(at 90% 10%, rgba(16, 185, 129, 0.12) 0px, transparent 50%),
+        radial-gradient(at 50% 80%, rgba(139, 92, 246, 0.08) 0px, transparent 50%) !important;
+}
+
+#login-page {
+    background: transparent !important;
+}
+
+/* Textos de Tailwind hardcodeados en Modo Claro con Resplandor Halo Blanco para Lectura Perfecta sobre la Marca de Agua */
+:root.light h1,
+:root.light h2,
+:root.light h3,
+:root.light p,
+:root.light span,
+:root.light strong,
+:root.light label,
+:root.light div {
+    text-shadow: 0 1px 4px rgba(255, 255, 255, 0.95), 0 0 12px rgba(255, 255, 255, 0.9) !important;
+}
+
+:root.light h1 { color: #0f172a !important; font-weight: 800 !important; }
+:root.light p  { color: #1e293b !important; font-weight: 600 !important; }
+:root.light .text-white      { color: #0f172a !important; }
+:root.light .text-slate-50   { color: #0f172a !important; }
+:root.light .text-slate-100  { color: #1e293b !important; }
+:root.light .text-slate-200  { color: #1e293b !important; }
+:root.light .text-slate-300  { color: #334155 !important; }
+:root.light .text-slate-400  { color: #047857 !important; font-weight: 700 !important; }
+:root.light .text-slate-500  { color: #475569 !important; }
+:root.light .text-slate-600  { color: #334155 !important; }
+:root.light .text-emerald-400,
+:root.light strong.text-emerald-400 { color: #047857 !important; font-weight: 800 !important; }
+:root.light .text-gray-300   { color: #1e293b !important; }
+:root.light .text-gray-400   { color: #334155 !important; }
+:root.light .text-gray-500   { color: #6b7280 !important; }
+
+/* Títulos de página con gradiente — hacerlos visibles */
+:root.light h1.bg-clip-text,
+:root.light .bg-clip-text { color: #1e293b !important; -webkit-text-fill-color: #1e293b !important; }
+/* Subtítulos / párrafos de contexto que suelen ser text-slate-400 o similares */
+:root.light p { color: inherit; }
+
+/* --- Sidebar --- */
+:root.light #main-sidebar {
+    background: rgba(255,255,255,0.97) !important;
+    border-right-color: rgba(0,0,0,0.08) !important;
+}
+:root.light #main-sidebar a            { color: #334155 !important; }
+:root.light #main-sidebar a:hover      { background: rgba(0,0,0,0.05) !important; color: #0f172a !important; }
+:root.light #main-sidebar span         { color: #475569 !important; }
+:root.light #main-sidebar .font-bold,
+:root.light #main-sidebar strong       { color: #0f172a !important; }
+:root.light #main-sidebar .text-xs     { color: #64748b !important; }
+/* Iconos en sidebar */
+:root.light #main-sidebar i            { color: #475569 !important; }
+
+/* --- Header (navbar superior) --- */
+:root.light header.glass-panel {
+    background: rgba(255,255,255,0.95) !important;
+    border-bottom-color: rgba(0,0,0,0.08) !important;
+}
+:root.light header .text-white   { color: #0f172a !important; }
+:root.light header .text-slate-400 { color: #64748b !important; }
+
+/* --- Login Card Container & Form Styling --- */
+#login-card, .login-card-box {
+    background: var(--bg-card) !important;
+    border: 1px solid var(--border-glass) !important;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4), 0 0 30px var(--glow-emerald) !important;
+    transition: background-color 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease;
+}
+
+:root.light #login-card,
+:root.light .login-card-box {
+    background: rgba(255, 255, 255, 0.94) !important;
+    border: 1px solid rgba(16, 185, 129, 0.4) !important;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.08), 0 0 30px rgba(16, 185, 129, 0.2) !important;
+}
+
+:root.light #login-card h2,
+:root.light #login-card .login-title {
+    color: #0f172a !important;
+}
+
+:root.light #login-card p,
+:root.light #login-card .login-subtitle {
+    color: #334155 !important;
+}
+
+:root.light #login-card label {
+    color: #059669 !important;
+}
+
+:root.light #login-card input {
+    background-color: #ffffff !important;
+    color: #0f172a !important;
+    border-color: rgba(16, 185, 129, 0.4) !important;
+}
+
+/* --- Paneles de vidrio generales --- */
+.glass-panel {
+    background: var(--bg-card);
+    border: 1px solid var(--border-glass);
+}
+:root.light .glass-panel {
+    background: rgba(255,255,255,0.92) !important;
+    border-color: rgba(16, 185, 129, 0.3) !important;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.06) !important;
+}
+
+/* --- Tarjetas Dashboard --- */
+:root.light .kpi-card {
+    background: #ffffff !important;
+    border-color: rgba(0,0,0,0.08) !important;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.04) !important;
+}
+:root.light .section-card {
+    background: #ffffff !important;
+    border-color: rgba(0,0,0,0.08) !important;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.04) !important;
+}
+:root.light .stat-mini {
+    background: #f8fafc !important;
+    border-color: rgba(0,0,0,0.08) !important;
+}
+:root.light .action-btn {
+    background: #f8fafc !important;
+    border-color: rgba(0,0,0,0.10) !important;
+    color: #1e293b !important;
+}
+:root.light .action-btn:hover {
+    background: #ffffff !important;
+    border-color: rgba(99,102,241,0.5) !important;
+    color: #0f172a !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.06) !important;
+}
+:root.light .action-btn .btn-icon { color: inherit !important; }
+
+/* --- Tablas --- */
+:root.light table thead tr  { background: rgba(241,245,249,0.9) !important; border-color: rgba(0,0,0,0.08) !important; }
+:root.light table thead th  { color: #475569 !important; }
+:root.light table tbody tr  { border-color: rgba(0,0,0,0.05) !important; color: #1e293b !important; }
+:root.light table tbody tr:hover { background: rgba(248,250,252,0.9) !important; }
+:root.light table tbody td  { color: #1e293b !important; }
+:root.light table tbody td span { color: inherit !important; }
+
+/* --- Formularios (labels) --- */
+:root.light label { color: #334155 !important; }
+:root.light legend { color: #1e293b !important; }
+
+/* --- Badges / pills de estado — preservar su color propio --- */
+:root.light .text-emerald-400 { color: #059669 !important; }
+:root.light .text-emerald-300 { color: #10b981 !important; }
+:root.light .text-yellow-400  { color: #d97706 !important; }
+:root.light .text-rose-400    { color: #e11d48 !important; }
+:root.light .text-rose-300    { color: #f43f5e !important; }
+:root.light .text-indigo-400  { color: #4f46e5 !important; }
+:root.light .text-violet-400  { color: #7c3aed !important; }
+:root.light .text-cyan-400    { color: #0891b2 !important; }
+:root.light .text-blue-400    { color: #2563eb !important; }
+:root.light .text-amber-400   { color: #d97706 !important; }
+
+/* --- Fondos de badges en modo claro --- */
+:root.light .bg-emerald-500\/10,
+:root.light [class*="bg-emerald"] { background-color: rgba(16,185,129,0.12) !important; }
+:root.light .bg-rose-500\/10,
+:root.light [class*="bg-rose-9"]  { background-color: rgba(244,63,94,0.10)  !important; }
+
+/* --- Botón de tema --- */
+:root.light #global-theme-toggle {
+    background: rgba(0,0,0,0.06) !important;
+    border-color: rgba(0,0,0,0.12) !important;
+    color: #475569 !important;
+}
+:root.light #global-theme-toggle:hover {
+    background: rgba(0,0,0,0.10) !important;
+    color: #0f172a !important;
+}
+
+/* --- Font Mono (seriales, IDs) --- */
+:root.light .font-mono { color: #334155 !important; }
+
+/* --- Texto transparente (gradient titles) en modo claro --- */
+:root.light [class*="text-transparent"] {
+    -webkit-text-fill-color: #1e293b !important;
+    color: #1e293b !important;
+    background: none !important;
+}
+
+/* Footer */
+:root.light footer.glass-panel { color: #64748b !important; }
+
+/* Transiciones suaves en todos los elementos */
+*, *::before, *::after {
+    transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+/* Excluir transiciones en elementos animados (no interferir) */
+.auto-dismiss, [class*="animate-"] {
+    transition: none !important;
+}
+
+/* -------- ESTILOS PERSONALIZADOS DE INTERACTIVIDAD & HOVER -------- */
+.btn-interactive {
+    cursor: pointer;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.btn-interactive:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px -4px rgba(16, 185, 129, 0.35);
+}
+.btn-interactive:active {
+    transform: translateY(0);
+}
+
+.kpi-card-hover {
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.kpi-card-hover:hover {
+    transform: translateY(-4px) scale(1.02);
+    border-color: rgba(16, 185, 129, 0.5) !important;
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(15, 23, 42, 0.8) 100%) !important;
+    box-shadow: 0 12px 28px -6px rgba(16, 185, 129, 0.25), 0 0 15px rgba(16, 185, 129, 0.15);
+}
+
+.sala-card-hover {
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.sala-card-hover:hover {
+    transform: translateY(-4px);
+    border-color: rgba(16, 185, 129, 0.6) !important;
+    box-shadow: 0 12px 30px -8px rgba(6, 182, 212, 0.3);
+}
+
+/* Elevación de botones y enlaces al pasar el mouse (Hover & Elevation) */
+.nav-link-hover {
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+.nav-link-hover:hover {
+    transform: translateY(-3px) !important;
+    box-shadow: 0 8px 20px -4px rgba(16, 185, 129, 0.4) !important;
+}
+
+.btn-theme-hover {
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+.btn-theme-hover:hover {
+    transform: translateY(-3px) scale(1.08) !important;
+    background-color: #059669 !important;
+    color: #ffffff !important;
+    border-color: #34d399 !important;
+    box-shadow: 0 8px 20px -4px rgba(16, 185, 129, 0.6) !important;
+}
+
+.btn-logout-hover {
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+.btn-logout-hover:hover {
+    transform: translateY(-3px) scale(1.08) !important;
+    background-color: #e11d48 !important;
+    color: #ffffff !important;
+    border-color: #fda4af !important;
+    box-shadow: 0 8px 20px -4px rgba(225, 29, 72, 0.6) !important;
+}
+
+/* Efecto del Botón de Modo Oscuro/Tema al pasar el Mouse */
+#theme-toggle:hover,
+#global-theme-toggle:hover {
+    background: linear-gradient(135deg, #10b981 0%, #06b6d4 50%, #1d4ed8 100%) !important;
+    color: #ffffff !important;
+    border-color: #34d399 !important;
+    box-shadow: 0 0 20px rgba(16, 185, 129, 0.6) !important;
+    transform: scale(1.1) !important;
+}
+
+/* Efectos de Cambio de Color al Hacer Clic / Tocar Botones (Verde Esmeralda y Azul Oscuro Intenso) */
+.btn-interactive,
+button[type="submit"],
+button:not(.no-style),
+.nav-link-hover {
+    transition: all 0.22s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.btn-interactive:hover,
+button[type="submit"]:hover,
+.nav-link-hover:hover {
+    background: linear-gradient(135deg, #10b981 0%, #0d9488 50%, #1d4ed8 100%) !important;
+    color: #ffffff !important;
+    box-shadow: 0 10px 25px -4px rgba(16, 185, 129, 0.5), 0 6px 12px -4px rgba(30, 58, 138, 0.4) !important;
+    border-color: #34d399 !important;
+    transform: translateY(-2px) scale(1.02) !important;
+}
+
+.btn-interactive:active,
+button[type="submit"]:active,
+.nav-link-hover:active {
+    background: linear-gradient(135deg, #00e676 0%, #10b981 50%, #0284c7 100%) !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 15px rgba(0, 230, 118, 0.6) !important;
+    transform: translateY(1px) scale(0.97) !important;
+    border-color: #a7f3d0 !important;
+}
+
+/* Print CSS para generación de PDF */
+@media print {
+    body {
+        background: #ffffff !important;
+        color: #000000 !important;
+    }
+    header, aside, #main-sidebar, button, .no-print {
+        display: none !important;
+    }
+    .print-only {
+        display: block !important;
+    }
+    .glass-panel {
+        background: #ffffff !important;
+        border: 1px solid #cccccc !important;
+        box-shadow: none !important;
+    }
+    table {
+        width: 100% !important;
+        border-collapse: collapse !important;
+    }
+    th, td {
+        border: 1px solid #dddddd !important;
+        padding: 8px !important;
+        color: #000000 !important;
+    }
+}
+
+/* =========================================================
+   ANIMATED INTERACTIVE BACKGROUND & MOUSE TRACKING SHAPES
+   ========================================================= */
+
+.animated-bg-wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none !important;
+    z-index: 0 !important;
+    overflow: hidden;
+}
+
+/* Ocultar bloques geométricos para un fondo limpio */
+.geo-shape {
+    display: none !important;
+}
+
+/* Marca de agua institucional reluciente e idéntica en ambos modos (Parallax 3D interactivo con el ratón) */
+.institutional-watermark-overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 65vmax;
+    height: 65vmax;
+    max-width: 900px;
+    max-height: 900px;
+    background-image: url('../img/logo_watermark.png');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+    border-radius: 50%;
+    opacity: 0.65;
+    filter: brightness(1.4) contrast(1.25) drop-shadow(0 0 70px rgba(16, 185, 129, 0.75)) drop-shadow(0 0 40px rgba(30, 58, 138, 0.65));
+    pointer-events: none !important;
+    z-index: 1;
+    transition: transform 0.12s cubic-bezier(0.1, 0.6, 0.2, 1), opacity 0.5s ease;
+}
+
+:root.light .institutional-watermark-overlay {
+    opacity: 0.35 !important;
+    filter: brightness(0.7) contrast(1.3) drop-shadow(0 0 50px rgba(16, 185, 129, 0.35)) drop-shadow(0 0 25px rgba(30, 58, 138, 0.25)) !important;
+    mix-blend-mode: multiply !important;
+    display: block !important;
+    visibility: visible !important;
+}
+
+/* Orb resplandeciente interactivo que sigue el movimiento del mouse (Verde y Azul Oscuro) */
+.cursor-glow-orb {
+    position: absolute;
+    width: 320px;
+    height: 320px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(16, 185, 129, 0.45) 0%, rgba(30, 58, 138, 0.35) 50%, transparent 80%);
+    filter: blur(50px);
+    transform: translate(-50%, -50%);
+    pointer-events: none !important;
+    z-index: 1;
+    transition: left 0.12s ease-out, top 0.12s ease-out;
+}
+
+:root.light .cursor-glow-orb {
+    background: radial-gradient(circle, rgba(16, 185, 129, 0.25) 0%, rgba(30, 58, 138, 0.2) 50%, transparent 80%);
+}
+
+/* Figuras en Movimiento Interactivas (Verde y Azul Oscuro) */
+.bg-shape {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(75px);
+    opacity: 0.55;
+    mix-blend-mode: screen;
+    animation-duration: 22s;
+    animation-iteration-count: infinite;
+    animation-timing-function: ease-in-out;
+    pointer-events: none !important;
+    transition: transform 0.25s cubic-bezier(0.1, 0.6, 0.2, 1);
+}
+
+:root.light .bg-shape {
+    opacity: 0.25;
+    mix-blend-mode: multiply;
+}
+
+/* 1. Esfera Verde Esmeralda Superior Izquierda */
+.shape-blob-green-1 {
+    width: 500px;
+    height: 500px;
+    top: -120px;
+    left: -120px;
+    background: radial-gradient(circle, rgba(16, 185, 129, 0.55) 0%, rgba(5, 150, 105, 0.2) 60%, transparent 100%);
+    animation-name: floatGreen1;
+}
+
+/* 2. Esfera Azul Oscuro Superior Derecha */
+.shape-blob-blue-1 {
+    width: 600px;
+    height: 600px;
+    top: -160px;
+    right: -160px;
+    background: radial-gradient(circle, rgba(30, 58, 138, 0.75) 0%, rgba(15, 23, 42, 0.35) 60%, transparent 100%);
+    animation-name: floatBlue1;
+}
+
+/* 3. Esfera Verde Bosque Inferior Derecha */
+.shape-blob-green-2 {
+    width: 520px;
+    height: 520px;
+    bottom: -160px;
+    right: -120px;
+    background: radial-gradient(circle, rgba(6, 78, 59, 0.65) 0%, rgba(16, 185, 129, 0.25) 60%, transparent 100%);
+    animation-name: floatGreen2;
+}
+
+/* 4. Esfera Azul Marino Inferior Izquierda */
+.shape-blob-blue-2 {
+    width: 500px;
+    height: 500px;
+    bottom: -140px;
+    left: -120px;
+    background: radial-gradient(circle, rgba(14, 116, 144, 0.55) 0%, rgba(15, 23, 42, 0.45) 60%, transparent 100%);
+    animation-name: floatBlue2;
+}
+
+/* 5. Orb Verde Teal Centro Fluctuante */
+.shape-blob-teal-1 {
+    width: 380px;
+    height: 380px;
+    top: 45%;
+    left: 45%;
+    background: radial-gradient(circle, rgba(20, 184, 166, 0.4) 0%, rgba(13, 148, 136, 0.15) 70%, transparent 100%);
+    animation-name: floatCenterTeal;
+}
+
+/* Anillo en órbita giratorio en azul oscuro y verde */
+.shape-orbit-ring {
+    width: 650px;
+    height: 650px;
+    top: 18%;
+    left: 28%;
+    border: 2px dashed rgba(16, 185, 129, 0.2);
+    border-top-color: rgba(59, 130, 246, 0.3);
+    border-bottom-color: rgba(16, 185, 129, 0.3);
+    border-radius: 42% 58% 70% 30% / 45% 45% 55% 55%;
+    filter: blur(14px);
+    animation: spinRing 30s linear infinite;
+}
+
+/* Base de Figuras Geométricas en Movimiento (Verde Esmeralda y Azul Eléctrico) */
+.geo-shape {
+    position: absolute;
+    pointer-events: none;
+    z-index: 0;
+    transition: transform 0.3s cubic-bezier(0.1, 0.6, 0.2, 1);
+    filter: drop-shadow(0 0 25px rgba(16, 185, 129, 0.35)) drop-shadow(0 0 15px rgba(30, 58, 138, 0.4));
+}
+
+.geo-shape polygon {
+    fill: none !important;
+}
+
+/* Red de Constelación Poligonal SVG 3D Ampliada (Izquierda y Derecha) */
+.geo-constellation-svg-left {
+    width: 850px;
+    height: 850px;
+    bottom: -100px;
+    left: -120px;
+    filter: drop-shadow(0 0 35px rgba(16, 185, 129, 0.65));
+    animation: floatConstellationLeft 20s ease-in-out infinite;
+}
+
+.geo-constellation-svg-right {
+    width: 950px;
+    height: 950px;
+    top: -120px;
+    right: -140px;
+    filter: drop-shadow(0 0 40px rgba(14, 165, 233, 0.7));
+    animation: floatConstellationRight 22s ease-in-out infinite;
+}
+
+@keyframes floatConstellationLeft {
+    0%, 100% { transform: translate(0, 0) rotate(0deg) scale(1); }
+    50% { transform: translate(40px, -35px) rotate(12deg) scale(1.08); }
+}
+
+@keyframes floatConstellationRight {
+    0%, 100% { transform: translate(0, 0) rotate(0deg) scale(1); }
+    50% { transform: translate(-45px, 40px) rotate(-15deg) scale(1.1); }
+}
+
+/* 1. Hexágono Tecnológico Reluciente (Arriba Izquierda) */
+.shape-geo-hex-1 {
+    width: 280px;
+    height: 280px;
+    top: 5%;
+    left: 8%;
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.3) 0%, rgba(30, 58, 138, 0.2) 50%, rgba(5, 150, 105, 0.1) 100%);
+    border: 2px solid rgba(16, 185, 129, 0.4);
+    backdrop-filter: blur(8px);
+    animation: spinGeoHex 24s linear infinite;
+}
+
+/* 2. Diamante Prismático 3D (Arriba Derecha) */
+.shape-geo-diamond-1 {
+    width: 240px;
+    height: 240px;
+    top: 12%;
+    right: 10%;
+    transform: rotate(45deg);
+    background: linear-gradient(225deg, rgba(30, 58, 138, 0.5) 0%, rgba(14, 116, 144, 0.3) 60%, rgba(16, 185, 129, 0.15) 100%);
+    border: 2px solid rgba(59, 130, 246, 0.5);
+    border-radius: 24px;
+    backdrop-filter: blur(6px);
+    animation: floatGeoDiamond 18s ease-in-out infinite;
+}
+
+/* 3. Octágono Orbital Neón (Abajo Izquierda) */
+.shape-geo-octagon-1 {
+    width: 320px;
+    height: 320px;
+    bottom: 8%;
+    left: 6%;
+    clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%);
+    background: radial-gradient(circle, rgba(16, 185, 129, 0.25) 0%, rgba(15, 23, 42, 0.6) 80%);
+    border: 2px dashed rgba(16, 185, 129, 0.5);
+    animation: pulseGeoOctagon 20s ease-in-out infinite;
+}
+
+/* 4. Polígono Angular Gradiente (Abajo Derecha) */
+.shape-geo-poly-2 {
+    width: 300px;
+    height: 300px;
+    bottom: 10%;
+    right: 8%;
+    clip-path: polygon(20% 0%, 80% 10%, 100% 70%, 50% 100%, 0% 60%);
+    background: linear-gradient(160deg, rgba(30, 58, 138, 0.45) 0%, rgba(16, 185, 129, 0.35) 70%, transparent 100%);
+    backdrop-filter: blur(10px);
+    animation: floatGeoPoly 22s ease-in-out infinite;
+}
+
+/* 5. Triángulo Tecnológico Central */
+.shape-geo-tri-1 {
+    width: 220px;
+    height: 220px;
+    top: 38%;
+    right: 22%;
+    clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
+    background: linear-gradient(60deg, rgba(16, 185, 129, 0.3) 0%, rgba(30, 58, 138, 0.4) 100%);
+    animation: floatGeoTri 16s ease-in-out infinite;
+}
+
+/* Malla Geométrica de Fondo */
+.shape-geo-grid {
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(rgba(16, 185, 129, 0.12) 1px, transparent 1px), radial-gradient(rgba(30, 58, 138, 0.15) 1px, transparent 1px);
+    background-size: 40px 40px;
+    background-position: 0 0, 20px 20px;
+    opacity: 0.45;
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* Keyframes de Figuras Geométricas */
+@keyframes spinGeoHex {
+    0% { transform: rotate(0deg) scale(1); }
+    50% { transform: rotate(180deg) scale(1.08); }
+    100% { transform: rotate(360deg) scale(1); }
+}
+
+@keyframes floatGeoDiamond {
+    0%, 100% { transform: rotate(45deg) translate(0, 0) scale(1); }
+    50% { transform: rotate(65deg) translate(-40px, 50px) scale(1.12); }
+}
+
+@keyframes pulseGeoOctagon {
+    0%, 100% { transform: rotate(0deg) scale(1); }
+    50% { transform: rotate(-90deg) scale(1.15); }
+}
+
+@keyframes floatGeoPoly {
+    0%, 100% { transform: translate(0, 0) rotate(0deg); }
+    50% { transform: translate(50px, -45px) rotate(40deg); }
+}
+
+@keyframes floatGeoTri {
+    0%, 100% { transform: translate(0, 0) rotate(0deg) scale(1); }
+    50% { transform: translate(-30px, -40px) rotate(-30deg) scale(1.1); }
+}
+
