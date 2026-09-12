@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.0
+-- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: localhost:3306
--- Generation Time: Jun 03, 2026 at 11:56 AM
--- Server version: 8.0.30
--- PHP Version: 8.1.10
+-- Servidor: 127.0.0.1
+-- Tiempo de generación: 12-09-2026 a las 17:57:14
+-- Versión del servidor: 10.4.32-MariaDB
+-- Versión de PHP: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,180 +18,320 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `inventario_santa_margarita`
+-- Base de datos: `inventario_santa_margarita`
 --
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `bajas_raee`
+-- Estructura de tabla para la tabla `bajas_raee`
 --
 
 CREATE TABLE `bajas_raee` (
-  `id_baja` int NOT NULL,
-  `id_computador` int NOT NULL,
+  `id_baja` int(11) NOT NULL,
+  `id_computador` int(11) NOT NULL,
   `numero_acta_consejo` varchar(50) NOT NULL,
   `fecha_baja` date NOT NULL,
   `entidad_retoma` enum('Computadores para Educar','EPM','Gestor Autorizado') NOT NULL,
   `numero_certificado_raee` varchar(100) NOT NULL,
-  `observaciones` text
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `observaciones` text DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `componentes_internos`
+-- Estructura de tabla para la tabla `componentes_internos`
 --
 
 CREATE TABLE `componentes_internos` (
-  `id_componente` int NOT NULL,
-  `id_computador` int NOT NULL,
+  `id_componente` int(11) NOT NULL,
+  `id_computador` int(11) NOT NULL,
   `tipo_componente` enum('RAM','Disco Duro','SSD','Procesador','Tarjeta de Red') NOT NULL,
   `serial_componente` varchar(100) NOT NULL,
   `especificaciones_tecnicas` varchar(255) DEFAULT NULL,
   `estado_componente` enum('Instalado','Removido','Falla') DEFAULT 'Instalado',
-  `fecha_registro` timestamp NULL DEFAULT CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `fecha_registro` timestamp NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `computadores`
+-- Estructura de tabla para la tabla `computadores`
 --
 
 CREATE TABLE `computadores` (
-  `id_computador` int NOT NULL,
+  `id_computador` int(11) NOT NULL,
   `placa_sed` varchar(50) DEFAULT NULL,
   `numero_serial` varchar(100) NOT NULL,
-  `id_marca` int NOT NULL,
+  `id_marca` int(11) NOT NULL,
   `modelo` varchar(100) DEFAULT NULL,
   `procesador` varchar(100) DEFAULT NULL,
   `licenciamiento` varchar(100) DEFAULT NULL,
   `fecha_adquisicion` date NOT NULL,
-  `id_sala_actual` int NOT NULL,
-  `estado_activo` enum('Operativo','En Mantenimiento','Obsoleto','Dado de Baja') DEFAULT 'Operativo'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `estado_activo` enum('Operativo','En Mantenimiento','Obsoleto','Dado de Baja') DEFAULT 'Operativo',
+  `sede` varchar(100) DEFAULT 'Santa Margarita',
+  `descripcion_adicional` text DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `computadores`
+--
+
+INSERT INTO `computadores` (`id_computador`, `placa_sed`, `numero_serial`, `id_marca`, `modelo`, `procesador`, `licenciamiento`, `fecha_adquisicion`, `estado_activo`, `sede`, `descripcion_adicional`) VALUES
+(1, 'SED-00105', 'SN-2026-0001', 1, 'Computador Lenovo ThinkCentre M70q', 'Intel Core i5-11400', 'Windows 11 Pro Education', '2026-09-08', 'Operativo', 'Santa Margarita', 'Equipo de cómputo de alto rendimiento asignado para actividades académicas.'),
+(2, 'SED-00210', 'SN-2026-0002', 1, 'Computador HP ProDesk 400 G6', 'Intel Core i5-11400', 'Windows 11 Pro Education', '2026-09-08', 'Operativo', 'Santa Margarita', 'Equipo de cómputo de alto rendimiento asignado para actividades académicas.'),
+(3, 'SED-00315', 'SN-2026-0003', 1, 'Computador Lenovo ThinkCentre M70q', 'Intel Core i5-11400', 'Windows 11 Pro Education', '2026-09-08', 'Operativo', 'Santa Margarita', 'Equipo de cómputo de alto rendimiento asignado para actividades académicas.'),
+(4, 'SED-00420', 'SN-2026-0004', 1, 'Computador HP ProDesk 400 G6', 'Intel Core i5-11400', 'Windows 11 Pro Education', '2026-09-08', 'Operativo', 'Pedro Nel Ospina', 'Equipo de cómputo de alto rendimiento asignado para actividades académicas.'),
+(5, 'SED-00525', 'SN-2026-0005', 1, 'Computador Lenovo ThinkCentre M70q', 'Intel Core i5-11400', 'Windows 11 Pro Education', '2026-09-08', 'Operativo', 'Santa Margarita', 'Equipo de cómputo de alto rendimiento asignado para actividades académicas.'),
+(6, 'SED-00630', 'SN-2026-0006', 1, 'Computador HP ProDesk 400 G6', 'Intel Core i5-11400', 'Windows 11 Pro Education', '2026-09-08', 'Operativo', 'Bachillerato Santa Margarita', 'Equipo de cómputo de alto rendimiento asignado para actividades académicas.'),
+(7, 'SED-00735', 'SN-2026-0007', 1, 'Computador Lenovo ThinkCentre M70q', 'Intel Core i5-11400', 'Windows 11 Pro Education', '2026-09-08', 'Operativo', 'Bachillerato Santa Margarita', 'Equipo de cómputo de alto rendimiento asignado para actividades académicas.'),
+(8, 'SED-00840', 'SN-2026-0008', 1, 'Computador HP ProDesk 400 G6', 'Intel Core i5-11400', 'Windows 11 Pro Education', '2026-09-08', 'Operativo', 'General / Otras', 'Equipo de cómputo de alto rendimiento asignado para actividades académicas.'),
+(9, 'SED-00945', 'SN-2026-0009', 1, 'Computador Lenovo ThinkCentre M70q', 'Intel Core i5-11400', 'Windows 11 Pro Education', '2026-09-08', 'Operativo', 'General / Otras', 'Equipo de cómputo de alto rendimiento asignado para actividades académicas.'),
+(10, 'SED-01050', 'SN-2026-0010', 1, 'Computador HP ProDesk 400 G6', 'Intel Core i5-11400', 'Windows 11 Pro Education', '2026-09-08', 'Operativo', 'Santa Margarita', 'Equipo de cómputo de alto rendimiento asignado para actividades académicas.'),
+(11, 'SED-01155', 'SN-2026-0011', 1, 'Computador Lenovo ThinkCentre M70q', 'Intel Core i5-11400', 'Windows 11 Pro Education', '2026-09-08', 'Operativo', 'Bachillerato Santa Margarita', 'Equipo de cómputo de alto rendimiento asignado para actividades académicas.');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `logs_seguridad`
+-- Estructura de tabla para la tabla `logs_seguridad`
 --
 
 CREATE TABLE `logs_seguridad` (
-  `id_log` int NOT NULL,
-  `id_usuario` int DEFAULT NULL,
+  `id_log` int(11) NOT NULL,
+  `id_usuario` int(11) DEFAULT NULL,
   `accion_ejecutada` varchar(100) NOT NULL,
   `tabla_afectada` varchar(50) DEFAULT NULL,
-  `id_registro_afectado` int DEFAULT NULL,
-  `fecha_evento` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `id_registro_afectado` int(11) DEFAULT NULL,
+  `fecha_evento` timestamp NULL DEFAULT current_timestamp(),
   `direccion_ip` varchar(45) DEFAULT NULL,
   `detalles_encriptados` blob NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `logs_seguridad`
+--
+
+INSERT INTO `logs_seguridad` (`id_log`, `id_usuario`, `accion_ejecutada`, `tabla_afectada`, `id_registro_afectado`, `fecha_evento`, `direccion_ip`, `detalles_encriptados`) VALUES
+(1, 1, 'Inicio de Sesión', 'usuarios', 1, '2026-08-28 00:35:37', '::1', 0x6163583250673947716557376f4d735539393176493038346e55344c3774674a306c65334a77457751636b55676e676f4f4a6c334b4778324e6d72536b33487467656a64463143745377557544686b4d2b7859313462366e6e76702f6a626e6374523976537a663850793553726635534c6750586975504e6f4664626f50772b),
+(2, 1, 'Inicio de Sesión', 'usuarios', 1, '2026-09-01 15:02:20', '::1', 0x4e69514f4233594a706c594f477967504673654f334f3745352f367251707250737176412f306a6b33592b687948334d574c3678796f754b5a463975367371796e71654130644242685631683079427542465554564d4151625231504a3174614c74576a50796e5142304e4b58344c586a496e2b3975456f744778476875676c),
+(3, 1, 'Cierre de Sesión', 'usuarios', 1, '2026-09-01 15:02:31', '::1', 0x626c495a51315353306d586d3779327a6b7574314f6f6e692b357267594f7950344552466957464155545164786364575a6f656e422b4c4e7a7066313579356f746d595956324835596f496f696e59684347584d4e6e36706f4576333147653269555853586a435568566b3d),
+(4, 1, 'Inicio de Sesión', 'usuarios', 1, '2026-09-01 15:13:46', '::1', 0x3937484554672b377342526a4d70466356346f5a436f66703636366136694a387a366868656154706866456a6661764d6b6163303855486370366c714a6f6e664f78617766466d675a6d6e5074696949746e4a5970397650786174466479612f44674d733244624e2b4d777955796362454b61395479506a78544b692f515467),
+(5, 1, 'Cierre de Sesión', 'usuarios', 1, '2026-09-01 15:21:06', '::1', 0x6b61596d555663476334706b4c716952445a36366f556964634634324d57415177652b75754b4d622f78482f434962524c5a3966396e516a2b43456e53785a794530455a536f754a6b795a4e53324464756d546e59484b3156524b7253677333795079686b4e39416d7a513d),
+(6, 1, 'Inicio de Sesión', 'usuarios', 1, '2026-09-01 15:42:39', '::1', 0x58354c3563336a444f724366387967736d30384d35623759492f7232364e7831584743514e546635574d4d6170333677516351346e6e316336473775506945723461536838424b6f6e492b74382b476736457a62395a526e73656b55664a6a7461616a704544684e516a43644a7269556e6e65616a64336d675056564c32662f),
+(7, 1, 'Cierre de Sesión', 'usuarios', 1, '2026-09-01 15:52:14', '::1', 0x566b362b64772b64597a7a6b32463346696b76636d437162615339552b6a775162322f686d3662363636745276564377622b744e71302b37353243333851786b572f7967443037304645786336556d703943775272356861396367336d42582b546e5235714843395157673d),
+(8, 1, 'Inicio de Sesión', 'usuarios', 1, '2026-09-01 15:52:28', '::1', 0x53354e33796a6a555330514d714f4f395a462f4b3357313836564f2f63544535566a636c7732576f7936446b336c74434e397964334a315a4166394d655a6f4f474f657a326b723035445371687848546c5763332b4a42504c6c454c6648566347517934482b647567523763344f326447664430786162417556316951512f37),
+(9, 1, 'Cierre de Sesión', 'usuarios', 1, '2026-09-01 16:02:31', '::1', 0x754d702b346a6a314731415673554a484f494a39664658516c502b5937703479794f494d594b774a747753716136793955723751534a737670466e4f4872534e30727075714537644157795663504a52625a4b46336c3378326b4b436f30765538396452535559564c32513d),
+(10, 1, 'Inicio de Sesión', 'usuarios', 1, '2026-09-01 16:32:49', '::1', 0x744b4136345233653152436e5a436b7475484b416669475958574e6e506d2b6768395a614b33556a7a70306632434862666177662f324c67492f2b6c316c55396d7358486a754b3767704b737874686a44357361644936642b562f594b6b75774e775539357461336f374a42666937536355436553355452447a7550332b4751),
+(11, 1, 'Cierre de Sesión', 'usuarios', 1, '2026-09-01 16:43:58', '::1', 0x7234623048556551546c356e6e4873434a724f567868566e3863757176594943557354483865476343796c46616c646241433573337974546a7857614f726766665469677278513441754f2f586f73764d6a48424261445746455448724c485851784a3853507333744c6f3d),
+(12, 1, 'Inicio de Sesión', 'usuarios', 1, '2026-09-01 16:44:16', '::1', 0x5577314150515157303671345376714e39386b687a6c59773236457553304d5037542f464f4a34393032796d704f544839626d5169664b2f524f2f55696362575868726b44456e713778324b794c744a48367869636c434e456c727138533864346278324b42625431447854765558663950644b67343853553634594d4f7454),
+(13, 1, 'Cierre de Sesión', 'usuarios', 1, '2026-09-01 16:48:12', '::1', 0x646276644569366b6d322b744e5a62674d374458635671526f6535756f70654275396363743565504441456970686f4c447a394c315064395075566b326357492f5330546b472b424c5151773878507177457a6a724578562b38343963445039474775586c4b55477633553d),
+(14, 1, 'Inicio de Sesión', 'usuarios', 1, '2026-09-01 16:50:40', '::1', 0x303958392b6764346f33366b736139724874306753527844554e6750496f6e5a544b634b646c474f372f6c4c51316f6177446c7359466d5a5466312b4152675a54506c426e4555594f55726c653670446b70617079724b35514850444878485a66725667745864426265716b766259446a51686c4f714158476d396c622f6f75),
+(15, 1, 'Cierre de Sesión', 'usuarios', 1, '2026-09-01 16:51:31', '::1', 0x706454424c654a435372706a785474513764574c422b3945673078372b7161397072496b693135725063704871517971433363656c746d69666c6f3073514a544f784737624a31564a63323958796c4f2b494c75336253745a705643636d63744d31487747477269764d383d),
+(16, 1, 'Inicio de Sesión', 'usuarios', 1, '2026-09-01 16:56:27', '::1', 0x704e57774771432f644c3469524c323467526c442f416e57694378794c69795547587045574f77586362386679713857706173717765357466727172516c64424474546255664436645669793868626f4c5a6f4d73597454637473484d774743316561735076667541717255414d4d54465850324e55582f4a677341522b7a55),
+(17, 1, 'Cierre de Sesión', 'usuarios', 1, '2026-09-01 16:58:41', '::1', 0x4572444d39624839412f733345744634737138574a3871585a416579654565744f35553946464e59324352317549426c412b72306b544d2b6a3978427636346b52667230446a487052584c2b514f50434252434774416d7656474c303851666a47656e4a61435566384e513d),
+(18, 1, 'Inicio de Sesión', 'usuarios', 1, '2026-09-01 17:39:27', '::1', 0x77597477704c6b6b71476343487a45356b67664e75472b453678533368666e44756b63627230574d7a584a377652546b5a6e4e4a45686f5468653559627a36644a6f64552f67314e555457696354577461756970326c486543726a725a6c454339544979663362675776323072746349594d374b344843394b33655264474142),
+(19, 1, 'Cierre de Sesión', 'usuarios', 1, '2026-09-01 17:41:27', '::1', 0x4f38773842376f563473794e50554749334330523932685946517766304963724f4943326e385679756f4d2f67483631512f413850596f52756b576b336f524b333848762b4e4a427968656148566531645677424a526d765332386f6b6c77544c4e387a6f5552306443733d),
+(20, 1, 'Inicio de Sesión', 'usuarios', 1, '2026-09-01 19:14:12', '::1', 0x386f736e3147696d6552717a736a796655625775416441363849584f54344f577751564f6341593055435342336e55353334425876662b342f57595644643945712f446f65684e6353454853507949376868446536736258694755563730544d654a31744f576b527867754f53655250673267766366566d49686164734a3071),
+(21, 1, 'Cierre de Sesión', 'usuarios', 1, '2026-09-01 19:17:51', '::1', 0x6244594852707a62555056507058475a676f776a36684c564e72454f795345304b554a6c476c434368355138586364477846443645394f4c3962425942584d654f724652476d446d5a77547043414e446f536a563338356b7055507455346b6c646a35693677505573416b3d),
+(22, 1, 'Inicio de Sesión', 'usuarios', 1, '2026-09-01 19:24:55', '::1', 0x32656f6e3133767769347245324c656b4f572f55425756616569754b796c2b50437a6e5237336e707033755245524a612b5945614176492b2b686b656b4f54724a504b6e4149576e526d3964364d596c35303067705378553942413871684a45544973524b76616b4a74384c71473757314f634c6f43494b4c536d2b77544272),
+(23, 1, 'Cierre de Sesión', 'usuarios', 1, '2026-09-01 19:27:31', '::1', 0x797732627a34414e6a4b3576586679465a33506c6d4d76557778587574395a3341464b545237492b2b5a526d56545a7a6e7a7375335569666238336670596c6a394b4d32774b4147536c6f75456773684976704a6a52576b6a7a694673453867534b58337a4f47553769303d),
+(24, 1, 'Inicio de Sesión', 'usuarios', 1, '2026-09-01 19:27:43', '::1', 0x73534a635767674a657957367a543943502f76475539386a694c697674792f706f54523451383842694e5434707a7045375774504876527a4965374234494e6f6b63582b7549442b2f436754322b4a41642b2f2f446545335864336c734366697a57506e5079496f49526c787970384531577a576a384b4347442b464b6d7951),
+(25, 1, 'Cierre de Sesión', 'usuarios', 1, '2026-09-01 19:39:15', '::1', 0x697a50756f6f68693961776b374e61417172756d573539757134656a7962634b6c6349506d4d7a50426e4e6e53624d6849513856624b4170746e7675797459466d474b6c59656553716d50504337435576775732685a314976764a65462b7849764a4436464575686f62593d),
+(26, 3, 'Inicio de Sesión', 'usuarios', 3, '2026-09-01 19:40:15', '::1', 0x324d39564f5172317a5273767541342b775a5930526438696c34474468677735767855433236707a584e427154794850626f6c454f76636c79765a774f696867657a334c68336b344649707a437273694d324f355736536f464a676e6a39494c4b625761335876676a58723279554d563542316e696c746134304d73346163516d69644976623156684173702f764c46322b465033673d3d),
+(27, 3, 'Cierre de Sesión', 'usuarios', 3, '2026-09-01 19:57:13', '::1', 0x5170596c35626c616d684f4c6b5446683557674256466e557776346d4552355974364d30686e576d4b547442367a6264444268566c7869436e4a354b483150543538574f4f522b364c425a48667949696e31486b77764549655477312f544935566762622b4a616c514b61707966594b3831683233765959346d41762b322b54),
+(28, 4, 'Inicio de Sesión', 'usuarios', 4, '2026-09-01 19:57:57', '::1', 0x7074526a3061335944586237746e657735766a43552b304d534e4d34302b5a644c384a2b4f486e5657736142464c56547037774d775758746b71464238655a6b545a76667051695a42514b4a65624f39782b506e4d436f716753593159544b584c7952672b6f376638624e7061346e57714d6252574c5342715356385a6c4a736e4d515742305a4475533236544a766a6b546d6462513d3d),
+(29, 4, 'Cierre de Sesión', 'usuarios', 4, '2026-09-01 19:58:09', '::1', 0x5464414c4156336d72334568666e6b62374132637145355030336c32795365546763366e516355346d6578417778324f52644c35446a3257646a4d62314d4c7866664a626872566533766656524237616f4e336a54637456685978302f6c3366756d43676556374938724e6a366b725048716b524d5a48753635727942425352),
+(30, 6, 'Inicio de Sesión', 'usuarios', 6, '2026-09-01 19:58:46', '::1', 0x5938505178613851766835703572637567676670347064614d726d72333176766c632b676953345a66676a736c61787758653349555841724b5662676d345a6179754a6a335372493064687265454533486970664a7a32645a4c506a732b6856502f61412b544c737351325675384c38472b3441313861703646514753396652746f386267345651613338785976616e5444554770413d3d),
+(31, 1, 'Inicio de Sesión', 'usuarios', 1, '2026-09-08 20:47:20', '::1', 0x495a34585a6c69627676305735305a515236513069497144656f726e77366661342f5a595a6d376f476866703032356641687978712f595766466562464c3748506261693836304447634278696f6a756f6b7461454f62496669504a63564735565862303942444e4d535a2f345452456548595165463142664331516c452b54),
+(32, 1, 'Inicio de Sesión', 'usuarios', 1, '2026-09-08 21:31:29', '::1', 0x68647445422b6b36504c526b776337794e4b642f4f4e506a706e4b714a4969314b4d3154504b39466459534e434c7272524c30666769366a357247515557786b57714a556d524c70612b3050765843437a642b68715068785a5a736d684653574c3753356a63386f31612f6a70467153362f302b654d526b6c30493076683951),
+(33, 1, 'Inicio de Sesión', 'usuarios', 1, '2026-09-08 22:09:17', '::1', 0x6e66557a6432753745795343524b766c624d3942553969464477383443527438516a62453774546b646d6e53555763416f56416c72327345564f6f76524a5671395872566b695061456e4e4c4956717974456e716550614653394f5464705a466f51574a5537657a3769627162316c5231436b673251746650457443524c4941),
+(34, 1, 'Inicio de Sesión', 'usuarios', 1, '2026-09-08 22:17:15', '::1', 0x7a386f56374533764d715561367275415a77346a2b73336c54446e4b384f56466d395550645139346c59623767784850314c355962526d714b6162594235684b6c6f35564735742f5a366972624661696b364d324e43513965712b76425948355562626f2b794944726263584e34634d56324b78547851324436582b49463547),
+(35, 1, 'Inicio de Sesión', 'usuarios', 1, '2026-09-08 22:19:38', '::1', 0x575a364d653041566e6f364f413262367a2f6b5435454c4c46644f646658696e663231414f4b314673624c5446374f6b634c796b4d647548767458564a5a72584e6472396e68566a4563316738744171416166773779766c54644a64686c55386b596a34364e74335951416a47354e717a754c7879594a35394936366a636333),
+(36, 1, 'Inicio de Sesión', 'usuarios', 1, '2026-09-08 22:29:52', '::1', 0x30394c53384279754c5a3458724e614431703458736a59774f54464b4c6d32673953314a4f50625365624e31733637784376425366586655366842363074596650743051612f4b73314b414b334e4b2b6571477a52666568786a5a2f74454e6f7a704349794b3944726b6f6f703854326e635965634434646e62754d4f683161),
+(37, 1, 'Inicio de Sesión', 'usuarios', 1, '2026-09-08 22:33:22', '::1', 0x46644f6e78656a464a7530546e464631477430364d374248736f6b4c625458564146533958427848475966665745303761452b5a64675455664a534d6a6c74327256442f6c5a42705649747976464d6f6e69634a377a624a395631696c41556a644538326b76765a49526e436572656933333341325731557a64493867595764),
+(38, 1, 'Inicio de Sesión', 'usuarios', 1, '2026-09-08 22:38:00', '::1', 0x424a6f58596b7a723571544f4b574b2b504f6b706e4935336a7654307553777a6b347045464a345a49726271594a6f70384d726e526d72706a4e6c79673454764a2b7063594349544674774a393656717a2b346c4f6c414d6f4c343970443530347071367a43367a4138416b305a2f6359734f6a5a6a6558723237576d415657),
+(39, 1, 'Inicio de Sesión', 'usuarios', 1, '2026-09-08 22:40:34', '::1', 0x31702b3634375675546a6d797038486a767679766769416b36587936534d714755426e75767036306c30444c36506e4f6a65414f42396c517263437a6f42664f616e4d47755735326e787943527642356545656a3956576f672b70366a57744d394f3352596e466d636863325935336f3432503844315a414770587442374a76),
+(40, 1, 'Inicio de Sesión', 'usuarios', 1, '2026-09-08 22:43:47', '::1', 0x2b6b4c4f6f303477574e735349302f466f775557526d2b78774e4843534964537a7448564e61622f2f364d5a695147734155662f3279557868436566415377307044506b494f52687552345a713473315a58455a384d51662b4c3468365a6f2b4d314a494d513158567035376f4679444571356f644f587477734c78724a5851),
+(41, 1, 'Cierre de Sesión', 'usuarios', 1, '2026-09-08 22:54:42', '::1', 0x644f595834744e6b42505444667a6d33576f56424132457a5037785a6c535367714f6f7646376c7650714431616a484c4e6a545a374c63715449384878397647727962504f4b743746637946652b526474374769576776697436437a4a3159756f68776b7a3846646b2f773d),
+(42, 1, 'Inicio de Sesión', 'usuarios', 1, '2026-09-08 23:05:19', '::1', 0x537573692f503433434768677135336464305a64684c4c3638455644746f79596467675366704654644e545579505479536c49516e7274366752475538696f582b696c6d324936697a4c726631445848536e6b74316b753536487674766e506d74465530534433346a685966314979727447785a797a79446273626b52326757),
+(43, 1, 'Cierre de Sesión', 'usuarios', 1, '2026-09-08 23:05:32', '::1', 0x3956793052794b6f6143744a50306c766d716675386a36786f72636f524962615631504a35714f6d765a683950466566705075674d446d5a6777504a57517475644761376c4f4d3771596e70536f38624e324f4374735259696c524f6c4258746b6a6b436967327930646f3d),
+(44, 6, 'Inicio de Sesión', 'usuarios', 6, '2026-09-08 23:09:39', '::1', 0x5052624f77386672493632366c493848512f4d676d73647375593045444d5a6934354a745174424b67527750586f505770594c436d7642413567394e47434b6b6d3863507967545a58507635797875593979484e56347772415674325271644570335461714c3030732f306e4a71415842783177315965505a42767132454c5349794974714e443653694c6a51687a384e326d3047413d3d),
+(45, 6, 'Cierre de Sesión', 'usuarios', 6, '2026-09-08 23:09:53', '::1', 0x5044714c65466c6d76375332577733616f4a53356871484d4537736d63764a302b7453614d726f73774b5456594734414a3367743654482f4c465658494e38384b557246465075525438587852327671697961386e50474e556f714d474f7648446565383045766169636e3978765655325769424c5a6859706350734e35736b),
+(46, 6, 'Inicio de Sesión', 'usuarios', 6, '2026-09-08 23:39:25', '::1', 0x497835443732787a7055394e61654e5247777832767670616a724364433247426a692b346e62454337727573463464623270506952557a4e7271536f52506271595a357934345a76736472425461466a493338612b2b502f44634d6a7a484e2b4a4d713631796856664f2f54564f416863587055357672482f62764a38424a7a4d6367564a41584a2b6b625464595a6f357a794b64673d3d),
+(47, 6, 'Cierre de Sesión', 'usuarios', 6, '2026-09-08 23:39:32', '::1', 0x78554c5668355a756b4f416d7679554f4375447a464334647a484c70524b3853696c305a46646a577046354c74534b306851327a6767583734383644614e666948766366754d6a6669584f5756466f79716d4c652b783868546a7a627937314968534c36426a4e354b416854695a5a7438447076563356326145536f53357042),
+(48, 6, 'Inicio de Sesión', 'usuarios', 6, '2026-09-09 00:04:41', '::1', 0x6b6c4a665a785334584154765439787256783945342f5067524b686e324b2f4d4356385042414959464e33655a3163635a7a4567434252426b4c3637663069496f6136696e5a564670776431515334754f74627258533243475571304c522f4348436c474232564e306c4e4b344274745956785179554a4167424f5758624e425275314c3046696a6c6235464d79306f443754434f773d3d),
+(49, 6, 'Cierre de Sesión', 'usuarios', 6, '2026-09-09 00:06:23', '::1', 0x4a61673973485a623078386d4b45353636427371533953716b4c4f67596f376f7a4d4e4531746763584d7665724b2b7479357230305a3770446649425345433834487a544a574c4338454464704e6c725456575758696d394b374b37377575726344796d356f4672516b64457344346376533335303964564e4c643436647a43),
+(50, 6, 'Inicio de Sesión', 'usuarios', 6, '2026-09-09 00:07:12', '::1', 0x5a7371384734796c65716e794e786a7365436a5674784a35506944777947735a69765a477052516f72666e5a524f7463787a35776f655a61704a7939732b794d38616f67756833466e7346662b4e78636f68576362723054424750752f627472716235596c393546635a66396774507074356b6f33376e376159504e634f67314e6664756f664a2b4752666e353149784c5a4d577a673d3d),
+(51, 6, 'Cierre de Sesión', 'usuarios', 6, '2026-09-09 00:07:36', '::1', 0x6243435755483670415a65393072667a4e685446627463462f376e35386f6949726f51494b34474856572f3033376432374e59306154733139794b4e4e4f736b4378476c7a33592f675369307a673551535446644b624c696854676642384e584137787a4d42534e36337169624c444e5473465a376273654467464a5562452f),
+(52, 3, 'Inicio de Sesión', 'usuarios', 3, '2026-09-09 17:52:32', '::1', 0x435950627237724561646f4d6c63497677343577504950504a6e665958453958384141726e67354e57514836435850526b4b6b3743526a4763534544597a547a506c6f68564a7847353056446a4b41622f412b69306d46582f6a324e74766a627a2f644d527341337375322f6e784468742f5550734235583563794335544f61465a33756a656c5563315646507639634a30462f37773d3d),
+(53, 3, 'Cierre de Sesión', 'usuarios', 3, '2026-09-09 18:09:47', '::1', 0x4939456334337072695872645739477973734353577041652f31496a334d377136677977444c4c33667766387a51586c4f4f2b345445646c483862776f7838673366495a37573455446752664b446c695859346d4e334d3353764e5942527867754e70656e63666e495542454130676778366468666350795044546150535542),
+(54, 6, 'Inicio de Sesión', 'usuarios', 6, '2026-09-09 18:16:23', '::1', 0x2f4f486a4b516855426f6279644e435856423958434c5862457269756c6d6f714c77575a424c4931583764473770657a715636455a3455446c6a473866695863322f7148314752627166652f536e3234637369792b3159616350675a6d446a6973706c6c343758555477346846353459546634435a6259566c424b5553326a6f4b5031614e33615a5034516c685252655864396376513d3d),
+(55, 6, 'Cierre de Sesión', 'usuarios', 6, '2026-09-09 18:22:11', '::1', 0x4e42353542774835736f657a5633597656594e574a38484b35745544546a68374539394d534c6d35612f43334877436e35503932594566417838457751626a48727246544d65384d793235366253537131734d565737643854486e5661544c526576436a65554a4c727a3955774e612b6e66577a7869616a62344c742b58345a),
+(56, 4, 'Inicio de Sesión', 'usuarios', 4, '2026-09-09 18:22:41', '::1', 0x47516c57443566467141454f644e4771332b7364335139792b4259657a736b3765562b7037456153424532316a4e694e61612f547052522f326552753262394f4f3638676238324243562f4459414537784e676d2f6437616245637975526a4a396f506e347338514d48486152536f4a58543753384d582f506c4c496d4a43537645366b4855794c766c2b7232554479773579706d773d3d),
+(57, 4, 'Cierre de Sesión', 'usuarios', 4, '2026-09-09 18:30:42', '::1', 0x392f4b2f507a5761577572722b554a39584d4230376e723144312f58704f72527961426241746d786b704634312f41764b524b6f33615371656c654365744c556974463158664b5971746e446374744b3070462f3769367952764c77475539397444714664683276334336487943307471736c2f3844684238646b5050416f58),
+(58, 6, 'Inicio de Sesión', 'usuarios', 6, '2026-09-09 18:30:47', '::1', 0x4a4955417a39474d74564675464a34426a4f68475454686d744575346b566558687a6c55565a4744364631523655306475415475723233726851716367564f5074486f2f6f6175727142536174637244554f496f565437644e67396a64576862494f3739726465787071373669324670426977325141677561354871763642584c71646168783841326a6b5674616564696333484f673d3d),
+(59, 6, 'Cierre de Sesión', 'usuarios', 6, '2026-09-09 18:36:51', '::1', 0x45335a61376d654b32453071734b534a6f456931676d325a54666d766e6d314c3055657649704b2f4f56715961325a364a6e6c573074766b4e435432364c46725a6942384e626c66556d4c524a6f4b7662695369615630372f59566e4c5044715153426a374844644445552b445146434a4f77422f496b536949635142624a6d),
+(60, 6, 'Inicio de Sesión', 'usuarios', 6, '2026-09-09 18:37:00', '::1', 0x4f5545717174546c553566703647774f7962687a4b6835314e494a6e2f6d414b732f366b526f43327757325651365571682b6333794e796357766c4276452f4e5049707438646a4d7568452f396f746156623442587141775850576679776a513273326e4e46557454693272424b4b73565146395054314e564c4936596b4c7772472f70427359784755614e594c79415834747562513d3d),
+(61, 6, 'Inicio de Sesión', 'usuarios', 6, '2026-09-09 19:37:47', '127.0.0.1', 0x73654c4133307431786e4a4c4937626768516f55494e4b334e78754a2b364b574d566c3974597441526749686b6e73622f3978376b646c6a307a724b59504e35626a4556714f46564372745946303478714266785867324c786a577a56302b7a41333257486d742f7470527452524d6e756754597976587648647358494c4c6a39496e4b4b674c704272756e4c7452436d71444c79413d3d),
+(62, 6, 'Cierre de Sesión', 'usuarios', 6, '2026-09-09 19:38:35', '::1', 0x6a734c3445623278547a62496377765068305444757072567a41304c2f6a437362427169583077656350584879517533324d504e78383769735a503569782b4d4b4d72684750314330464e506a3264574538754a42316c30784f336957374d694f55514a43586a6d56496665626c487a553664477551386d694d7369756a4458);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `marcas`
+-- Estructura de tabla para la tabla `marcas`
 --
 
 CREATE TABLE `marcas` (
-  `id_marca` int NOT NULL,
+  `id_marca` int(11) NOT NULL,
   `nombre_marca` varchar(50) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `marcas`
+--
+
+INSERT INTO `marcas` (`id_marca`, `nombre_marca`) VALUES
+(5, 'Apple'),
+(4, 'Asus'),
+(3, 'Dell'),
+(1, 'HP'),
+(2, 'Lenovo');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `prestamos`
+-- Estructura de tabla para la tabla `prestamos`
 --
 
 CREATE TABLE `prestamos` (
-  `id_prestamo` int NOT NULL,
-  `id_computador` int NOT NULL,
-  `id_docente` int NOT NULL,
-  `fecha_prestamo` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `id_prestamo` int(11) NOT NULL,
+  `id_computador` int(11) NOT NULL,
+  `id_usuario` int(11) NOT NULL,
+  `fecha_prestamo` datetime NOT NULL DEFAULT current_timestamp(),
   `fecha_devolucion_estimada` datetime NOT NULL,
   `fecha_devolucion_real` datetime DEFAULT NULL,
-  `id_auxiliar_retorno` int DEFAULT NULL,
-  `observaciones_retorno` text,
+  `id_noauxiliar` varchar(50) DEFAULT NULL,
+  `observaciones_retorno` text DEFAULT NULL,
   `estado_prestamo` enum('Activo','Devuelto','Vencido','Siniestro') DEFAULT 'Activo'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `roles`
+-- Estructura de tabla para la tabla `roles`
 --
 
 CREATE TABLE `roles` (
-  `id_rol` int NOT NULL,
+  `id_rol` int(11) NOT NULL,
   `nombre_rol` varchar(50) NOT NULL,
-  `descripcion` text
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `descripcion` text DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `roles`
+--
+
+INSERT INTO `roles` (`id_rol`, `nombre_rol`, `descripcion`) VALUES
+(1, 'Rector', 'Ordenador de gasto y responsable máximo del inventario.'),
+(2, 'Almacenista', 'Administración física, catálogo, aprobación de traslados e infraestructura.'),
+(3, 'Docente', 'Solicitud de préstamos de terminales y planeación pedagógica.'),
+(4, 'Contralor', 'Veeduría ciudadana y acceso a reportes públicos de transparencia.'),
+(5, 'Administrador', 'Superadministrador con control total del sistema, gestión de usuarios y CRUD centralizado.');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `salas`
+-- Estructura de tabla para la tabla `salas`
 --
 
 CREATE TABLE `salas` (
-  `id_sala` int NOT NULL,
+  `id_sala` int(11) NOT NULL,
   `nombre_sala` varchar(50) NOT NULL,
-  `tiene_polo_a_tierra` tinyint(1) DEFAULT '0',
-  `tiene_estabilizador` tinyint(1) DEFAULT '0',
-  `tiene_red_structured` tinyint(1) DEFAULT '0',
-  `ultima_revision_infraestructura` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `tiene_polo_a_tierra` tinyint(1) DEFAULT 0,
+  `tiene_estabilizador` tinyint(1) DEFAULT 0,
+  `tiene_red_structured` tinyint(1) DEFAULT 0,
+  `ultima_revision_infraestructura` datetime DEFAULT NULL,
+  `sede` varchar(100) DEFAULT 'Santa Margarita',
+  `categoria` varchar(100) DEFAULT 'Salas'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `salas`
+--
+
+INSERT INTO `salas` (`id_sala`, `nombre_sala`, `tiene_polo_a_tierra`, `tiene_estabilizador`, `tiene_red_structured`, `ultima_revision_infraestructura`, `sede`, `categoria`) VALUES
+(3, 'Laboratorio de Física de Santa Margarita', 1, 0, 1, '2026-08-28 02:35:37', 'Santa Margarita', 'Laboratorios'),
+(4, 'Sala de sistemas de la Pedro Nel Ospina', 1, 1, 1, '2026-09-08 16:19:13', 'Pedro Nel Ospina', 'Salas de Sistemas'),
+(5, 'Sala de sistemas de la Santa Margarita', 1, 1, 1, '2026-09-08 16:19:13', 'Santa Margarita', 'Salas de Sistemas'),
+(6, 'Sala EPM de Bachillerato', 1, 1, 1, '2026-09-08 16:19:13', 'Bachillerato Santa Margarita', 'Salas de Sistemas'),
+(7, 'Sala Medellín de Bachillerato Digital', 1, 1, 1, '2026-09-08 16:19:13', 'Bachillerato Santa Margarita', 'Salas Digitales'),
+(8, 'Sala Medellín Digital', 1, 1, 1, '2026-09-08 16:19:13', 'General / Otras', 'Salas Digitales'),
+(9, 'Sala EPM', 1, 1, 1, '2026-09-08 16:19:13', 'General / Otras', 'Salas General'),
+(10, 'Laboratorio de Química de Santa Margarita', 1, 1, 1, '2026-09-08 16:19:13', 'Santa Margarita', 'Laboratorios'),
+(11, 'Laboratorio de Ciencias de Bachillerato', 0, 1, 0, '2026-09-08 16:19:13', 'Bachillerato Santa Margarita', 'Laboratorios'),
+(12, 'Laboratorio de Ciencias Pedro Nel Ospina', 1, 1, 1, '2026-09-08 16:48:15', 'Pedro Nel Ospina', 'Laboratorios'),
+(13, 'Laboratorio de Física Pedro Nel Ospina', 1, 1, 1, '2026-09-08 16:48:15', 'Pedro Nel Ospina', 'Laboratorios'),
+(14, 'Laboratorio de Química Pedro Nel Ospina', 1, 1, 1, '2026-09-08 16:48:15', 'Pedro Nel Ospina', 'Laboratorios'),
+(15, 'Laboratorio de Física de Bachillerato', 1, 1, 1, '2026-09-08 16:48:15', 'Bachillerato Santa Margarita', 'Laboratorios'),
+(16, 'Laboratorio de Química de Bachillerato', 1, 1, 1, '2026-09-08 16:48:15', 'Bachillerato Santa Margarita', 'Laboratorios'),
+(17, 'Laboratorio de Ciencias de Santa Margarita', 1, 1, 1, '2026-09-08 16:49:42', 'Santa Margarita', 'Laboratorios');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `traslados`
+-- Estructura de tabla para la tabla `traslados`
 --
 
 CREATE TABLE `traslados` (
-  `id_traslado` int NOT NULL,
-  `id_computador` int NOT NULL,
-  `id_sala_origen` int NOT NULL,
-  `id_sala_destino` int NOT NULL,
-  `id_usuario_solicita` int NOT NULL,
-  `id_usuario_autoriza` int NOT NULL,
-  `fecha_solicitud` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `id_traslado` int(11) NOT NULL,
+  `id_computador` int(11) NOT NULL,
+  `id_sala_origen` varchar(50) NOT NULL,
+  `id_sala_destino` varchar(50) NOT NULL,
+  `id_usuario_autoriza` tinyint(1) NOT NULL,
+  `id_usuario_solicita` int(11) NOT NULL,
+  `fecha_solicitud` datetime NOT NULL DEFAULT current_timestamp(),
   `fecha_autorizacion` datetime DEFAULT NULL,
   `codigo_qr_generado` varchar(255) DEFAULT NULL,
   `estado_traslado` enum('Pendiente','Aprobado','Rechazado') DEFAULT 'Pendiente'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `usuarios`
+-- Estructura de tabla para la tabla `usuarios`
 --
 
 CREATE TABLE `usuarios` (
-  `id_usuario` int NOT NULL,
+  `id_usuario` int(11) NOT NULL,
   `documento_identidad` varchar(20) NOT NULL,
   `nombres` varchar(100) NOT NULL,
   `apellidos` varchar(100) NOT NULL,
   `email` varchar(100) NOT NULL,
   `password_hash` varchar(255) NOT NULL,
-  `id_rol` int NOT NULL,
-  `capacitacion_tic_aprobada` tinyint(1) DEFAULT '0',
-  `horas_asistencia_tic` int DEFAULT '0',
+  `id_rol` int(11) NOT NULL,
+  `capacitacion_tic_aprobada` tinyint(1) DEFAULT 0,
+  `horas_asistencia_tic` int(11) DEFAULT 0,
   `estado_usuario` enum('Activo','Inactivo') DEFAULT 'Activo'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
--- --------------------------------------------------------
-
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Indexes for dumped tables
+-- Volcado de datos para la tabla `usuarios`
+--
+
+INSERT INTO `usuarios` (`id_usuario`, `documento_identidad`, `nombres`, `apellidos`, `email`, `password_hash`, `id_rol`, `capacitacion_tic_aprobada`, `horas_asistencia_tic`, `estado_usuario`) VALUES
+(1, '1001', 'Guillermo', 'Rendón', 'rector@santa.edu.co', '$2y$10$m7Vg4lxmQKxrt9APxhDApOFgDEYvNjHazlYoa5KA0.0WNmqn4a5DK', 1, 1, 80, 'Activo'),
+(2, '1002', 'Marta', 'Gómez', 'almacenista@santa.edu.co', '$2y$10$7hUvY00F5gXNbeJAldyDXumPRYH.xCVwhdnrpWD7tFDoNORMoUp2.', 2, 0, 0, 'Activo'),
+(3, '1003', 'Carlos', 'Herrera (Docente TIC)', 'docente_tic@santa.edu.co', '$2y$10$jbkNFqyfLpyX54E5UJekcua6AxlJoP2rP9HpXSBR0x7PEGiYVzECq', 3, 1, 45, 'Activo'),
+(4, '1004', 'Lucía', 'Pérez (Docente No TIC)', 'docente_notic@santa.edu.co', '$2y$10$K4xsgm71Kryo/bHvMCln5.EgfCPAZ3kOQyXmcr3oGo7mb9Fjd.1TW', 3, 0, 12, 'Activo'),
+(5, '1005', 'Mateo', 'Restrepo', 'contralor@santa.edu.co', '$2y$10$QewoxGZO4QatC3lM2bQxRu4fEn3fknFqNXBKmMfVP/msay7VAVv5G', 4, 0, 0, 'Activo'),
+(6, '10000000', 'Administrador', 'General', 'admin@santa.edu.co', '$2y$10$6cYFUGfxGvd3p6F55d1HgOlmLWG8TJqS1GeYxCyIOR4PA4tiOwDhO', 5, 1, 100, 'Activo');
+
+--
+-- Índices para tablas volcadas
 --
 
 --
--- Indexes for table `bajas_raee`
+-- Indices de la tabla `bajas_raee`
 --
 ALTER TABLE `bajas_raee`
   ADD PRIMARY KEY (`id_baja`),
@@ -199,7 +339,7 @@ ALTER TABLE `bajas_raee`
   ADD UNIQUE KEY `numero_certificado_raee` (`numero_certificado_raee`);
 
 --
--- Indexes for table `componentes_internos`
+-- Indices de la tabla `componentes_internos`
 --
 ALTER TABLE `componentes_internos`
   ADD PRIMARY KEY (`id_componente`),
@@ -207,52 +347,52 @@ ALTER TABLE `componentes_internos`
   ADD KEY `id_computador` (`id_computador`);
 
 --
--- Indexes for table `computadores`
+-- Indices de la tabla `computadores`
 --
 ALTER TABLE `computadores`
   ADD PRIMARY KEY (`id_computador`),
   ADD UNIQUE KEY `numero_serial` (`numero_serial`),
   ADD UNIQUE KEY `placa_sed` (`placa_sed`),
-  ADD KEY `id_marca` (`id_marca`),
-  ADD KEY `id_sala_actual` (`id_sala_actual`);
+  ADD KEY `id_marca` (`id_marca`);
 
 --
--- Indexes for table `logs_seguridad`
+-- Indices de la tabla `logs_seguridad`
 --
 ALTER TABLE `logs_seguridad`
-  ADD PRIMARY KEY (`id_log`);
+  ADD PRIMARY KEY (`id_log`),
+  ADD KEY `id_usuario` (`id_usuario`);
 
 --
--- Indexes for table `marcas`
+-- Indices de la tabla `marcas`
 --
 ALTER TABLE `marcas`
   ADD PRIMARY KEY (`id_marca`),
   ADD UNIQUE KEY `nombre_marca` (`nombre_marca`);
 
 --
--- Indexes for table `prestamos`
+-- Indices de la tabla `prestamos`
 --
 ALTER TABLE `prestamos`
   ADD PRIMARY KEY (`id_prestamo`),
   ADD KEY `id_computador` (`id_computador`),
-  ADD KEY `id_docente` (`id_docente`),
-  ADD KEY `id_auxiliar_retorno` (`id_auxiliar_retorno`);
+  ADD KEY `id_docente` (`id_usuario`),
+  ADD KEY `id_auxiliar_retorno` (`id_noauxiliar`);
 
 --
--- Indexes for table `roles`
+-- Indices de la tabla `roles`
 --
 ALTER TABLE `roles`
   ADD PRIMARY KEY (`id_rol`),
   ADD UNIQUE KEY `nombre_rol` (`nombre_rol`);
 
 --
--- Indexes for table `salas`
+-- Indices de la tabla `salas`
 --
 ALTER TABLE `salas`
   ADD PRIMARY KEY (`id_sala`);
 
 --
--- Indexes for table `traslados`
+-- Indices de la tabla `traslados`
 --
 ALTER TABLE `traslados`
   ADD PRIMARY KEY (`id_traslado`),
@@ -260,11 +400,11 @@ ALTER TABLE `traslados`
   ADD KEY `id_computador` (`id_computador`),
   ADD KEY `id_sala_origen` (`id_sala_origen`),
   ADD KEY `id_sala_destino` (`id_sala_destino`),
-  ADD KEY `id_usuario_solicita` (`id_usuario_solicita`),
-  ADD KEY `id_usuario_autoriza` (`id_usuario_autoriza`);
+  ADD KEY `id_usuario_solicita` (`id_usuario_autoriza`),
+  ADD KEY `id_usuario_autoriza` (`id_usuario_solicita`);
 
 --
--- Indexes for table `usuarios`
+-- Indices de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
   ADD PRIMARY KEY (`id_usuario`),
@@ -273,112 +413,112 @@ ALTER TABLE `usuarios`
   ADD KEY `id_rol` (`id_rol`);
 
 --
--- AUTO_INCREMENT for dumped tables
+-- AUTO_INCREMENT de las tablas volcadas
 --
 
 --
--- AUTO_INCREMENT for table `bajas_raee`
+-- AUTO_INCREMENT de la tabla `bajas_raee`
 --
 ALTER TABLE `bajas_raee`
-  MODIFY `id_baja` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id_baja` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `componentes_internos`
+-- AUTO_INCREMENT de la tabla `componentes_internos`
 --
 ALTER TABLE `componentes_internos`
-  MODIFY `id_componente` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id_componente` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `computadores`
+-- AUTO_INCREMENT de la tabla `computadores`
 --
 ALTER TABLE `computadores`
-  MODIFY `id_computador` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id_computador` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
--- AUTO_INCREMENT for table `logs_seguridad`
+-- AUTO_INCREMENT de la tabla `logs_seguridad`
 --
 ALTER TABLE `logs_seguridad`
-  MODIFY `id_log` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id_log` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=63;
 
 --
--- AUTO_INCREMENT for table `marcas`
+-- AUTO_INCREMENT de la tabla `marcas`
 --
 ALTER TABLE `marcas`
-  MODIFY `id_marca` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id_marca` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
--- AUTO_INCREMENT for table `prestamos`
+-- AUTO_INCREMENT de la tabla `prestamos`
 --
 ALTER TABLE `prestamos`
-  MODIFY `id_prestamo` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id_prestamo` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `roles`
+-- AUTO_INCREMENT de la tabla `roles`
 --
 ALTER TABLE `roles`
-  MODIFY `id_rol` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id_rol` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
--- AUTO_INCREMENT for table `salas`
+-- AUTO_INCREMENT de la tabla `salas`
 --
 ALTER TABLE `salas`
-  MODIFY `id_sala` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id_sala` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
--- AUTO_INCREMENT for table `traslados`
+-- AUTO_INCREMENT de la tabla `traslados`
 --
 ALTER TABLE `traslados`
-  MODIFY `id_traslado` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id_traslado` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `usuarios`
+-- AUTO_INCREMENT de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `id_usuario` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
--- Constraints for dumped tables
+-- Restricciones para tablas volcadas
 --
 
 --
--- Constraints for table `bajas_raee`
+-- Filtros para la tabla `bajas_raee`
 --
 ALTER TABLE `bajas_raee`
   ADD CONSTRAINT `bajas_raee_ibfk_1` FOREIGN KEY (`id_computador`) REFERENCES `computadores` (`id_computador`);
 
 --
--- Constraints for table `componentes_internos`
+-- Filtros para la tabla `componentes_internos`
 --
 ALTER TABLE `componentes_internos`
   ADD CONSTRAINT `componentes_internos_ibfk_1` FOREIGN KEY (`id_computador`) REFERENCES `computadores` (`id_computador`) ON DELETE CASCADE;
 
 --
--- Constraints for table `computadores`
+-- Filtros para la tabla `computadores`
 --
 ALTER TABLE `computadores`
-  ADD CONSTRAINT `computadores_ibfk_1` FOREIGN KEY (`id_marca`) REFERENCES `marcas` (`id_marca`),
-  ADD CONSTRAINT `computadores_ibfk_2` FOREIGN KEY (`id_sala_actual`) REFERENCES `salas` (`id_sala`);
+  ADD CONSTRAINT `computadores_ibfk_1` FOREIGN KEY (`id_marca`) REFERENCES `marcas` (`id_marca`);
 
 --
--- Constraints for table `prestamos`
+-- Filtros para la tabla `logs_seguridad`
+--
+ALTER TABLE `logs_seguridad`
+  ADD CONSTRAINT `logs_seguridad_ibfk_1` FOREIGN KEY (`id_usuario`) REFERENCES `usuarios` (`id_usuario`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Filtros para la tabla `prestamos`
 --
 ALTER TABLE `prestamos`
   ADD CONSTRAINT `prestamos_ibfk_1` FOREIGN KEY (`id_computador`) REFERENCES `computadores` (`id_computador`),
-  ADD CONSTRAINT `prestamos_ibfk_2` FOREIGN KEY (`id_docente`) REFERENCES `usuarios` (`id_usuario`),
-  ADD CONSTRAINT `prestamos_ibfk_3` FOREIGN KEY (`id_auxiliar_retorno`) REFERENCES `usuarios` (`id_usuario`);
+  ADD CONSTRAINT `prestamos_ibfk_2` FOREIGN KEY (`id_usuario`) REFERENCES `usuarios` (`id_usuario`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Constraints for table `traslados`
+-- Filtros para la tabla `traslados`
 --
 ALTER TABLE `traslados`
-  ADD CONSTRAINT `traslados_ibfk_1` FOREIGN KEY (`id_computador`) REFERENCES `computadores` (`id_computador`),
-  ADD CONSTRAINT `traslados_ibfk_2` FOREIGN KEY (`id_sala_origen`) REFERENCES `salas` (`id_sala`),
-  ADD CONSTRAINT `traslados_ibfk_3` FOREIGN KEY (`id_sala_destino`) REFERENCES `salas` (`id_sala`),
-  ADD CONSTRAINT `traslados_ibfk_4` FOREIGN KEY (`id_usuario_solicita`) REFERENCES `usuarios` (`id_usuario`),
-  ADD CONSTRAINT `traslados_ibfk_5` FOREIGN KEY (`id_usuario_autoriza`) REFERENCES `usuarios` (`id_usuario`);
+  ADD CONSTRAINT `traslados_ibfk_5` FOREIGN KEY (`id_usuario_solicita`) REFERENCES `usuarios` (`id_usuario`);
 
 --
--- Constraints for table `usuarios`
+-- Filtros para la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
   ADD CONSTRAINT `usuarios_ibfk_1` FOREIGN KEY (`id_rol`) REFERENCES `roles` (`id_rol`);
