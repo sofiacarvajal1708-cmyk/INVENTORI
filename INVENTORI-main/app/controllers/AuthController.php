@@ -40,11 +40,17 @@ class AuthController extends Controller {
                 $user = $userModel->getByEmail($email);
 
                 if ($user && password_verify($password, $user['password_hash'])) {
+                    // Determinar rol específico para Docentes (TIC / No TIC)
+                    $roleName = $user['role_name'];
+                    if ($roleName === 'Docente') {
+                        $roleName = !empty($user['capacitacion_tic_aprobada']) ? 'Docente TIC' : 'Docente No TIC';
+                    }
+
                     // Cargar sesión con datos del usuario
                     Session::set('user_id', $user['id_usuario']);
                     Session::set('user_name', $user['nombres'] . ' ' . $user['apellidos']);
                     Session::set('user_email', $user['email']);
-                    Session::set('role_name', $user['role_name']);
+                    Session::set('role_name', $roleName);
                     Session::set('last_activity', time());
 
                     // Log de auditoría encriptado
@@ -54,7 +60,7 @@ class AuthController extends Controller {
                         'Inicio de Sesión',
                         'usuarios',
                         $user['id_usuario'],
-                        "Sesión iniciada exitosamente por el usuario {$user['nombres']} {$user['apellidos']} con rol {$user['role_name']}."
+                        "Sesión iniciada exitosamente por el usuario {$user['nombres']} {$user['apellidos']} con rol {$roleName}."
                     );
 
                     $this->redirect('dashboard');

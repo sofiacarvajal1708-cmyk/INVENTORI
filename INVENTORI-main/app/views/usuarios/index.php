@@ -88,7 +88,10 @@ require_once APP_ROOT . '/views/layout/header.php';
                         <?php foreach ($usuarios as $u): ?>
                             <tr class="border-b border-white/5 hover:bg-white/[0.01] transition-colors text-slate-300">
                                 <td class="py-3.5 px-4 text-center text-slate-500 font-mono">#<?= $u['id_usuario'] ?></td>
-                                <td class="py-3.5 px-4 font-mono text-slate-300"><?= htmlspecialchars($u['documento_identidad']) ?></td>
+                                <td class="py-3.5 px-4 font-mono text-slate-300">
+                                    <span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-white/10 text-emerald-400 mr-1"><?= htmlspecialchars($u['tipo_documento'] ?? 'C.C.') ?></span>
+                                    <span><?= htmlspecialchars($u['documento_identidad']) ?></span>
+                                </td>
                                 <td class="py-3.5 px-4">
                                     <span class="block font-semibold text-white"><?= htmlspecialchars($u['nombres'] . ' ' . $u['apellidos']) ?></span>
                                     <?php if ($u['id_rol'] == 3): ?>

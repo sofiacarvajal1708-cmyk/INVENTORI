@@ -1,7 +1,7 @@
 <?php
 require_once APP_ROOT . '/views/layout/header.php';
 $role = Session::get('role_name');
-$canEdit = in_array($role, ['Rector', 'Almacenista', 'Administrador']);
+$canEdit = in_array($role, ['Rector', 'Almacenista', 'Contralor', 'Docente', 'Administrador']);
 
 // Group computadores into sections by category and sede
 $equiposSecciones = [
@@ -46,16 +46,17 @@ foreach ($computadores as $comp) {
             <!-- Botón IMPRIMIR INVENTARIO (PDF) -->
             <a href="<?= BASE_URL ?>/computadores/imprimir?sede=<?= urlencode($filters['sede'] ?? '') ?>&sala=<?= urlencode($filters['sala'] ?? '') ?>&laboratorio=<?= urlencode($filters['laboratorio'] ?? '') ?>&estado=<?= urlencode($filters['estado'] ?? '') ?>" 
                target="_blank" 
-               class="py-2.5 px-4 bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-500 hover:from-emerald-500 hover:to-teal-400 text-white font-semibold rounded-xl text-xs flex items-center space-x-2 shadow-lg shadow-emerald-600/30 hover:shadow-emerald-500/50 hover:scale-105 active:scale-95 transition-all btn-interactive">
-                <i class="fa-solid fa-file-pdf text-sm"></i>
+               class="py-2.5 px-4 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-semibold rounded-xl text-xs flex items-center space-x-2 shadow-sm transition-all btn-interactive">
+                <i class="fa-solid fa-file-pdf text-rose-400 text-sm"></i>
                 <span>Imprimir Inventario</span>
             </a>
 
             <?php if ($canEdit): ?>
+                <!-- Botón AGREGAR NUEVO EQUIPO -->
                 <a href="<?= BASE_URL ?>/computadores/crear" 
-                   class="py-2.5 px-4 bg-gradient-to-r from-blue-600 to-emerald-600 hover:from-blue-500 hover:to-emerald-500 text-white font-semibold rounded-xl text-xs flex items-center space-x-2 shadow-lg shadow-blue-600/30 hover:scale-105 active:scale-95 transition-all btn-interactive">
-                    <i class="fa-solid fa-circle-plus text-sm"></i>
-                    <span>Nuevo Equipo</span>
+                   class="py-2.5 px-4 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold rounded-xl text-xs flex items-center space-x-2 shadow-lg shadow-blue-500/30 hover:scale-105 active:scale-95 transition-all btn-interactive border border-blue-400/30">
+                    <i class="fa-solid fa-plus-circle text-sm"></i>
+                    <span>+ Agregar Nuevo Equipo</span>
                 </a>
             <?php endif; ?>
         </div>

@@ -47,7 +47,7 @@ $canDevel = in_array($role, ['Rector', 'Almacenista']);
                         <?php foreach ($prestamos as $p): ?>
                             <?php 
                             // Ocultar préstamos de otros docentes si el rol actual es Docente
-                            if ($role === 'Docente' && $p['id_docente'] != $userId) {
+                            if (in_array($role, ['Docente', 'Docente TIC', 'Docente No TIC']) && $p['id_docente'] != $userId) {
                                 continue;
                             }
                             ?>

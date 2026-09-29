@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>INVENTORI - Generador de Prompts e Imagen de Diagrama de Flujo para Sustentación</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Inter:wght@300;400;500;600;700&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Custom CSS Stylesheet -->
+    <link rel="stylesheet" href="css/sustentacion.css">
+</head>
+<body>
+
+    <!-- Top Navigation Bar -->
+    <header class="top-nav">
+        <div class="brand-container">
+            <span class="brand-badge">TESIS DE GRADO</span>
+            <span class="brand-title">INVENTORI <span style="font-size: 0.8rem; opacity: 0.7;">v4.0 IA Studio</span></span>
+        </div>
+
+        <nav class="nav-tabs">
+            <button class="nav-tab active" data-tab="tab-prompt-builder">
+                <i class="fa-solid fa-wand-magic-sparkles" style="color: var(--accent-amber);"></i> Generador de Prompts IA
+            </button>
+            <button class="nav-tab" data-tab="tab-live-svg">
+                <i class="fa-solid fa-vector-square" style="color: var(--accent-cyan);"></i> Canvas SVG en Vivo
+            </button>
+            <button class="nav-tab" data-tab="tab-galeria">
+                <i class="fa-solid fa-images"></i> Diagramas Generados HD
+            </button>
+            <button class="nav-tab" data-tab="tab-global">
+                <i class="fa-solid fa-diagram-project"></i> Arquitectura Global
+            </button>
+            <button class="nav-tab" data-tab="tab-simulador">
+                <i class="fa-solid fa-play"></i> Simulador Flujo Live
+            </button>
+            <button class="nav-tab" data-tab="tab-erd">
+                <i class="fa-solid fa-database"></i> Persistencia BD (ERD)
+            </button>
+        </nav>
+
+        <div class="nav-actions">
+            <button class="btn-present" id="btn-present-mode">
+                <i class="fa-solid fa-desktop"></i> Modo Sustentación
+            </button>
+        </div>
+    </header>
+
+    <main class="main-container">
+
+        <!-- ===================================================================
+             TAB 1: GENERADOR PROFESIONAL DE PROMPTS PARA IAS DE IMAGEN
+             =================================================================== -->
+        <section id="tab-prompt-builder" class="tab-content active">
+            <div class="glass-card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <i class="fa-solid fa-wand-magic-sparkles" style="color: var(--accent-amber);"></i>
+                        Generador de Prompts Personalizados para IAs de Imagen (Midjourney, DALL-E, ChatGPT, Flux, Canva)
+                    </div>
+                    <div class="card-subtitle">Configura exactamente el tipo de diagrama, estilo estético y detalles para que la IA genere la imagen tal cual la necesitas</div>
+                </div>
+
+                <!-- Customizer Form Controls -->
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.25rem; margin-bottom: 1.5rem; background: rgba(15, 23, 42, 0.8); padding: 1.25rem; border-radius: 14px; border: 1px solid var(--border-glass);">
+                    <div>
+                        <label style="font-weight: 600; font-size: 0.9rem; margin-bottom: 0.5rem; display: block; color: var(--accent-cyan);">
+                            <i class="fa-solid fa-sitemap"></i> 1. Tipo de Diagrama Deseado:
+                        </label>
+                        <select id="builder-diagram-select" class="sim-select" style="width: 100%;">
+                            <option value="flujo_global">Diagrama de Flujo de Información Completo (UI -> Controller -> DB)</option>
+                            <option value="secuencia_prestamo">Diagrama de Secuencia: Flujo de Préstamo de Computadores</option>
+                            <option value="secuencia_traslado">Diagrama de Secuencia: Traslado de Equipos entre Salas</option>
+                            <option value="erd_database">Diagrama Entidad-Relación (ERD) MySQL Completo</option>
+                            <option value="infraestructura_laboratorios">Diagrama de Infraestructura de Laboratorios y Red</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label style="font-weight: 600; font-size: 0.9rem; margin-bottom: 0.5rem; display: block; color: var(--secondary);">
+                            <i class="fa-solid fa-palette"></i> 2. Estilo Visual de la Imagen:
+                        </label>
+                        <select id="builder-style-select" class="sim-select" style="width: 100%;">
+                            <option value="dark">Executive Dark Glassmorphism (Neón Azul y Violeta - Recomendado)</option>
+                            <option value="blueprint">Engineering Blueprint (Plano Técnico de Ingeniería Azul)</option>
+                            <option value="isometric">Isometric 3D Perspective (Perspectiva 3D Isométrica Futurista)</option>
+                            <option value="corporate">Minimalist Corporate Clean White (Infografía Limpia Corporativa)</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label style="font-weight: 600; font-size: 0.9rem; margin-bottom: 0.5rem; display: block; color: var(--accent-emerald);">
+                            <i class="fa-solid fa-crop"></i> 3. Relación de Aspecto (Formato):
+                        </label>
+                        <select id="builder-ratio-select" class="sim-select" style="width: 100%;">
+                            <option value="--ar 16:9">16:9 Wide Screen (Para Diapositivas / Pantalla Ancha)</option>
+                            <option value="--ar 4:3">4:3 Standard Slide (Para Documentos y Proyector)</option>
+                            <option value="--ar 1:1">1:1 Square (Formato Cuadrado)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Generated Prompt Output Panel -->
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+                    <!-- English Prompt Box (Optimized for Midjourney, DALL-E 3, Flux, Imagen 3) -->
+                    <div style="background: rgba(15, 23, 42, 0.9); border: 1px solid var(--border-glow); border-radius: 14px; padding: 1.25rem;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                            <span style="font-family: var(--font-heading); font-weight: 700; color: var(--primary);">
+                                <i class="fa-solid fa-robot"></i> Prompt para Midjourney / DALL-E 3 / Flux (Inglés)
+                            </span>
+                            <button id="btn-copy-en" class="btn-sim-action" style="padding: 0.4rem 1rem; font-size: 0.85rem;">
+                                <i class="fa-solid fa-copy"></i> Copiar
+                            </button>
+                        </div>
+                        <div id="prompt-output-en" style="font-family: var(--font-mono); font-size: 0.85rem; color: #60A5FA; background: #090D16; padding: 1rem; border-radius: 8px; white-space: pre-wrap; min-height: 140px; border: 1px solid rgba(255,255,255,0.05);">
+                            Generando prompt...
+                        </div>
+                    </div>
+
+                    <!-- Spanish Prompt Box (Optimized for ChatGPT, Canva IA, Bing) -->
+                    <div style="background: rgba(15, 23, 42, 0.9); border: 1px solid rgba(139, 92, 246, 0.4); border-radius: 14px; padding: 1.25rem;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                            <span style="font-family: var(--font-heading); font-weight: 700; color: var(--secondary);">
+                                <i class="fa-solid fa-comment-dots"></i> Prompt para ChatGPT / Canva / Bing (Español)
+                            </span>
+                            <button id="btn-copy-es" class="btn-sim-action" style="background: var(--secondary); padding: 0.4rem 1rem; font-size: 0.85rem;">
+                                <i class="fa-solid fa-copy"></i> Copiar
+                            </button>
+                        </div>
+                        <div id="prompt-output-es" style="font-family: var(--font-mono); font-size: 0.85rem; color: #C4B5FD; background: #090D16; padding: 1rem; border-radius: 8px; white-space: pre-wrap; min-height: 140px; border: 1px solid rgba(255,255,255,0.05);">
+                            Generando prompt...
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Technical Specification Card -->
+                <div style="margin-top: 1.5rem; background: rgba(6, 182, 212, 0.1); border: 1px solid rgba(6, 182, 212, 0.3); border-radius: 12px; padding: 1rem; display: flex; align-items: center; gap: 1rem;">
+                    <i class="fa-solid fa-circle-info" style="font-size: 1.5rem; color: var(--accent-cyan);"></i>
+                    <div>
+                        <strong style="color: white; font-size: 0.9rem;">Especificaciones Técnicas Incluidas en la Generación:</strong>
+                        <p id="prompt-output-spec" style="font-size: 0.85rem; color: var(--text-muted);">Cargando componentes...</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ===================================================================
+             TAB 2: CANVAS SVG EN VIVO (RENDERIZADOR VECTORIAL)
+             =================================================================== -->
+        <section id="tab-live-svg" class="tab-content">
+            <div class="glass-card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <i class="fa-solid fa-vector-square" style="color: var(--accent-cyan);"></i>
+                        Diagrama de Flujo Renderizado en Vivo (Vectorial SVG)
+                    </div>
+                    <button id="btn-download-svg" class="btn-sim-action" style="background: var(--accent-cyan);">
+                        <i class="fa-solid fa-download"></i> Descargar Imagen PNG HD (4K)
+                    </button>
+                </div>
+
+                <div id="live-svg-container" style="width: 100%; min-height: 600px; background: #090D16; border-radius: 12px; padding: 1rem; border: 1px solid var(--border-glass);">
+                    <!-- Dynamic SVG rendered via JavaScript -->
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ===================================================================
+             TAB 3: GALERÍA DE DIAGRAMAS VISUALES HD
+             =================================================================== -->
+        <section id="tab-galeria" class="tab-content">
+            <div class="glass-card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <i class="fa-solid fa-image" style="color: var(--secondary);"></i>
+                        Galería de Diagramas Visuales de Alta Resolución (HD)
+                    </div>
+                    <div class="card-subtitle">Haz clic en cualquier imagen para ampliarla a pantalla completa o utilizarla en tu sustentación de grado</div>
+                </div>
+
+                <div class="diagram-gallery">
+                    <div class="diagram-card">
+                        <img src="img/diagramas/database_erd.jpg" alt="Diagrama de Base de Datos Relacional ERD">
+                        <div class="diagram-info">
+                            <span class="diagram-title"><i class="fa-solid fa-database"></i> Diagrama ERD Base de Datos</span>
+                            <span class="diagram-zoom-btn"><i class="fa-solid fa-expand"></i> Ampliar</span>
+                        </div>
+                    </div>
+
+                    <div class="diagram-card">
+                        <img src="img/diagramas/data_flow_sequence.jpg" alt="Diagrama de Secuencia de Flujo de Datos">
+                        <div class="diagram-info">
+                            <span class="diagram-title"><i class="fa-solid fa-diagram-next"></i> Diagrama de Secuencia de Datos</span>
+                            <span class="diagram-zoom-btn"><i class="fa-solid fa-expand"></i> Ampliar</span>
+                        </div>
+                    </div>
+
+                    <div class="diagram-card">
+                        <img src="img/diagramas/architecture_banner.jpg" alt="Vista General Arquitectura">
+                        <div class="diagram-info">
+                            <span class="diagram-title"><i class="fa-solid fa-layer-group"></i> Visión General de Arquitectura</span>
+                            <span class="diagram-zoom-btn"><i class="fa-solid fa-expand"></i> Ampliar</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ===================================================================
+             TAB 4: ARQUITECTURA GLOBAL Y FLUJO DE INFORMACIÓN
+             =================================================================== -->
+        <section id="tab-global" class="tab-content">
+            <!-- Header Banner with Generated Tech Image -->
+            <div class="banner-grid">
+                <div class="banner-visual">
+                    <img src="img/diagramas/architecture_banner.jpg" alt="Arquitectura de Datos INVENTORI">
+                    <div class="banner-overlay">
+                        <h1>Diagrama de Flujo de Información Nivel N-3</h1>
+                        <p>Trazabilidad Integral: Interfaz de Usuario (UI) &rarr; Lógica Controladores (MVC) &rarr; Persistencia Relacional (MySQL)</p>
+                    </div>
+                </div>
+
+                <div class="metrics-panel">
+                    <div class="metric-box">
+                        <div class="metric-value">3 Capas</div>
+                        <div class="metric-label">Arquitectura MVC</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-value">9 Tablas</div>
+                        <div class="metric-label">Esquema Relacional</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-value">8 Controllers</div>
+                        <div class="metric-label">Lógica de Negocio</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-value">100%</div>
+                        <div class="metric-label">Auditoría en Logs</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Visual Data Flow Canvas -->
+            <div class="glass-card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <i class="fa-solid fa-network-wired" style="color: var(--primary);"></i>
+                        Mapa de Flujo de Información End-to-End
+                    </div>
+                    <div class="card-subtitle">Haz clic en cualquier nodo para explorar su comportamiento en el sistema</div>
+                </div>
+
+                <div class="flow-diagram-canvas">
+                    <!-- Layer 1: Interfaces (UI) -->
+                    <div class="layer-column">
+                        <div class="layer-badge ui">1. Vistas e Interfaces (UI)</div>
+                        
+                        <div class="node-card" id="node-ui-auth">
+                            <div class="node-title">
+                                <span><i class="fa-solid fa-lock"></i> Auth / Login</span>
+                                <span class="col-type">auth/login.php</span>
+                            </div>
+                            <div class="node-desc">Captura credenciales y valida token de sesión.</div>
+                        </div>
+
+                        <div class="node-card" id="node-ui-dashboard">
+                            <div class="node-title">
+                                <span><i class="fa-solid fa-chart-line"></i> Dashboard</span>
+                                <span class="col-type">dashboard/index.php</span>
+                            </div>
+                            <div class="node-desc">Visualiza KPIs de laboratorios y disponibilidad.</div>
+                        </div>
+
+                        <div class="node-card" id="node-ui-prestamos">
+                            <div class="node-title">
+                                <span><i class="fa-solid fa-handshake"></i> Préstamos</span>
+                                <span class="col-type">prestamos/create.php</span>
+                            </div>
+                            <div class="node-desc">Formulario de entrega y recepción de equipos.</div>
+                        </div>
+
+                        <div class="node-card" id="node-ui-traslados">
+                            <div class="node-title">
+                                <span><i class="fa-solid fa-truck-ramp-box"></i> Traslados</span>
+                                <span class="col-type">traslados/create.php</span>
+                            </div>
+                            <div class="node-desc">Solicitud de movimiento de PCs entre salas.</div>
+                        </div>
+
+                        <div class="node-card" id="node-ui-bajas">
+                            <div class="node-title">
+                                <span><i class="fa-solid fa-ban"></i> Bajas Técnicas</span>
+                                <span class="col-type">bajas/create.php</span>
+                            </div>
+                            <div class="node-desc">Registro de obsolescencia con dictamen técnico.</div>
+                        </div>
+                    </div>
+
+                    <!-- Layer 2: Business Logic & Controllers -->
+                    <div class="layer-column">
+                        <div class="layer-badge logic">2. Lógica & Controladores (MVC)</div>
+
+                        <div class="node-card" id="node-logic-router">
+                            <div class="node-title">
+                                <span><i class="fa-solid fa-route"></i> Core Router & Middleware</span>
+                                <span class="col-type">app/core/Router.php</span>
+                            </div>
+                            <div class="node-desc">Enrutamiento HTTP GET/POST y verificación de roles.</div>
+                        </div>
+
+                        <div class="node-card" id="node-logic-prestamo">
+                            <div class="node-title">
+                                <span><i class="fa-solid fa-gears"></i> PrestamoController</span>
+                                <span class="col-type">app/controllers/PrestamoController.php</span>
+                            </div>
+                            <div class="node-desc">Valida disponibilidad del equipo y fechas esperadas.</div>
+                        </div>
+
+                        <div class="node-card" id="node-logic-traslado">
+                            <div class="node-title">
+                                <span><i class="fa-solid fa-sliders"></i> TrasladoController</span>
+                                <span class="col-type">app/controllers/TrasladoController.php</span>
+                            </div>
+                            <div class="node-desc">Procesa autorizaciones y cambio de sala atómico.</div>
+                        </div>
+
+                        <div class="node-card" id="node-logic-baja">
+                            <div class="node-title">
+                                <span><i class="fa-solid fa-shield-halved"></i> BajaController</span>
+                                <span class="col-type">app/controllers/BajaController.php</span>
+                            </div>
+                            <div class="node-desc">Valida aprobación técnica para inactivar hardware.</div>
+                        </div>
+                    </div>
+
+                    <!-- Layer 3: Persistence & Database -->
+                    <div class="layer-column">
+                        <div class="layer-badge db">3. Persistencia (MySQL PDO)</div>
+
+                        <div class="node-card" id="node-db-computadores">
+                            <div class="node-title">
+                                <span><i class="fa-solid fa-desktop"></i> computadores</span>
+                                <span class="col-type">Tabla MySQL</span>
+                            </div>
+                            <div class="node-desc">id_computador, estado_activo, id_sala_actual</div>
+                        </div>
+
+                        <div class="node-card" id="node-db-prestamos">
+                            <div class="node-title">
+                                <span><i class="fa-solid fa-file-contract"></i> prestamos</span>
+                                <span class="col-type">Tabla MySQL</span>
+                            </div>
+                            <div class="node-desc">id_prestamo, id_computador, id_docente, fechas</div>
+                        </div>
+
+                        <div class="node-card" id="node-db-traslados">
+                            <div class="node-title">
+                                <span><i class="fa-solid fa-right-left"></i> traslados</span>
+                                <span class="col-type">Tabla MySQL</span>
+                            </div>
+                            <div class="node-desc">id_traslado, id_sala_origen, id_sala_destino</div>
+                        </div>
+
+                        <div class="node-card" id="node-db-bajas">
+                            <div class="node-title">
+                                <span><i class="fa-solid fa-trash-can"></i> bajas</span>
+                                <span class="col-type">Tabla MySQL</span>
+                            </div>
+                            <div class="node-desc">id_baja, dictamen_tecnico, motivo_baja</div>
+                        </div>
+
+                        <div class="node-card" id="node-db-logs">
+                            <div class="node-title">
+                                <span><i class="fa-solid fa-list-check"></i> logs_sistema</span>
+                                <span class="col-type">Auditoría MySQL</span>
+                            </div>
+                            <div class="node-desc">id_log, id_usuario, accion, fecha_hora, IP</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ===================================================================
+             TAB 5: SIMULADOR DE TRAZABILIDAD EN TIEMPO REAL
+             =================================================================== -->
+        <section id="tab-simulador" class="tab-content">
+            <div class="glass-card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <i class="fa-solid fa-terminal" style="color: var(--accent-cyan);"></i>
+                        Simulador Interactivo de Trazabilidad de Peticiones
+                    </div>
+                    <div class="card-subtitle">Selecciona un caso de uso y observa el recorrido exacto del paquete de datos paso a paso</div>
+                </div>
+
+                <div class="sim-controls">
+                    <label for="sim-select" style="font-weight: 600;">Seleccionar Caso de Uso:</label>
+                    <select id="sim-select" class="sim-select">
+                        <option value="prestamos">Caso 1: Registrar Préstamo de Equipo a Docente</option>
+                        <option value="traslados">Caso 2: Solicitar y Aprobar Traslado entre Laboratorios</option>
+                        <option value="bajas">Caso 3: Dictamen de Baja Técnica de Hardware Defectuoso</option>
+                    </select>
+
+                    <button id="btn-start-sim" class="btn-sim-action">
+                        <i class="fa-solid fa-play"></i> Iniciar Simulación
+                    </button>
+                </div>
+
+                <div class="trace-log-panel" id="trace-log">
+                    <div class="log-entry">
+                        <span class="log-time">[SYSTEM]</span>
+                        <span class="log-msg">Simulador listo. Haz clic en "Iniciar Simulación" para ejecutar el flujo de datos.</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ===================================================================
+             TAB 6: PERSISTENCIA Y MODELO RELACIONAL DE BASE DE DATOS (ERD)
+             =================================================================== -->
+        <section id="tab-erd" class="tab-content">
+            <div class="glass-card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <i class="fa-solid fa-database" style="color: var(--accent-emerald);"></i>
+                        Esquema Relacional de Persistencia (Base de Datos MySQL)
+                    </div>
+                    <div class="card-subtitle">Estructura de tablas, claves primarias (PK), foráneas (FK) y tipos de datos</div>
+                </div>
+
+                <div class="erd-grid">
+                    <!-- Tabla: usuarios -->
+                    <div class="table-card">
+                        <div class="table-header">
+                            <span><i class="fa-solid fa-users"></i> usuarios</span>
+                            <span style="font-size: 0.75rem;">Core Users</span>
+                        </div>
+                        <ul class="table-columns">
+                            <li><span><span class="pk-badge">PK</span> id_usuario</span> <span class="col-type">INT AUTO_INC</span></li>
+                            <li><span>nombre, apellido</span> <span class="col-type">VARCHAR(100)</span></li>
+                            <li><span>tipo_documento</span> <span class="col-type">ENUM</span></li>
+                            <li><span>numero_documento</span> <span class="col-type">VARCHAR(20)</span></li>
+                            <li><span>email</span> <span class="col-type">VARCHAR(150)</span></li>
+                            <li><span>password_hash</span> <span class="col-type">VARCHAR(255)</span></li>
+                            <li><span><span class="fk-badge">FK</span> id_rol</span> <span class="col-type">INT</span></li>
+                        </ul>
+                    </div>
+
+                    <!-- Tabla: computadores -->
+                    <div class="table-card">
+                        <div class="table-header">
+                            <span><i class="fa-solid fa-laptop"></i> computadores</span>
+                            <span style="font-size: 0.75rem;">Hardware Inventory</span>
+                        </div>
+                        <ul class="table-columns">
+                            <li><span><span class="pk-badge">PK</span> id_computador</span> <span class="col-type">INT AUTO_INC</span></li>
+                            <li><span>codigo_inventario</span> <span class="col-type">VARCHAR(50)</span></li>
+                            <li><span>numero_serie</span> <span class="col-type">VARCHAR(100)</span></li>
+                            <li><span><span class="fk-badge">FK</span> id_marca</span> <span class="col-type">INT</span></li>
+                            <li><span>procesador, ram_gb</span> <span class="col-type">VARCHAR / INT</span></li>
+                            <li><span><span class="fk-badge">FK</span> id_sala_actual</span> <span class="col-type">INT</span></li>
+                            <li><span>estado_activo</span> <span class="col-type">ENUM</span></li>
+                        </ul>
+                    </div>
+
+                    <!-- Tabla: salas -->
+                    <div class="table-card">
+                        <div class="table-header">
+                            <span><i class="fa-solid fa-door-open"></i> salas</span>
+                            <span style="font-size: 0.75rem;">Laboratories</span>
+                        </div>
+                        <ul class="table-columns">
+                            <li><span><span class="pk-badge">PK</span> id_sala</span> <span class="col-type">INT AUTO_INC</span></li>
+                            <li><span>nombre_sala</span> <span class="col-type">VARCHAR(100)</span></li>
+                            <li><span>sede</span> <span class="col-type">VARCHAR(100)</span></li>
+                            <li><span>tiene_polo_a_tierra</span> <span class="col-type">TINYINT(1)</span></li>
+                            <li><span>tiene_estabilizador</span> <span class="col-type">TINYINT(1)</span></li>
+                            <li><span>tiene_red_structured</span> <span class="col-type">TINYINT(1)</span></li>
+                        </ul>
+                    </div>
+
+                    <!-- Tabla: prestamos -->
+                    <div class="table-card">
+                        <div class="table-header">
+                            <span><i class="fa-solid fa-hand-holding-hand"></i> prestamos</span>
+                            <span style="font-size: 0.75rem;">Transactions</span>
+                        </div>
+                        <ul class="table-columns">
+                            <li><span><span class="pk-badge">PK</span> id_prestamo</span> <span class="col-type">INT AUTO_INC</span></li>
+                            <li><span><span class="fk-badge">FK</span> id_computador</span> <span class="col-type">INT</span></li>
+                            <li><span><span class="fk-badge">FK</span> id_docente</span> <span class="col-type">INT</span></li>
+                            <li><span><span class="fk-badge">FK</span> id_auxiliar_entrega</span> <span class="col-type">INT</span></li>
+                            <li><span>fecha_prestamo</span> <span class="col-type">DATETIME</span></li>
+                            <li><span>estado_prestamo</span> <span class="col-type">ENUM</span></li>
+                        </ul>
+                    </div>
+
+                    <!-- Tabla: traslados -->
+                    <div class="table-card">
+                        <div class="table-header">
+                            <span><i class="fa-solid fa-truck-fast"></i> traslados</span>
+                            <span style="font-size: 0.75rem;">Transfers</span>
+                        </div>
+                        <ul class="table-columns">
+                            <li><span><span class="pk-badge">PK</span> id_traslado</span> <span class="col-type">INT AUTO_INC</span></li>
+                            <li><span><span class="fk-badge">FK</span> id_computador</span> <span class="col-type">INT</span></li>
+                            <li><span><span class="fk-badge">FK</span> id_sala_origen</span> <span class="col-type">INT</span></li>
+                            <li><span><span class="fk-badge">FK</span> id_sala_destino</span> <span class="col-type">INT</span></li>
+                            <li><span><span class="fk-badge">FK</span> id_usuario_autoriza</span> <span class="col-type">INT</span></li>
+                            <li><span>estado_traslado</span> <span class="col-type">ENUM</span></li>
+                        </ul>
+                    </div>
+
+                    <!-- Tabla: bajas -->
+                    <div class="table-card">
+                        <div class="table-header">
+                            <span><i class="fa-solid fa-dumpster"></i> bajas</span>
+                            <span style="font-size: 0.75rem;">Decommission</span>
+                        </div>
+                        <ul class="table-columns">
+                            <li><span><span class="pk-badge">PK</span> id_baja</span> <span class="col-type">INT AUTO_INC</span></li>
+                            <li><span><span class="fk-badge">FK</span> id_computador</span> <span class="col-type">INT</span></li>
+                            <li><span>motivo_baja</span> <span class="col-type">TEXT</span></li>
+                            <li><span>dictamen_tecnico</span> <span class="col-type">TEXT</span></li>
+                            <li><span>fecha_baja</span> <span class="col-type">DATETIME</span></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Modal para Zoom de Imágenes -->
+    <div class="image-modal" id="image-modal">
+        <span class="image-modal-close" id="close-image-modal">&times;</span>
+        <img id="modal-img-element" src="" alt="Diagrama Ampliado">
+    </div>
+
+    <!-- Fullscreen Presentation Modal -->
+    <div class="fullscreen-presenter" id="presenter-modal">
+        <div class="presenter-header">
+            <span class="brand-badge"><i class="fa-solid fa-graduation-cap"></i> SUSTENTACIÓN DE GRADO</span>
+            <button id="btn-close-presenter" style="background: transparent; border: none; color: white; font-size: 1.5rem; cursor: pointer;">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+
+        <div class="presenter-body">
+            <div class="slide-content">
+                <h1 class="slide-title" id="slide-title">Título de Diapositiva</h1>
+                <p class="slide-desc" id="slide-desc">Descripción ejecutiva</p>
+                <div style="background: rgba(255,255,255,0.05); padding: 2rem; border-radius: 16px; border: 1px solid rgba(255,255,255,0.1); margin-top: 1.5rem;" id="slide-detail">
+                    Detalle ampliado
+                </div>
+            </div>
+        </div>
+
+        <div class="presenter-controls">
+            <button class="btn-nav-slide" id="btn-prev-slide"><i class="fa-solid fa-chevron-left"></i> Anterior</button>
+            <span id="slide-indicator" style="color: var(--text-muted); font-size: 0.9rem;">Diapositiva 1 de 4</span>
+            <button class="btn-nav-slide" id="btn-next-slide">Siguiente <i class="fa-solid fa-chevron-right"></i></button>
+        </div>
+    </div>
+
+    <!-- Application JavaScript -->
+    <script src="js/sustentacion.js"></script>
+</body>
+</html>

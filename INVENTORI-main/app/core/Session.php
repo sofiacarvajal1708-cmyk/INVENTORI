@@ -46,6 +46,8 @@ class Session {
             if (stripos($val, 'rector') !== false) return 'Rector';
             if (stripos($val, 'almacen') !== false) return 'Almacenista';
             if (stripos($val, 'contralor') !== false) return 'Contralor';
+            if (stripos($val, 'docente tic') !== false || stripos($val, 'docente_tic') !== false) return 'Docente TIC';
+            if (stripos($val, 'docente no tic') !== false || stripos($val, 'docente_notic') !== false) return 'Docente No TIC';
             if (stripos($val, 'docente') !== false) return 'Docente';
         }
         return $val;

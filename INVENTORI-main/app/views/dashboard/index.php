@@ -44,6 +44,26 @@ $roleConfig = [
         'label'        => 'DOCENTE',
         'subtitle'     => 'Solicitud de préstamos de terminales y planeación de experiencias pedagógicas.',
     ],
+    'Docente TIC' => [
+        'color'        => '#06b6d4',
+        'colorDim'     => 'rgba(6,182,212,0.15)',
+        'colorBorder'  => 'rgba(6,182,212,0.35)',
+        'colorGlow'    => 'rgba(6,182,212,0.08)',
+        'bannerGrad'   => 'linear-gradient(135deg, rgba(8,51,68,0.55) 0%, rgba(7,89,133,0.2) 60%, transparent 100%)',
+        'icon'         => 'fa-solid fa-laptop-code',
+        'label'        => 'DOCENTE TIC',
+        'subtitle'     => 'Certificación TIC Aprobada. Solicitud prioritaria de préstamos y experiencias pedagógicas avanzadas.',
+    ],
+    'Docente No TIC' => [
+        'color'        => '#64748b',
+        'colorDim'     => 'rgba(100,116,139,0.15)',
+        'colorBorder'  => 'rgba(100,116,139,0.35)',
+        'colorGlow'    => 'rgba(100,116,139,0.08)',
+        'bannerGrad'   => 'linear-gradient(135deg, rgba(30,41,59,0.55) 0%, rgba(51,65,85,0.2) 60%, transparent 100%)',
+        'icon'         => 'fa-solid fa-book-open-reader',
+        'label'        => 'DOCENTE NO TIC',
+        'subtitle'     => 'Docente institucional. Consulta de inventario, disponibilidad de salas y capacitación TIC.',
+    ],
     'Contralor' => [
         'color'        => '#f59e0b',
         'colorDim'     => 'rgba(245,158,11,0.15)',
@@ -333,7 +353,7 @@ html.light-mode .action-btn:hover {
                 <a href="<?= BASE_URL ?>/salas"                 class="action-btn"><i class="btn-icon fa-solid fa-school"></i><span>Salas y espacios</span></a>
                 <a href="<?= BASE_URL ?>/traslados"             class="action-btn"><i class="btn-icon fa-solid fa-truck-ramp-box"></i><span>Historial traslados</span></a>
                 <a href="<?= BASE_URL ?>/bajas"                 class="action-btn"><i class="btn-icon fa-solid fa-recycle" style="color:#10b981"></i><span>Bajas RAEE</span></a>
-            <?php elseif ($role === 'Docente'): ?>
+            <?php elseif (in_array($role, ['Docente', 'Docente TIC', 'Docente No TIC'])): ?>
                 <a href="<?= BASE_URL ?>/prestamos/crear"       class="action-btn primary"><i class="btn-icon fa-solid fa-calendar-plus"></i><span>Solicitar préstamo</span></a>
                 <a href="<?= BASE_URL ?>/prestamos"             class="action-btn"><i class="btn-icon fa-solid fa-clock-rotate-left"></i><span>Mis préstamos / Historial</span></a>
                 <a href="<?= BASE_URL ?>/computadores"          class="action-btn"><i class="btn-icon fa-solid fa-computer"></i><span>Equipos disponibles</span></a>
@@ -501,7 +521,7 @@ html.light-mode .action-btn:hover {
     </div>
 </div>
 
-<?php elseif (in_array($role, ['Docente TIC', 'Docente No TIC'])): ?>
+<?php elseif (in_array($role, ['Docente', 'Docente TIC', 'Docente No TIC'])): ?>
 <!-- DOCENTES: Guía de uso -->
 <div class="section-card mb-6" style="border-color:<?= $rc['colorBorder'] ?>">
     <h4 class="text-sm font-bold text-white uppercase tracking-wider mb-4 flex items-center gap-2">

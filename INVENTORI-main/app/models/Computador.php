@@ -4,6 +4,26 @@
  */
 class Computador extends Model {
 
+    public function __construct() {
+        parent::__construct();
+        $this->ensureColumnsExist();
+    }
+
+    /**
+     * Asegurar que la columna id_sala_actual exista en la tabla computadores
+     */
+    private function ensureColumnsExist() {
+        try {
+            $stmt = $this->db->query("SHOW COLUMNS FROM computadores LIKE 'id_sala_actual'");
+            if (!$stmt->fetch()) {
+                // Obtener primera sala si existe
+                $firstSala = $this->db->query("SELECT id_sala FROM salas ORDER BY id_sala ASC LIMIT 1")->fetchColumn() ?: 1;
+                $this->db->exec("ALTER TABLE computadores ADD COLUMN id_sala_actual INT(11) DEFAULT {$firstSala} AFTER fecha_adquisicion");
+                $this->db->exec("UPDATE computadores SET id_sala_actual = {$firstSala} WHERE id_sala_actual IS NULL OR id_sala_actual = 0");
+            }
+        } catch (Exception $e) {}
+    }
+
     /**
      * Listar todos los computadores con su sala y marca
      */

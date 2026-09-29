@@ -12,9 +12,10 @@ require_once APP_ROOT . '/views/layout/header.php';
     <!-- Barra superior: logo pequeño + botón de tema interactivo con cambio de color al pasar el mouse -->
     <div class="w-full flex items-center justify-between px-6 py-3 relative z-20 shrink-0">
         <div class="flex items-center space-x-2.5">
-            <img src="<?= BASE_URL ?>/public/img/logo.png" alt="INVENTORI BASAMA" class="h-9 w-9 rounded-xl object-contain border border-emerald-500/40 bg-slate-950/80 p-0.5 shadow-md">
-            <div class="leading-tight">
-                <span class="text-sm font-bold text-white tracking-wide">INVENTORI BASAMA</span>
+            <img src="<?= BASE_URL ?>/public/img/logo.png" alt="INVENTORI BASAMA" class="h-9 w-9 rounded-xl object-contain border border-blue-500/30 bg-slate-950/80 p-0.5 shadow-md">
+            <div class="flex flex-col justify-center leading-none space-y-0.5">
+                <span class="text-sm font-bold text-white tracking-wide whitespace-nowrap">INVENTORI BASAMA</span>
+                <span class="text-[10px] text-blue-400 font-semibold tracking-tight uppercase whitespace-nowrap">I.E. Barrio Santa Margarita</span>
             </div>
         </div>
         <button id="theme-toggle" type="button" onclick="toggleAppTheme(event)"
@@ -45,12 +46,12 @@ require_once APP_ROOT . '/views/layout/header.php';
                 Bienvenido a <strong class="text-emerald-400 font-bold">INVENTORI BASAMA</strong>, un entorno diseñado para optimizar el inventario de equipos, salas, préstamos y traslados con total seguridad y transparencia institucional.
             </p>
 
-            <!-- Imagen Ilustrativa -->
-            <div class="w-full rounded-2xl overflow-hidden glass-panel border border-emerald-500/30 shadow-2xl relative group" style="flex:1; min-height:120px; max-height:220px;">
-                <img src="<?= BASE_URL ?>/public/img/login_hero.jpg"
-                     alt="Inventario Tecnológico Santa Margarita"
+            <!-- Imagen Ilustrativa Fotográfica Realista -->
+            <div class="w-full rounded-2xl overflow-hidden glass-panel border border-slate-700/40 shadow-2xl relative group" style="flex:1; min-height:140px; max-height:240px;">
+                <img src="<?= BASE_URL ?>/public/img/login_hero.jpg?v=<?= time() ?>"
+                     alt="Laboratorio de Cómputo e Innovación Tecnológica Santa Margarita"
                      class="w-full h-full object-cover object-center transform group-hover:scale-105 transition-transform duration-700">
-                <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none"></div>
+                <div class="absolute inset-0 bg-gradient-to-t from-slate-950/40 via-transparent to-transparent pointer-events-none"></div>
             </div>
 
             <!-- Instrucciones de Acceso -->
@@ -81,8 +82,8 @@ require_once APP_ROOT . '/views/layout/header.php';
 
                 <!-- Encabezado de la tarjeta -->
                 <div class="text-center space-y-1.5">
-                    <img src="<?= BASE_URL ?>/public/img/logo.png" alt="INVENTORI BASAMA"
-                         class="mx-auto h-14 w-14 rounded-2xl object-contain shadow-xl shadow-emerald-500/40 border border-emerald-500/40 bg-slate-950 p-1">
+                    <img src="<?= BASE_URL ?>/public/img/logo.png?v=<?= time() ?>" alt="I.E. Barrio Santa Margarita"
+                         class="mx-auto h-14 w-14 rounded-2xl object-contain shadow-md border border-slate-200 bg-white p-1">
                     <h2 class="text-xl font-bold tracking-tight login-title">Acceso al Portal</h2>
                     <p class="text-xs login-subtitle">Ingresa con tus credenciales de usuario</p>
                 </div>
@@ -96,46 +97,46 @@ require_once APP_ROOT . '/views/layout/header.php';
                 <?php endif; ?>
 
                 <!-- Formulario -->
-                <form class="space-y-3.5" action="<?= BASE_URL ?>/auth/login" method="POST">
+                <form id="login-form" class="space-y-3.5" action="<?= BASE_URL ?>/auth/login" method="POST">
 
                     <!-- Campo: Usuario / Correo -->
                     <div>
-                        <label for="email" class="block text-xs font-bold uppercase tracking-wider mb-1.5" style="color: #10b981 !important;">
+                        <label for="email" class="block text-xs font-bold uppercase tracking-wider mb-1.5 text-blue-400">
                             Usuario / Correo Institucional
                         </label>
                         <div class="relative rounded-xl">
-                            <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-emerald-400 text-sm z-10">
+                            <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-blue-600 text-sm z-10">
                                 <i class="fa-regular fa-user"></i>
                             </div>
                             <input id="email" name="email" type="email" required
-                                class="block w-full pl-10 pr-4 py-2.5 rounded-xl text-sm font-medium shadow-inner"
-                                style="background: rgba(2, 6, 23, 0.95) !important; color: #ffffff !important; border: 1px solid rgba(16, 185, 129, 0.4) !important;"
+                                class="block w-full input-icon-left pl-11 pr-4 py-2.5 rounded-xl text-sm font-medium shadow-sm bg-white text-slate-900 border-2 border-blue-500"
+                                style="padding-left: 2.75rem !important; background-color: #ffffff !important; color: #0f172a !important;"
                                 placeholder="usuario@santa.edu.co">
                         </div>
                     </div>
 
                     <!-- Campo: Contraseña -->
                     <div>
-                        <label for="password" class="block text-xs font-bold uppercase tracking-wider mb-1.5" style="color: #10b981 !important;">
+                        <label for="password" class="block text-xs font-bold uppercase tracking-wider mb-1.5 text-blue-400">
                             Contraseña
                         </label>
                         <div class="relative rounded-xl">
-                            <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-emerald-400 text-sm z-10">
+                            <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-blue-600 text-sm z-10">
                                 <i class="fa-solid fa-lock"></i>
                             </div>
                             <input id="password" name="password" type="password" required
-                                class="block w-full pl-10 pr-11 py-2.5 rounded-xl text-sm font-medium shadow-inner"
-                                style="background: rgba(2, 6, 23, 0.95) !important; color: #ffffff !important; border: 1px solid rgba(16, 185, 129, 0.4) !important;"
+                                class="block w-full input-icon-left input-icon-right pl-11 pr-11 py-2.5 rounded-xl text-sm font-medium shadow-sm bg-white text-slate-900 border-2 border-blue-500"
+                                style="padding-left: 2.75rem !important; padding-right: 2.75rem !important; background-color: #ffffff !important; color: #0f172a !important;"
                                 placeholder="••••••••">
                             <button type="button" id="toggle-password"
-                                class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-emerald-300 transition-colors text-sm focus:outline-none z-10"
+                                class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-600 hover:text-blue-600 transition-colors text-sm focus:outline-none z-10"
                                 title="Mostrar u ocultar contraseña">
                                 <i class="fa-regular fa-eye" id="eye-icon"></i>
                             </button>
                         </div>
                     </div>
 
-                    <!-- Botón de Ingreso con Efecto Dinámico de Cambio de Color -->
+                    <!-- Botón de Ingreso con Efecto Dinámico -->
                     <button type="submit"
                         class="w-full py-3 px-4 bg-gradient-to-r from-emerald-600 via-teal-600 to-blue-700 hover:from-emerald-500 hover:to-cyan-500 active:from-cyan-400 active:to-emerald-500 text-white font-extrabold rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-400 shadow-lg shadow-emerald-600/40 active:scale-95 transition-all text-sm flex items-center justify-center space-x-2 btn-interactive cursor-pointer">
                         <span>Ingresar al Portal</span>

@@ -65,7 +65,7 @@ class ComputadorController extends Controller {
      * Formulario y proceso de registro de nuevo equipo
      */
     public function crear() {
-        Session::requireRole(['Rector', 'Almacenista', 'Administrador']);
+        Session::requireRole(['Rector', 'Almacenista', 'Contralor', 'Docente', 'Administrador']);
         
         $compModel = $this->model('Computador');
         $salaModel = $this->model('Sala');

@@ -33,11 +33,23 @@ $user = $data['user'] ?? [];
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
 
-                <!-- Documento de Identidad -->
+                <!-- Tipo y Documento de Identidad -->
                 <div>
-                    <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Documento de Identidad (Cédula) *</label>
-                    <input type="text" name="documento_identidad" required value="<?= htmlspecialchars($user['documento_identidad'] ?? '') ?>" 
-                        class="block w-full px-4 py-2.5 text-xs" placeholder="Ej. 1020304050">
+                    <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Documento de Identidad *</label>
+                    <div class="grid grid-cols-3 gap-2">
+                        <div>
+                            <select name="tipo_documento" required class="block w-full px-2.5 py-2.5 text-xs font-bold text-emerald-400 bg-slate-900 border border-slate-700/80 rounded-xl focus:ring-2 focus:ring-emerald-500">
+                                <option value="C.C." <?= ($user['tipo_documento'] ?? 'C.C.') === 'C.C.' ? 'selected' : '' ?>>C.C.</option>
+                                <option value="T.I." <?= ($user['tipo_documento'] ?? '') === 'T.I.' ? 'selected' : '' ?>>T.I. (Tarjeta de Identidad)</option>
+                                <option value="C.E." <?= ($user['tipo_documento'] ?? '') === 'C.E.' ? 'selected' : '' ?>>C.E. (Cédula Extranjería)</option>
+                                <option value="Pasaporte" <?= ($user['tipo_documento'] ?? '') === 'Pasaporte' ? 'selected' : '' ?>>Pasaporte</option>
+                            </select>
+                        </div>
+                        <div class="col-span-2">
+                            <input type="text" name="documento_identidad" required value="<?= htmlspecialchars($user['documento_identidad'] ?? '') ?>" 
+                                class="block w-full px-4 py-2.5 text-xs" placeholder="Número de documento...">
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Rol -->

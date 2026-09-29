@@ -80,17 +80,33 @@ class User extends Model {
     }
 
     /**
+     * Asegurar que la columna tipo_documento exista en la base de datos
+     */
+    private function ensureColumnsExist() {
+        try {
+            $stmt = $this->db->query("SHOW COLUMNS FROM usuarios LIKE 'tipo_documento'");
+            if (!$stmt->fetch()) {
+                $this->db->exec("ALTER TABLE usuarios ADD COLUMN tipo_documento VARCHAR(20) DEFAULT 'C.C.' AFTER id_usuario");
+            }
+        } catch (Exception $e) {
+            // Ignorar si la columna ya existe o si no se puede alterar en tiempo de ejecución
+        }
+    }
+
+    /**
      * Crear un nuevo usuario
      */
     public function create($data) {
+        $this->ensureColumnsExist();
         $stmt = $this->db->prepare("
             INSERT INTO usuarios 
-            (documento_identidad, nombres, apellidos, email, password_hash, id_rol, capacitacion_tic_aprobada, horas_asistencia_tic, estado_usuario) 
+            (tipo_documento, documento_identidad, nombres, apellidos, email, password_hash, id_rol, capacitacion_tic_aprobada, horas_asistencia_tic, estado_usuario) 
             VALUES 
-            (:doc, :nombres, :apellidos, :email, :pass, :rol, :tic, :horas, :estado)
+            (:tipo_doc, :doc, :nombres, :apellidos, :email, :pass, :rol, :tic, :horas, :estado)
         ");
 
         $stmt->execute([
+            'tipo_doc' => $data['tipo_documento'] ?? 'C.C.',
             'doc' => $data['documento_identidad'],
             'nombres' => $data['nombres'],
             'apellidos' => $data['apellidos'],
@@ -109,9 +125,11 @@ class User extends Model {
      * Actualizar datos del usuario
      */
     public function update($id, $data) {
+        $this->ensureColumnsExist();
         $stmt = $this->db->prepare("
             UPDATE usuarios 
-            SET documento_identidad = :doc,
+            SET tipo_documento = :tipo_doc,
+                documento_identidad = :doc,
                 nombres = :nombres, 
                 apellidos = :apellidos, 
                 email = :email, 
@@ -124,6 +142,7 @@ class User extends Model {
 
         return $stmt->execute([
             'id' => $id,
+            'tipo_doc' => $data['tipo_documento'] ?? 'C.C.',
             'doc' => $data['documento_identidad'],
             'nombres' => $data['nombres'],
             'apellidos' => $data['apellidos'],
@@ -222,12 +241,12 @@ class User extends Model {
                     'rol' => 2, 'tic' => 0, 'horas' => 0
                 ],
                 [
-                    'doc' => '1003', 'nombres' => 'Carlos', 'apellidos' => 'Herrera (Docente TIC)',
+                    'doc' => '1003', 'nombres' => 'Carlos', 'apellidos' => 'Herrera',
                     'email' => 'docente_tic@santa.edu.co', 'pass' => password_hash('docente123', PASSWORD_DEFAULT),
                     'rol' => 3, 'tic' => 1, 'horas' => 45 // Cumple requisitos TIC
                 ],
                 [
-                    'doc' => '1004', 'nombres' => 'Lucía', 'apellidos' => 'Pérez (Docente No TIC)',
+                    'doc' => '1004', 'nombres' => 'Lucía', 'apellidos' => 'Pérez',
                     'email' => 'docente_notic@santa.edu.co', 'pass' => password_hash('docente123', PASSWORD_DEFAULT),
                     'rol' => 3, 'tic' => 0, 'horas' => 12 // No cumple requisitos
                 ],

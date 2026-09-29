@@ -4,6 +4,31 @@
  */
 class Prestamo extends Model {
 
+    public function __construct() {
+        parent::__construct();
+        $this->ensureColumnsExist();
+    }
+
+    /**
+     * Asegurar que la estructura de la tabla prestamos contenga id_docente e id_auxiliar_retorno
+     */
+    private function ensureColumnsExist() {
+        try {
+            $stmt = $this->db->query("SHOW COLUMNS FROM prestamos LIKE 'id_docente'");
+            if (!$stmt->fetch()) {
+                $this->db->exec("ALTER TABLE prestamos ADD COLUMN id_docente INT(11) AFTER id_computador");
+                $this->db->exec("UPDATE prestamos SET id_docente = id_usuario WHERE (id_docente IS NULL OR id_docente = 0) AND id_usuario IS NOT NULL");
+            }
+        } catch (Exception $e) {}
+
+        try {
+            $stmt = $this->db->query("SHOW COLUMNS FROM prestamos LIKE 'id_auxiliar_retorno'");
+            if (!$stmt->fetch()) {
+                $this->db->exec("ALTER TABLE prestamos ADD COLUMN id_auxiliar_retorno INT(11) AFTER fecha_devolucion_real");
+            }
+        } catch (Exception $e) {}
+    }
+
     /**
      * Listar todos los préstamos
      */

@@ -29,7 +29,7 @@ class PrestamoController extends Controller {
      * Crear solicitud de préstamo
      */
     public function crear() {
-        Session::requireRole(['Docente', 'Almacenista', 'Administrador']);
+        Session::requireRole(['Docente', 'Docente TIC', 'Docente No TIC', 'Almacenista', 'Administrador']);
         $prestamoModel = $this->model('Prestamo');
         $compModel = $this->model('Computador');
         $userModel = $this->model('User');
@@ -41,7 +41,7 @@ class PrestamoController extends Controller {
             $data = Security::sanitize($_POST);
 
             // Determinar ID del docente a prestar
-            $docenteId = ($role === 'Docente') ? $userId : (int)$data['id_docente'];
+            $docenteId = (in_array($role, ['Docente', 'Docente TIC', 'Docente No TIC'])) ? $userId : (int)($data['id_docente'] ?? 0);
 
             // 1. Validar Requisitos TIC del Docente (Educativo)
             if (!$prestamoModel->checkTeacherRequisites($docenteId)) {

@@ -44,6 +44,7 @@ class UsuarioController extends Controller {
         $error = null;
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $tipoDoc = trim($_POST['tipo_documento'] ?? 'C.C.');
             $doc = trim($_POST['documento_identidad'] ?? '');
             $nombres = trim($_POST['nombres'] ?? '');
             $apellidos = trim($_POST['apellidos'] ?? '');
@@ -68,6 +69,7 @@ class UsuarioController extends Controller {
                     $error = 'El correo electrónico ya se encuentra registrado.';
                 } else {
                     $userId = $userModel->create([
+                        'tipo_documento' => $tipoDoc,
                         'documento_identidad' => $doc,
                         'nombres' => $nombres,
                         'apellidos' => $apellidos,
@@ -119,6 +121,7 @@ class UsuarioController extends Controller {
         $error = null;
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $tipoDoc = trim($_POST['tipo_documento'] ?? 'C.C.');
             $doc = trim($_POST['documento_identidad'] ?? '');
             $nombres = trim($_POST['nombres'] ?? '');
             $apellidos = trim($_POST['apellidos'] ?? '');
@@ -132,6 +135,7 @@ class UsuarioController extends Controller {
                 $error = 'Por favor complete todos los campos obligatorios (*).';
             } else {
                 $userModel->update($id, [
+                    'tipo_documento' => $tipoDoc,
                     'documento_identidad' => $doc,
                     'nombres' => $nombres,
                     'apellidos' => $apellidos,
